@@ -1,0 +1,77 @@
+.header {
+  /* color: var(--foreground); */
+  color: var(--background);
+  mix-blend-mode: difference;
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0.05rem;
+  text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.05);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  padding: 1.75rem 4rem;
+  z-index: 1001;
+}
+
+.navText {
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.list {
+  position: relative;
+  gap: 0.25rem;
+}
+
+.endList {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.logoWordmark {
+  gap: 0.25rem;
+}
+
+.navText .icon {
+  opacity: 0;
+  margin-top: -0.1rem;
+  margin-right: 0.3rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateX(-10px);
+}
+
+.navText:hover .icon {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.logo {
+  gap: 0.5rem;
+}
+
+.logoIcon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.logoText,
+.contactText {
+  font-weight: 800;
+}
+
+.copiedText {
+  margin-top: 0.25rem;
+  animation: fadeOut 3s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

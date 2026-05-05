@@ -1,0 +1,114 @@
+.pageContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-height: 100vh;
+  align-items: end;
+  overflow: hidden;
+  padding: 1.75rem 4rem;
+  z-index: 1000;
+}
+
+.titleText {
+  font-family: 'Geologica';
+  letter-spacing: -0.05rem;
+  font-weight: 800;
+  line-height: 0.8;
+  user-select: none;
+  align-items: center;
+  bottom: -0.5rem;
+}
+
+.titleLetter {
+  transition: opacity 0.3s ease-out;
+  width: min-content;
+}
+
+.titleLetter:hover {
+  opacity: 0.4;
+  cursor: pointer;
+}
+
+.titleAdjusted {
+  position: relative;
+  left: -0.5rem;
+}
+
+.slash {
+  position: relative;
+  font-weight: 400;
+}
+
+.descriptionContainer {
+  margin-bottom: 1rem;
+}
+
+.descriptionText {
+  font-weight: 400;
+  letter-spacing: 0.05rem;
+}
+
+
+@media (min-width: 1471px) and (min-height: 956px) {
+  /* .titleText, .slash {
+    font-size: 12rem;
+  }
+
+  .slash {
+    font-size: 10rem;
+    top: 0.75rem;
+  }
+
+  .descriptionText {
+    font-size: 2rem;
+  } */
+  .titleText {
+    font-size: 8rem;
+  }
+
+  .slash {
+    font-size: 6.5rem;
+    top: 0.65rem;
+  }
+
+  .descriptionText {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 1470px) or (max-height: 955px) {
+  .titleText {
+    font-size: 8rem;
+  }
+
+  .slash {
+    font-size: 6.5rem;
+    top: 0.65rem;
+  }
+
+  .descriptionText {
+    font-size: 1rem;
+  }
+}
+
+
+.showcaseContainer {
+  position: fixed;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 4rem;
+  top: 0;
+  left: 0;
+}
+
+.maskedImage {
+  position: absolute;
+  left: -1rem;
+}
+
+.image {
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+  object-position: center 100%;
+}

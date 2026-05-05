@@ -1,0 +1,36 @@
+.main {
+  scroll-snap-type: y mandatory;
+}
+
+.section {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  scroll-snap-align: start;
+  overflow: hidden;
+}
+
+.image-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1s ease-in-out;
+}
+
+.section.in-view .image-container {
+  clip-path: inset(0 0 0 0);
+}
+
+.text-container {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.section.in-view .text-container {
+  opacity: 1;
+  transform: translateY(0);
+}

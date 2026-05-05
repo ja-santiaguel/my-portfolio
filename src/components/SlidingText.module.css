@@ -1,0 +1,36 @@
+.sliderContainer {
+  position: fixed;
+  overflow: hidden;
+  height: 100%;
+  z-index: 1000;
+  color: var(--background);
+  mix-blend-mode: difference;
+}
+
+.slider {
+  white-space: nowrap;
+  opacity: 0.4;
+}
+
+.slider p {
+  font-size: 1.25rem;
+  font-weight: 200;
+  letter-spacing: 0.1rem;
+  margin: 0;
+  user-select: none;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+.slider p:nth-of-type(2) {
+  position: absolute;
+  top: 100%;
+}
+
+.barcodeText {
+  position: relative;
+  left: -0.3rem;
+  font-family: "Libre Barcode 39 Text";
+  font-size: 1.75rem;
+}

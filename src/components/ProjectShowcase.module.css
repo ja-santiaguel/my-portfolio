@@ -1,0 +1,6 @@
+.pageContainer {
+  display: flex;
+  min-height: 100vh;
+  justify-content: end;
+  flex-direction: column;
+}

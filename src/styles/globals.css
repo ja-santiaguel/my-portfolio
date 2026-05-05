@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&display=swap");
+
+/* Heavy */
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/Helvetica_Neue/HelveticaNeueHeavy.otf") format("opentype");
+  font-weight: 800;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/Helvetica_Neue/HelveticaNeueHeavyItalic.otf")
+    format("opentype");
+  font-weight: 800;
+  font-style: italic;
+}
+
+/* Medium */
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/Helvetica_Neue/HelveticaNeueMedium.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/Helvetica_Neue/HelveticaNeueMediumItalic.otf")
+    format("opentype");
+  font-weight: 600;
+  font-style: italic;
+}
+
+/* Regular */
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/Helvetica_Neue/HelveticaNeueRoman.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/Helvetica_Neue/HelveticaNeueItalic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* Thin */
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/Helvetica_Neue/HelveticaNeueThin.otf") format("opentype");
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Helvetica Neue";
+  src: url("/fonts/Helvetica_Neue/HelveticaNeueThinItalic.otf")
+    format("opentype");
+  font-weight: 200;
+  font-style: italic;
+}
+
+:root {
+  /* --background: #f9f6f1; */
+  --background: #f3f3f3;
+  --foreground: #151515;
+  font-family: "Helvetica Neue", sans-serif;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Helvetica Neue", sans-serif;
+  padding: 0;
+  margin: 0;
+  letter-spacing: 0.05rem;
+  overflow: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.masking-container {
+  overflow-y: hidden;
+}
+
+.grid-8-column {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.stacked {
+  display: flex;
+  flex-direction: column;
+}

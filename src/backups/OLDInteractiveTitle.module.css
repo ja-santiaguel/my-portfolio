@@ -1,0 +1,84 @@
+.titleContainer {
+  height: 85vh;
+  align-items: end;
+  overflow: hidden;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.mainText {
+  font-family: 'Geologica';
+  font-size: 12rem;
+  font-weight: 700;
+  z-index: 0;
+  user-select: none;
+  align-items: center;
+}
+
+.secondaryText {
+  /* font-family: 'Bergen Mono'; */
+  font-family: 'Geologica';
+  font-size: 6rem;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.075);
+  position: relative;
+  top: -3.5rem;
+  left: 3rem;
+  z-index: 1;
+  user-select: none;
+}
+
+.interactiveText,
+.graphicText {
+  line-height: 0.8;
+  /* font-family: 'Bergen Mono'; */
+}
+
+.interactiveText {
+}
+
+.graphicText {
+  /* letter-spacing: 0.5rem; */
+}
+
+.interactiveSecondaryText,
+.graphicSecondaryText {
+  line-height: 0.78;
+  filter: blur(0.2rem);
+}
+
+.subTextContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  top: -2.5rem;
+  gap: 1.5rem;
+}
+
+.designText {
+  font-family: 'Geologica';
+  font-weight: 800;
+  line-height: 0.85;
+  font-size: 4rem;
+}
+
+.descriptionText {
+  font-weight: 200;
+  font-size: 1.5rem;
+  line-height: 1.75rem;
+}
+
+.boldText {
+  font-weight: 600;
+}
+
+.slash {
+  position: relative;
+  top: -0.75rem;
+  font-size: 10rem;
+  font-weight: 400;
+}
