@@ -20,7 +20,7 @@ With the home page and case studies in place, the rest of the site still read li
 - **Archived** Sha Tea and Reckless (2026-10-28); the home grid now lays out four projects.
 - **Trimmed the case studies:** no Showcase captions (the photos speak for themselves), General Roofing down to three key decisions, and each client result now says in its own words how satisfied the client was.
 - **Web development services** widened from three items to seven, outcomes first (landing pages built to convert, interaction and motion, accessibility and performance, SEO and launch), then platforms.
-- **Launch prep:** real page titles, canonical URLs, Open Graph previews with a shared image (`after-og-image.png`), a sitemap and robots file; Oswald self-hosted and three unused Google Fonts removed; touch targets brought to 44px; the empty `/contact` page and the legacy page styles removed.
+- **Launch prep:** real page titles, canonical URLs, Open Graph previews with a shared image (`after-og-image.png`), a sitemap and robots file; Oswald self-hosted and three unused Google Fonts removed; touch targets brought to 44px; the empty `/contact` page and the legacy page styles removed. Next.js upgraded from 15.1 to 15.5.28 (2026-10-29), which clears every Next.js security advisory, including the critical ones.
 
 ## Why
 Recruiters decide in under a minute, so the facts they look for (role, location, availability, résumé) now sit on the first screen of About, and the résumé is one click from anywhere. Hiring managers get the reasoning: the path, the method and the projects behind each claim. Launch prep was about not losing people at the door: a "(WIP)" title or a blank link preview undercuts everything behind it.
