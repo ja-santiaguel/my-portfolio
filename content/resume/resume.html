@@ -46,7 +46,7 @@
     width: 8.5in;
     height: 11in;
     margin: 0 auto;
-    padding: 0.45in 0.45in 0.4in;
+    padding: 0.45in;
     background: #fff;
     display: flex;
     flex-direction: column;
@@ -113,10 +113,12 @@
   .bracket::before { content: "[\2009"; }
   .bracket::after { content: "\2009]"; }
 
-  /* ---- Sections: name on columns 1-2, content on 3-8, on a fine rule ---- */
+  /* ---- Sections: name on columns 1-2, content on 3-8, on a fine rule ----
+     No footer since 2026-10-29 (Jonathan): its space went into the sections,
+     so the page still ends at the bottom margin. */
   .section {
     border-top: 1px solid var(--line);
-    padding: 0.13in 0 0.17in;
+    padding: 0.2in 0 0.25in;
   }
 
   .section > h2 {
@@ -201,13 +203,6 @@
   .edu .entry + .entry { margin-top: 0.05in; }
   .edu h3 .label { margin-left: 0.1in; font-weight: 600; }
 
-  .foot {
-    margin-top: auto;
-    padding-top: 0.1in;
-    border-top: 1px solid var(--line);
-    display: flex;
-    justify-content: space-between;
-  }
 </style>
 </head>
 <body>
@@ -320,11 +315,6 @@
       </article>
     </div>
   </section>
-
-  <footer class="foot label muted">
-    <span>Updated October 2026</span>
-    <span>Case studies at <a href="https://www.jasantiaguel.com/">jasantiaguel.com</a></span>
-  </footer>
 </main>
 </body>
 </html>
