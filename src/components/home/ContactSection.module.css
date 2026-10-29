@@ -1,0 +1,434 @@
+/* The footer: an ink ending across all eight columns (2026-10-15). Concrete
+   text on ink; the fixed chrome (navbar, corner label, cursor) inverts over it
+   through its difference blend. After mikewilcockdesign.com: one emphasised
+   question, then a single row of details. */
+.ending {
+  --ending-ink: var(--background);
+  --ending-muted: #9a9a9a; /* 6.9:1 on ink */
+  --ending-line: rgb(243 243 243 / 0.18);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 100svh;
+  margin-top: var(--space-section-l); /* room after the last project */
+  padding: var(--space-section) var(--grid-margin) 1.75rem; /* details row level with the corner label */
+  color: var(--ending-ink);
+  container-type: inline-size;
+  overflow: clip;
+  view-timeline-name: --ending;
+}
+
+.ending :focus-visible {
+  outline-color: var(--ending-ink);
+}
+
+/* The ink: eight columns across the full width, one per grid column like
+   the page transition's blocks (a hair of overlap so no seam shows). */
+.columns {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  pointer-events: none;
+}
+
+.columns span {
+  margin-right: -1px;
+  background: var(--foreground);
+}
+
+.ending > :not(.columns) {
+  position: relative;
+}
+
+/* The call to action, emphasised: its longer line spans columns 1-8 exactly
+   (FitLine scales it; this size is the close starting point). */
+.title {
+  margin: 0 0 var(--space-xl);
+  font-family: var(--font-display);
+  font-size: calc((100cqw - 2 * var(--grid-margin)) / 9.6);
+  font-weight: var(--type-display-m-weight);
+  line-height: 0.9;
+  letter-spacing: var(--type-display-tracking);
+  text-transform: uppercase;
+}
+
+/* The answer to the question, centred under it. It rises last, after the
+   letters. */
+.cta {
+  align-self: center;
+  margin-bottom: var(--space-4xl);
+}
+
+.titleLine {
+  display: block;
+  width: fit-content;
+  white-space: nowrap;
+}
+
+.word {
+  display: inline-flex;
+}
+
+.letterMask {
+  display: inline-block;
+}
+
+.letter {
+  display: inline-block;
+}
+
+/* ---- One row of details, continuing the corner label (columns 1-2) ---- */
+.details {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  padding-top: var(--space-l);
+  font-size: var(--type-chrome-size);
+  font-weight: var(--type-chrome-weight);
+  letter-spacing: var(--type-chrome-tracking);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.details::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--ending-line);
+  transform-origin: left center;
+}
+
+/* Two stacked lines each, styled exactly like the corner label ("CA / DEV
+   BY J.A." over "RETURN TO TOP"): the first line in the chrome style, the
+   second in the meta style, 0.2rem apart, all in concrete. The corner label
+   (1) and the copyright and name right-aligned in the last column (8); the
+   email and socials between them as one centred trio. */
+.detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The trio: centred on the page and evenly spaced, set apart from the
+   strict column positions in favour of visual balance. */
+/* The résumé and LinkedIn straddle the page's centre line, under "[ Let's
+   talk ]"; the email and Instagram sit the same distance either side
+   (1fr / auto / auto / 1fr, ends hugging the middle). 2026-10-18; four
+   since the résumé joined, 2026-10-27. */
+.trio {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr);
+  column-gap: clamp(3rem, 8vw, 8rem);
+}
+
+.trio > .contact {
+  justify-self: end;
+  text-align: right;
+}
+
+.trio > .instagram {
+  justify-self: start;
+}
+
+/* Second lines: the meta style, like "RETURN TO TOP". */
+.detail > :nth-child(2) {
+  font-size: var(--type-meta-size);
+  font-weight: var(--type-meta-weight);
+  letter-spacing: var(--type-meta-tracking);
+}
+
+.end {
+  grid-column: 8;
+  grid-row: 1;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.details a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.email {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+  text-decoration-color: var(--ending-line);
+  transition: text-decoration-color var(--dur-micro) var(--ease-smooth);
+}
+
+@media (hover: hover) {
+  .email:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+/* The rising line wrappers are inline blocks: carry the underline into them. */
+.email * {
+  text-decoration: inherit;
+  text-underline-offset: inherit;
+}
+
+.email:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+.muted {
+  color: var(--ending-muted);
+}
+
+/* Each details line rises out of its own mask. */
+.mask {
+  display: block;
+}
+
+.rise {
+  display: inline-block;
+}
+
+/* ---- Motion ----
+   The ink columns are tied to the footer's own scroll timeline (they are the
+   scroll). The text enters on a trigger (2026-10-19, like the rest of the
+   site): when the question comes into view (ViewTrigger sets [data-in] on
+   it), its letters rise one after another, then "[ Let's talk ]", the rule
+   and the details row follow on fixed delays, each keyed off the question
+   (sibling selectors). Scrolling back up, it all leaves together. ---- */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .columns span {
+      animation-timeline: --ending;
+      animation-fill-mode: both;
+      animation-timing-function: linear;
+    }
+
+    /* Each column starts further behind the one to its left, so the edge
+       comes up as a staircase and settles flat (the page transition's
+       left-to-right blocks, played by scroll). Linear, so the steps hold
+       through the whole rise, and timed to settle flat exactly as the ink
+       fills the screen (the footer's top reaching the top of the view). */
+    .columns span {
+      animation-name: endingColumn;
+      animation-range: entry 0% entry 97%; /* flush a hair before the page ends, so no sliver remains */
+    }
+
+  }
+
+  :global(html[data-trigger-ready]) .title:not([data-in]) .letter,
+  :global(html[data-trigger-ready]) .title:not([data-in]) ~ * .rise {
+    opacity: 0;
+  }
+
+  :global(html[data-trigger-ready]) .title:not([data-in]) ~ .details::before {
+    transform: scaleX(0);
+  }
+
+  /* The question: letters 20 ms apart (39 of them, so the line lands within
+     about a second), on the display letters' overshooting spring. */
+  .title[data-in] .letter {
+    transform-origin: 50% 100%;
+    animation:
+      endingLetter 1100ms var(--ease-rise) calc(var(--i) * 20ms) both,
+      endingFocus var(--dur-short) var(--ease-smooth) calc(var(--i) * 20ms) both;
+  }
+
+  /* Then the answer, the rule and the details, on the reveal curve. */
+  .title[data-in] ~ * .rise {
+    animation: endingRise var(--dur-reveal) var(--ease-reveal) calc(var(--t, 850ms) + var(--d, 0) * 60ms) both;
+  }
+
+  .title[data-in] ~ .details::before {
+    transition: transform var(--dur-reveal) var(--ease-reveal) 750ms;
+  }
+
+  .cta {
+    --t: 650ms;
+    --d: 0;
+  }
+
+  .resume {
+    --d: 1;
+  }
+
+  .linkedin {
+    --d: 2;
+  }
+
+  .instagram {
+    --d: 3;
+  }
+
+  .end {
+    --d: 4;
+  }
+
+  /* Leaving (scrolled back up past the question): everything together,
+     short and accelerating away. */
+  .title[data-out] .letter {
+    transform-origin: 50% 100%;
+    animation: endingLetterOut var(--dur-short) var(--ease-exit) both;
+  }
+
+  .title[data-out] ~ * .rise {
+    animation: endingRiseOut var(--dur-short) var(--ease-exit) both;
+  }
+
+  .title[data-out] ~ .details::before {
+    transition: transform var(--dur-short) var(--ease-exit);
+  }
+}
+
+@keyframes endingColumn {
+  from {
+    transform: translateY(calc(10% + var(--i) * 22%));
+  }
+}
+
+/* The entrance, as everywhere (2026-10-18): the rise on the spring, the
+   focus clearing early. */
+@keyframes endingLetter {
+  from {
+    transform: translateY(0.45em) scaleX(1.05);
+  }
+}
+
+@keyframes endingFocus {
+  from {
+    opacity: 0;
+    filter: blur(0.1em);
+  }
+}
+
+@keyframes endingRise {
+  from {
+    opacity: 0;
+    filter: blur(0.08em);
+    transform: translateY(1em);
+  }
+}
+
+/* Exits name their start values (the hidden base style would otherwise be
+   the start, and they'd vanish at once). */
+@keyframes endingLetterOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(0.1em);
+    transform: translateY(0.45em) scaleX(1.05);
+  }
+}
+
+@keyframes endingRiseOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(0.08em);
+    transform: translateY(0.35em);
+  }
+}
+
+/* ---- Below 1024px: the question wraps, the details stack two-up ---- */
+@media (max-width: 1023px) {
+  .ending {
+    margin-top: var(--space-section);
+    padding: 7rem var(--grid-margin-sm) 1.75rem;
+  }
+
+  /* As large as the longest word ("EXPERIENCE?", ~5.3em) allows at 320px. */
+  .title {
+    font-size: clamp(3rem, 15vw, 7rem);
+    margin-bottom: var(--space-l);
+  }
+
+  /* The question wraps left-aligned here, so its answer aligns with it. */
+  .cta {
+    align-self: flex-start;
+    margin-bottom: var(--space-3xl);
+  }
+
+  .titleLine {
+    white-space: normal;
+  }
+
+  .word {
+    display: inline-flex;
+    white-space: nowrap;
+  }
+
+  .details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: var(--space-xl);
+  }
+
+  .end {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  /* On the details' own two columns, so Instagram starts on page column 5
+     like every other two-up below 1024px (2026-10-23). */
+  .trio {
+    grid-column: 1 / -1;
+    grid-row: auto;
+    display: grid;
+    grid-template-columns: subgrid;
+    justify-self: stretch;
+    gap: var(--space-xl) var(--grid-gap);
+  }
+
+  .trio > .instagram {
+    justify-self: start;
+  }
+
+  .end {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  /* The address gets the full row so it never runs into its neighbour. */
+  .contact {
+    grid-column: 1 / -1;
+  }
+
+  .trio > .contact {
+    justify-self: start;
+    text-align: left;
+  }
+
+}
+
+@media (pointer: coarse) {
+  /* Keep the CTA's visible spacing while its touch area grows. */
+  .cta {
+    margin-top: calc((44px - 1lh) / -2);
+    margin-bottom: calc(var(--space-4xl) - (44px - 1lh) / 2);
+  }
+}
+
+@media (pointer: coarse) and (max-width: 1023px) {
+  .cta {
+    margin-bottom: calc(var(--space-3xl) - (44px - 1lh) / 2);
+  }
+}

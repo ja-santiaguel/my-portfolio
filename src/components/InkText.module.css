@@ -1,0 +1,54 @@
+/* Ink fill (InkText): faint grey to ink, word by word, on trigger. */
+.word {
+  color: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-trigger-ready]) .ink[data-mode="trigger"]:not([data-in]) .word {
+    color: var(--ink-faint);
+  }
+
+  .ink[data-in] .word {
+    animation: inkFill var(--dur-medium) var(--ease-smooth) calc(var(--w) * 35ms) both;
+  }
+
+  /* Leaving: the fill in reverse, last word first, quicker (20 ms apart). */
+  .ink[data-out] .word {
+    animation: inkOut var(--dur-short) var(--ease-exit) calc((var(--n) - 1 - var(--w)) * 20ms) both;
+  }
+}
+
+/* Scroll-tracked: words ink one after another while the block (the parent
+   that sets --ink-timeline, or the line itself) moves from the lower part of
+   the screen towards the middle: each over 8% of its pass, spread across the
+   first 12-48%, so the sentence is inked by the time it reaches the middle. */
+.ink[data-mode="scroll"] {
+  view-timeline-name: --ink-line;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ink[data-mode="scroll"] .word {
+      animation: inkFill linear both;
+      animation-timeline: var(--ink-timeline, --ink-line);
+      animation-range: cover calc(12% + var(--w) / var(--n) * 28%) cover calc(20% + var(--w) / var(--n) * 28%);
+    }
+  }
+}
+
+@keyframes inkFill {
+  from {
+    color: var(--ink-faint);
+  }
+}
+
+/* Names its start (the base style while not [data-in] is already grey). */
+@keyframes inkOut {
+  from {
+    color: var(--foreground);
+  }
+
+  to {
+    color: var(--ink-faint);
+  }
+}

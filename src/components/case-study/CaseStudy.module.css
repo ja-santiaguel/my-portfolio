@@ -1,0 +1,2265 @@
+/* "55-second" case study. The site's palette, type and gutters; a layout
+   for skimming first and reading second: sticky contents, a reading column
+   at 18px with a margin, visuals that explain (annotated screens, a
+   before/after slider, short recordings), concise throughout.
+
+   Grid: everything sits on the navbar's 8 columns. Column 1 holds navigation
+   (the back link, the content rail); content starts in column 2 (the
+   navbar's time column). Blocks of three span two columns each (2-3, 4-5,
+   6-7). Only deliberate flair breaks out (the full-width recording).
+
+   Surfaces: no grey fills and no frames. Screens sit straight on the page;
+   summary blocks are announced by a fine, light 1px rule (`--line`;
+   precision, after The Shift). Small labels on top of screens are concrete tabs, like the bento
+   labels; numbers are "[ n ]" brackets, never black squares. */
+
+/* ---- Header: the first screen ---- */
+.header {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  align-items: start;
+  /* The back link sits as far below the navbar as the corner label sits
+     above the bottom of the screen (2026-10-19): the navbar ends 3.75rem
+     down, plus the corner label's 1.75rem. The title still starts about a
+     quarter down (see .back). */
+  padding: 5.5rem var(--grid-margin) 0;
+  /* Back link to title: keeps the title about a quarter down. */
+  --back-gap: calc(clamp(8rem, 17svh, 11rem) - 5.5rem + var(--space-2xl));
+}
+
+/* Main content on columns 2-7 (2026-10-18); columns 1 and 8 are for
+   navigation and flair (the back link, the content rail), and full-width
+   elements (the 3D laptop, the ink band, the footer) break out. */
+.header > * {
+  grid-column: 2 / -2;
+}
+
+/* Navigation lives in column 1, like the content rail below, on its own row
+   above the title (2026-10-19): beside the title it crowded the first letter
+   and overran column 1 below ~1100px. The step from column 1 to the title
+   on column 2 reads as the way back, then where you are. */
+.header > .back {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+
+
+/* "[ Back to work ]" (2026-10-18): in column 1 (navigation), on its own row
+   above the title, at every width; left edge on the logo's and the content
+   rail's. */
+.back {
+  display: inline-block;
+  margin-bottom: var(--back-gap);
+  color: inherit;
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+/* Touch screens: a 44px-tall tap area without moving the label. */
+@media (pointer: coarse) {
+  .back {
+    padding-block: 0.85rem;
+    margin-block: -0.85rem calc(var(--back-gap) - 0.85rem);
+  }
+}
+
+/* Sticky from 1024px (2026-10-19): held where it starts, 28px under the
+   navbar in column 1, all the way down the page, so the way back is always
+   one click away. Column 1 is the navigation spine (logo, back link, the
+   content rail, the corner label), so it never covers content; over the ink
+   band, the 3D laptop and the footer it's difference-blended like the navbar
+   and the rail. Phones keep it in the flow: the single column has no free
+   margin, and the menu has Work. */
+@media (min-width: 1024px) {
+  .header {
+    padding-top: calc(5.5rem + 1.3125rem + var(--back-gap)); /* + the link's 21px line */
+  }
+
+  .header > .back {
+    position: fixed;
+    top: 5.5rem;
+    left: var(--grid-margin);
+    z-index: 1000;
+    margin: 0;
+    color: var(--background);
+    mix-blend-mode: difference;
+  }
+}
+
+@media (min-width: 1024px) and (pointer: coarse) {
+  .header > .back {
+    top: calc(5.5rem - 0.85rem); /* the tap padding, so the label stays put */
+  }
+}
+
+.title {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.22em;
+  margin: 0 0 var(--space-xl) -0.05em; /* optical: Oswald's side bearing */
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 9.5vw, 9.5rem);
+  font-weight: var(--type-display-l-weight);
+  line-height: 0.9;
+  letter-spacing: var(--type-display-tracking);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+.header > .lead {
+  grid-column: 2 / 6;
+}
+
+/* Two balanced lines at the lead size, not three short ones. */
+.lead {
+  max-width: 52ch;
+  margin: 0 0 var(--space-3xl);
+  font-size: var(--type-lead-size);
+  font-weight: var(--type-lead-weight);
+  line-height: 1.35;
+  letter-spacing: var(--type-lead-tracking);
+  text-wrap: balance;
+}
+
+/* Title block: facts on the left, outcome + live link on the right. */
+/* Facts strip on columns 2-7: Role (2), Team (3), Timeline (4), Tools (5),
+   Status with the live link (6-7). */
+.facts {
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: end;
+  row-gap: var(--space-xl);
+  padding-top: var(--space-l);
+}
+
+.factList {
+  display: contents;
+}
+
+.factList > div {
+  align-self: start;
+}
+
+.factList > div,
+.factList dd {
+  min-width: 0;
+}
+
+.label,
+.inlineLabel {
+  margin: 0 0 var(--space-xs);
+  color: var(--ink-muted);
+  font-size: var(--type-meta-size);
+  font-weight: var(--type-meta-weight);
+  letter-spacing: var(--type-meta-tracking);
+  text-transform: uppercase;
+}
+
+.factValue {
+  margin: 0;
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  line-height: 1.6;
+  letter-spacing: var(--type-body-tracking);
+}
+
+/* Status: a fifth facts column (6-7), top-aligned and labelled like the
+   others, with the live link under its value. */
+.factsAside {
+  grid-column: -3 / -1;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.factsAside .factValue {
+  margin: 0;
+}
+
+.factsAsideList {
+  margin: 0;
+}
+
+/* From 1024px the rightmost column of the details is set right, so it ends
+   on the content's right edge like the rule above it (2026-10-19). */
+@media (min-width: 1024px) {
+  .factsAside {
+    align-items: flex-end;
+    text-align: right;
+  }
+}
+
+.liveLine {
+  margin-top: var(--space-s);
+}
+
+.liveLink {
+  white-space: nowrap;
+}
+
+/* ---- 3D showcase (LaptopShowcase): a tall section whose stage sticks to
+   the screen; scroll through it to drive the scene, then it releases. ---- */
+.showcase3d {
+  position: relative;
+  height: 380svh;
+  margin-top: var(--space-3xl);
+}
+
+.showcaseStage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+  background: #e9e5df;
+}
+
+.showcaseStage canvas {
+  display: block;
+}
+
+.showcaseStill {
+  margin: var(--space-3xl) 0 0;
+}
+
+/* ---- Body: contents + reading column + margin ---- */
+/* The site's 8-column grid (same columns as the navbar): the content rail
+   sits in column 1, the content starts in column 2 (where the navbar's time
+   sits). Inside, reading text spans columns 2-5 and the margin 6-8. */
+.layout {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  /* The summary opens the story right under the preview (2026-10-19): about
+     half a section gap, so it reads as that preview's brief, not a section
+     of its own. */
+  margin-top: var(--space-4xl);
+  padding: 0 var(--grid-margin) var(--space-3xl);
+}
+
+/* Held at the middle of the screen (its height is ~19rem), never above the
+   navbar. */
+/* Difference-blended (like the navbar) so it reads over the ink showcase
+   band as well as the concrete page. */
+.contents {
+  grid-column: 1;
+  position: sticky;
+  z-index: 2;
+  top: max(7.5rem, calc(50svh - 8rem));
+  align-self: start;
+  padding-top: 0.25rem;
+  color: var(--background);
+  mix-blend-mode: difference;
+}
+
+
+.contentsLabel {
+  composes: label;
+}
+
+/* The rail wipes in from the left edge, item after item (50 ms apart),
+   while the story crosses the middle of the screen, and out in reverse,
+   quicker, as it leaves. Timed, not scroll-tied (2026-10-19). */
+@media (prefers-reduced-motion: no-preference) {
+  .contentsLabel,
+  .contentsList li {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path var(--dur-short) var(--ease-exit) calc((var(--count, 6) - 1 - var(--i, 0)) * 40ms);
+  }
+
+  .contents[data-shown="true"] .contentsLabel,
+  .contents[data-shown="true"] .contentsList li {
+    clip-path: inset(0 0 0 0);
+    transition: clip-path var(--dur-medium) var(--ease-smooth) calc(var(--i, 0) * 50ms);
+  }
+
+  .contents .contentsMarker {
+    opacity: 0;
+    transition: opacity var(--dur-micro) var(--ease-exit), transform var(--dur-medium) var(--ease-smooth), height var(--dur-medium) var(--ease-smooth);
+  }
+
+  .contents[data-shown="true"] .contentsMarker {
+    opacity: 1;
+    transition: opacity var(--dur-short) var(--ease-smooth) calc(var(--count, 6) * 50ms), transform var(--dur-medium) var(--ease-smooth), height var(--dur-medium) var(--ease-smooth);
+  }
+}
+
+.contentsTrack {
+  position: relative;
+  padding-left: var(--space-s);
+}
+
+/* A fine marker line that glides to the current section. */
+.contentsMarker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  background: var(--background);
+  transition:
+    transform var(--dur-medium) var(--ease-smooth),
+    height var(--dur-medium) var(--ease-smooth);
+}
+
+.contentsList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contentsLink {
+  display: block;
+  padding: 0.4rem 0;
+  overflow-wrap: anywhere;
+  color: var(--ink-muted-blend);
+  font-size: var(--type-label-s-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color var(--dur-micro) var(--ease-smooth);
+}
+
+.contentsLink[aria-current] {
+  color: var(--background);
+}
+
+@media (hover: hover) {
+  .contentsLink:hover {
+    color: var(--background);
+  }
+}
+
+.content {
+  grid-column: 2 / -2;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-content: start;
+}
+
+/* ---- "In short" and other three-up facts ---- */
+.summary {
+  grid-column: 1 / -1;
+}
+
+/* The summary (2026-10-19): no visible heading (Jonathan removed "In short";
+   it stays for screen readers), sitting close under the preview as its
+   brief. Problem, What I did and Result read across in the content's three
+   column pairs, each with a gutter so the lines stay short (~55 characters)
+   and the three read as separate steps. */
+.summary .trio > * {
+  padding-right: var(--space-xl);
+}
+
+/* Three-up blocks span the content's six columns, two each: 2-3, 4-5, 6-7. */
+.trio {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  row-gap: var(--space-l);
+  margin: 0;
+}
+
+.trio > * {
+  grid-column: span 2;
+}
+
+.trioText {
+  margin: 0;
+  font-size: var(--type-prose-size);
+  line-height: 1.6;
+  letter-spacing: var(--type-prose-tracking);
+}
+
+/* ---- Sections ---- */
+/* Sections (2026-10-18): each opens with a fine rule across the content
+   width that draws in as it scrolls into view, the title under it. */
+.section {
+  position: relative;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-content: start;
+  /* The rule sits between sections, not on the title (2026-10-28, Jonathan:
+     it read as one of a list's own rules): 5rem of air above it, 4rem below
+     to the title, which then stays closer to its content (2rem) than to the
+     rule. Same 9rem from one section's content to the next title as before. */
+  margin-top: var(--space-5xl);
+  padding-top: var(--space-4xl);
+}
+
+.section::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left center;
+}
+
+/* The rule draws in from the left when the section comes into view
+   (trigger-based, ViewTrigger). */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-trigger-ready]) .section:not([data-in])::before {
+    transform: scaleX(0);
+  }
+
+  .section[data-in]::before {
+    transition: transform var(--dur-reveal) var(--ease-reveal);
+  }
+
+  /* Leaving: the rule draws back to the left, shorter. */
+  .section[data-out]::before {
+    transition: transform var(--dur-short) var(--ease-exit);
+  }
+}
+
+/* The showcase on a full-width ink band: a dark stage for the finished
+   product. The band extends to both screen edges (box-shadow spread, clipped
+   to the section's own height); the band itself is the separation, so no
+   rule. */
+.section[data-tone="ink"] {
+  margin-top: var(--space-section);
+  padding-top: var(--space-section);
+  padding-bottom: var(--space-section);
+  background: var(--foreground);
+  box-shadow: 0 0 0 100vmax var(--foreground);
+  clip-path: inset(0 -100vmax);
+  color: var(--background);
+}
+
+.section[data-tone="ink"]::before {
+  content: none;
+}
+
+.section[data-tone="ink"] .caption {
+  color: #9a9a9a; /* the footer's muted grey on ink */
+}
+
+.section[data-tone="ink"] [class*="Devices_screen__"] {
+  outline-color: rgb(243 243 243 / 0.14);
+}
+
+.section[data-tone="ink"] + .section {
+  margin-top: var(--space-section);
+}
+
+.section:focus {
+  outline: none; /* a landing point for the contents links, not a control */
+}
+
+.section > *,
+.decision > * {
+  grid-column: 1 / 5;
+  max-width: var(--reading-measure);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--space-xl);
+  font-family: var(--font-display);
+  font-size: var(--type-display-s-size);
+  font-weight: var(--type-display-s-weight);
+  line-height: 0.95;
+  letter-spacing: var(--type-display-tracking);
+  text-transform: uppercase;
+}
+
+.prose {
+  margin: 0 0 var(--space-m);
+  font-size: var(--type-prose-size);
+  font-weight: var(--type-prose-weight);
+  line-height: 1.6;
+  letter-spacing: var(--type-prose-tracking);
+}
+
+.leadIn {
+  font-weight: 800; /* bold lead-ins inside reading text */
+}
+
+.heading {
+  margin: 0 0 var(--space-xs);
+  font-size: var(--type-heading-size);
+  font-weight: var(--type-heading-weight);
+  line-height: 1.3;
+  letter-spacing: var(--type-heading-tracking);
+  text-wrap: balance;
+}
+
+.inlineLabel {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.section > .figureWide,
+.decision > .figureWide,
+.section > .figure,
+.decision > .figure,
+.section > .process,
+.section > .decisions,
+.section > .wideBlock,
+.decisions > .decision {
+  grid-column: 1 / -1;
+  max-width: none;
+}
+
+/* ---- Figures ---- */
+/* Spacing by proximity (2026-10-15): the closer things belong together,
+   the smaller the gap. Section to section --space-section (7rem); group to
+   group inside a section (decision to decision, showcase item to item)
+   --space-5xl; a section title to its content --space-xl; text to the screen
+   it explains about 2.25rem; a screen to its caption or notes --space-s. */
+.figureWide,
+.figure {
+  margin: var(--space-xl) 0 0;
+}
+
+/* Text sits right above: its paragraph margin already adds to the gap. */
+.decision > .figure,
+.decision > .figureWide {
+  margin-top: var(--space-s);
+}
+
+/* First thing under a section title: the title's own margin is the gap. */
+.sectionTitle + .figureWide,
+.sectionTitle + .figure {
+  margin-top: 0;
+}
+
+.figureWide + .figureWide {
+  margin-top: var(--space-5xl);
+}
+
+/* Annotated screens, laid out like a drawing set: the screen spans --span of
+   the content's 7 columns (one scale across screens); notes sit beside it,
+   level with their features (side), or under them (below). */
+.figure {
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: stretch;
+}
+
+.figure > .annotatedMedia {
+  grid-column: 1 / span var(--span);
+  grid-row: 2;
+  align-self: start;
+}
+
+/* Title block: which page and viewport, in the label style, right above the
+   screen (its hairline top edge doubles as the title's rule). */
+.frameTitle {
+  grid-column: 1 / span var(--span, 6);
+  grid-row: 1;
+}
+
+/* A hairline edge, so white screens read as objects on the page instead of
+   blending into it. Drawn as an overlay on top of the image (2026-10-19): an
+   outline on the frame was painted under the screenshot's own layer, so only
+   one side ever showed. */
+.annotatedMedia::after,
+.compare::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  box-shadow: inset 0 0 0 1px var(--screen-edge);
+  pointer-events: none;
+}
+
+.plateImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Screens sit straight on the page: no mat, no frame. */
+.annotatedMedia,
+.video,
+.compare {
+  position: relative;
+  overflow: clip;
+}
+
+.caption {
+  max-width: var(--reading-measure);
+  margin-top: var(--space-s);
+  color: var(--ink-muted);
+  font-size: var(--type-body-size);
+  line-height: 1.5;
+  letter-spacing: var(--type-body-tracking);
+}
+
+/* ---- Parallax screens (see parallax.js): the image is 112% of its frame ---- */
+.parallaxFrame {
+  position: relative;
+  overflow: clip;
+}
+
+.parallaxInner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 112%;
+  transform: translate3d(0, -5.5%, 0);
+  will-change: transform;
+}
+
+.videoFill {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  background: var(--foreground);
+}
+
+/* Whole screens (focus screens, before/after): scaled up 6% so the drift
+   never shows an edge; the layer moves, the overlays move with it. */
+.parallaxScale {
+  transform: scale(1.06);
+}
+
+.parallaxLayer {
+  position: relative;
+  will-change: transform;
+}
+
+/* ---- Annotations: notes that focus the screen ---- */
+/* The shade closes in from the frame onto the feature (see FocusFigure).
+   Entering uses the spring at medium length; letting go is shorter and
+   accelerating, like every exit on the site. */
+.focusShade {
+  position: absolute;
+  inset: 0;
+  background: rgb(21 21 21 / 0.55);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+  transition: clip-path var(--dur-short) var(--ease-exit);
+}
+
+.focusShade[data-active="true"] {
+  transition: clip-path var(--dur-medium) var(--ease-smooth);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .focusShade,
+  .focusShade[data-active="true"] {
+    transition: none;
+  }
+}
+
+.notesList {
+  align-content: start;
+  padding-right: var(--space-l);
+}
+
+.notesList {
+  display: grid;
+  gap: var(--space-xs) var(--space-2xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+
+
+/* Each note is a button: hover, focus or tap it to focus the screen. */
+.note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-xs);
+  align-items: baseline;
+  width: 100%;
+  padding: var(--space-3xs) 0;
+  border: 0;
+  background: none;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: var(--type-body-size);
+  line-height: 1.5;
+  letter-spacing: var(--type-body-tracking);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--dur-micro) var(--ease-smooth);
+}
+
+/* Grey at rest: none is active until it's pointed at. */
+.note[data-active="true"] {
+  color: var(--foreground);
+}
+
+/* Keyboard focus: the same ink as pointing, with a ring. */
+.note:focus-visible {
+  outline: 1px solid var(--foreground);
+  outline-offset: 2px;
+}
+
+.noteNo {
+  font-size: var(--type-label-s-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  white-space: nowrap;
+}
+
+/* ---- Decisions ---- */
+.decisions {
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
+/* Decision to decision: the section gap (2026-10-19), so each decision reads
+   as its own group (Jonathan found it hard to tell which text belonged to
+   which decision at 5rem); still less than section to section, which adds a
+   rule and --space-xl. Phones keep --space-5xl. */
+.decision {
+  display: grid;
+  grid-template-columns: subgrid;
+  padding-top: var(--space-section);
+}
+
+.decision:first-child {
+  padding-top: 0;
+}
+
+/* ---- Before / after ---- */
+.compareImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.compareAfter {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 0 0 var(--pos));
+}
+
+/* The side with less of the frame dims and blurs (amounts set per frame in
+   BeforeAfterSlider), keeping attention on the version mostly in view. */
+.compareShade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.compareShadeLeft {
+  left: 0;
+  width: var(--pos);
+}
+
+.compareShadeRight {
+  left: var(--pos);
+  right: 0;
+}
+
+/* Concrete tabs, the same as the bento labels. */
+.compareTag,
+.compareGrip,
+.videoToggle {
+  padding: 0.55rem 0.7rem;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* Before / After and Drag: ink blocks (2026-10-25, Jonathan: "improve
+   visibility"; concrete tabs were lost on the screens' white headers and
+   grey photos). Ink is the system's colour for what must read on top of
+   anything, like the cursor's "[ View ]" label, with the same faint
+   concrete edge so they keep their shape over dark photography. */
+.compareTag,
+.compareGrip {
+  background: var(--foreground);
+  color: var(--background);
+  box-shadow: 0 0 0 1px rgb(243 243 243 / 0.18);
+}
+
+/* Above the divide (2026-10-26): the line used to pass over them. */
+.compareTag {
+  position: absolute;
+  z-index: 2;
+  top: var(--space-s);
+  padding: 0.6rem 0.8rem;
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  line-height: 1;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* Optically centred (2026-10-26): Helvetica's line box leaves more room
+   under the capitals than above, so the words sat ~0.5px high. Trimmed to
+   the capitals, equal padding centres them exactly; the padding grows by
+   what the trim removes, so the tabs keep their size. */
+@supports (text-box: trim-both cap alphabetic) {
+  .compareTag,
+  .compareGrip {
+    text-box: trim-both cap alphabetic;
+  }
+
+  .compareTag {
+    padding-block: calc(0.6rem + 0.135em);
+  }
+
+  .compareGrip {
+    padding-block: calc(0.55rem + 0.135em);
+  }
+}
+
+.compareTagBefore {
+  left: var(--space-s);
+}
+
+.compareTagAfter {
+  right: var(--space-s);
+}
+
+/* A fine divide: a single 1px concrete line. */
+.compareHandle {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 1px;
+  background: rgb(243 243 243 / 0.85);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.compareGrip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: var(--type-label-s-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+}
+
+.compareRange {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+/* While dragging, the grip's chevrons spread the way the divide can move
+   (the site's press effect, 2026-10-26). */
+@media (prefers-reduced-motion: no-preference) {
+  .compare:has(.compareRange:active) .compareGrip :global(.chevron-back) {
+    translate: -0.2em 0;
+    transition-duration: var(--dur-micro);
+  }
+
+  .compare:has(.compareRange:active) .compareGrip :global(.chevron-forward) {
+    translate: 0.2em 0;
+    transition-duration: var(--dur-micro);
+  }
+}
+
+.compare:has(.compareRange:focus-visible) .compareGrip {
+  outline: 2px solid var(--foreground);
+  outline-offset: 4px;
+}
+
+/* ---- Video ---- */
+.videoMedia {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: var(--foreground);
+}
+
+/* Positioned by LoopVideo (follows the pointer, rests bottom right). */
+.videoToggle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  border: 0;
+  will-change: transform;
+  font: inherit;
+  font-size: var(--type-label-s-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  line-height: 1;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* ---- Process ---- */
+/* A stage on columns 2-6 holds at the middle of the screen while the steps
+   pass beside it on 7-8, about half a screen each, so they cross it one at a
+   time (see ProcessSteps). */
+.process {
+  display: grid;
+  grid-template-columns: subgrid;
+  margin: 0;
+}
+
+.stageColumn {
+  grid-column: 1 / 5;
+  container-type: inline-size;
+}
+
+/* 16:10, so its height is 62.5% of the column's width. */
+/* Stage and counter held together at the middle of the screen (the 16:10
+   stage is 62.5% of the column's width; the counter adds ~2.5rem). */
+.stageSticky {
+  position: sticky;
+  top: max(6rem, calc(50svh - 31.25cqw - 1.25rem));
+}
+
+/* No frame (2026-10-19): the artworks are composed on the page's own grey,
+   so a box around them read as a stray line. */
+.stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: clip;
+}
+
+/* The new artefact clip-opens from the top over the previous one; the old
+   one holds until it's covered, then closes out of sight. */
+.stageImage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 0s linear var(--dur-medium);
+}
+
+.stageImage[data-shown="true"] {
+  z-index: 1;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path var(--dur-medium) var(--ease-smooth);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stageImage,
+  .stageImage[data-shown="true"] {
+    transition: none;
+  }
+}
+
+/* The artworks carry wide margins of their own; scaled so they fill the
+   stage (the composition sits within the middle ~80% of each). A wider
+   composition can set its own zoom (`scale` in the content file; the Build
+   step's laptop needs 1.1 so its base isn't cut). */
+.stageImg {
+  object-fit: contain;
+  transform: scale(var(--scale, 1.18));
+}
+
+.steps {
+  grid-column: 5 / -1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* One continuous sequence, so no rules between the steps (2026-10-18): the
+   step at the middle of the screen is ink, the others wait in grey, and the
+   counter under the stage ties the image to the step being read. */
+.step {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 50svh;
+  padding: var(--space-xl) 0;
+  color: var(--ink-muted);
+  transition: color var(--dur-short) var(--ease-smooth);
+}
+
+/* "[ 3 / 4 ]  High fidelity" under the stage, in the label style. */
+.stageCaption {
+  display: flex;
+  gap: var(--space-s);
+  margin: var(--space-s) 0 0;
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+}
+
+.stageCaption > span:first-child {
+  color: var(--ink-muted);
+}
+
+.step[data-current="true"] {
+  color: var(--foreground);
+}
+
+/* Each step's own artefact: for screen readers on desktop (the stage is
+   decorative there), shown in place on phones. */
+.stepFigure {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.stepTitle {
+  display: block;
+  margin: 0 0 var(--space-3xs);
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+}
+
+.stepNo {
+  margin-right: 0.15rem;
+}
+
+.stepText {
+  margin: 0;
+  font-size: var(--type-body-size);
+  line-height: 1.5;
+  letter-spacing: var(--type-body-tracking);
+}
+
+/* ---- Results, lessons ---- */
+/* Lessons: three-up like "In short"; a heading, then two labelled lines. */
+.lesson {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+.lesson .heading {
+  margin: 0;
+}
+
+.lesson .trioText {
+  margin: 0;
+}
+.bullets {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bullets li {
+  position: relative;
+  margin: 0 0 var(--space-m);
+  padding-left: 1.25rem;
+  font-size: var(--type-prose-size);
+  line-height: 1.6;
+  letter-spacing: var(--type-prose-tracking);
+}
+
+/* A small solid square, the same mark as the annotation numbers. */
+.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--foreground);
+}
+
+.quote {
+  margin: var(--space-l) 0 0;
+}
+
+.quote p {
+  margin: 0;
+  font-size: var(--type-lead-size);
+  line-height: 1.4;
+}
+
+/* ---- Previous / next project ---- */
+/* Two halves across all eight columns (navigation, so it may use column 1):
+   previous on the left, next mirrored on the right. No rules (2026-10-15). */
+.adjacent {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  margin-top: var(--space-section);
+  padding: 0 var(--grid-margin);
+}
+
+.adjacentHalf {
+  position: relative;
+  grid-column: span 4;
+}
+
+/* The whole half is the link. */
+.adjacentLink {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-l);
+  height: 100%;
+  padding: var(--space-xl) 0 var(--space-4xl);
+  color: inherit;
+  text-decoration: none;
+}
+
+.adjacentLink[data-side="next"] {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.adjacentLink .label {
+  margin: 0;
+}
+
+.adjacentTitle {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 0.22em;
+}
+
+.adjacentLink[data-side="next"] .adjacentTitle {
+  justify-content: flex-end;
+}
+
+.nextTitle {
+  font-family: var(--font-display);
+  font-size: var(--type-display-m-size);
+  font-weight: var(--type-display-m-weight);
+  line-height: 0.95;
+  letter-spacing: var(--type-display-tracking);
+  text-transform: uppercase;
+}
+
+/* ---- Motion ----
+   No clip mask on case-study media (2026-10-15): screens show at their true
+   size the whole time, so the visual explanations are never cropped. Fine
+   rules draw in from the left with scroll (the header's on load). */
+.facts {
+  position: relative;
+}
+
+.facts::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* On screen at load, so it draws in with the header's load sequence. */
+  .facts::before {
+    animation: lineDraw var(--dur-reveal) var(--ease-reveal) 0.62s both;
+  }
+
+  /* Held while a page transition covers the page, then drawn. */
+  :global(html[data-page-transition]) .facts::before {
+    animation: none;
+    transform: scaleX(0);
+  }
+
+}
+
+@keyframes lineDraw {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contentsMarker {
+    transition: none;
+  }
+}
+
+/* ---- Phones and small tablets: one column, contents at the top ---- */
+@media (max-width: 1023px) {
+  /* The phone navbar ends 2.75rem down; plus its 1rem top inset. */
+  .header {
+    display: block;
+    padding: 3.75rem var(--grid-margin-sm) 0;
+  }
+
+  .back {
+    --back-gap: calc(7rem - 3.75rem + var(--space-2xl));
+  }
+
+
+  .facts {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Full width with the grid's gutter, so the second column starts exactly
+     on page column 5, like every other two-up below 1024px (2026-10-23). */
+  .factList {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-l) var(--grid-gap);
+    width: 100%;
+  }
+
+  .factList > div:nth-child(2) {
+    grid-column: auto;
+  }
+
+  .layout {
+    display: block;
+    margin-top: var(--space-3xl);
+    padding: 0 var(--grid-margin-sm) var(--space-xl);
+  }
+
+  .contents {
+    position: static;
+    margin-bottom: var(--space-s);
+  }
+
+  /* At the top of the page the list is plain navigation: no current-section
+     marker. */
+  .contentsMarker {
+    display: none;
+  }
+
+  .contentsTrack {
+    padding-left: 0;
+  }
+
+  .contentsLabel,
+  .contentsList li,
+  .contents .contentsMarker {
+    animation: none !important;
+    clip-path: none;
+  }
+
+  .contentsLink {
+    color: var(--foreground);
+  }
+
+  .content,
+  .section,
+  .decisions,
+  .decision {
+    display: block;
+  }
+
+  .section {
+    margin-top: var(--space-4xl);
+    padding-top: var(--space-3xl);
+  }
+
+  .section[data-tone="ink"] {
+    padding-top: var(--space-5xl);
+    padding-bottom: var(--space-5xl);
+  }
+
+  .trio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .trio > * {
+    grid-column: auto;
+  }
+
+  .summary .trio > * {
+    padding-right: 0;
+  }
+
+  .figure,
+  .process {
+    display: block;
+  }
+
+  /* No stage: each step shows its own artefact above its text. */
+  .stageColumn {
+    display: none;
+  }
+
+  .step {
+    min-height: 0;
+    padding: var(--space-l) 0;
+    color: var(--foreground);
+  }
+
+  .stepFigure {
+    position: relative;
+    width: auto;
+    height: auto;
+    margin: 0 0 var(--space-s);
+    overflow: visible;
+    clip-path: none;
+    white-space: normal;
+  }
+
+  /* Side by side, mirrored like desktop (2026-10-26, Jonathan: stacked, they
+     read as two more sections, not a pair of directions): previous on
+     columns 1-4 set left, next on 5-8 set right. Titles sized so the longest
+     word fits half the width. */
+  .adjacent {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    grid-template-rows: repeat(4, auto);
+    row-gap: var(--space-s);
+    margin-top: var(--space-5xl);
+    padding: 0 var(--grid-margin-sm);
+  }
+
+  /* Both halves share the page's rows (subgrid), so the labels, titles and
+     actions line up across the pair whatever each title's length
+     (2026-10-26): label, title, then the actions. */
+  .adjacentHalf {
+    display: grid;
+    grid-row: 1 / span 4;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: subgrid;
+  }
+
+  .adjacentLink {
+    display: grid;
+    grid-row: 1 / span 4;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: subgrid;
+    justify-items: start;
+    padding-bottom: var(--space-3xl);
+  }
+
+  /* Wider than its half on phones, the action overflows inward, never past
+     the margin ("unsafe" keeps it on its end edge). */
+  .adjacentLink[data-side="next"] {
+    justify-items: unsafe end;
+  }
+
+  .adjacentLink > .label {
+    grid-row: 1;
+  }
+
+  .adjacentLink > .adjacentTitle {
+    grid-row: 2;
+  }
+
+  /* "[ View … ]" on one line under the title (tablets). */
+  .adjacentLink > :last-child {
+    grid-row: 3;
+    width: max-content;
+    white-space: nowrap;
+  }
+
+  .nextTitle {
+    font-size: clamp(2rem, 9.5vw, 3.75rem);
+  }
+}
+
+/* Phones: no "[ View … ]" for now (2026-10-26, Jonathan). It's wider than
+   half the width, and stepping the two down was "so off balanced and ugly";
+   each half is the link, its title and direction carry it. */
+@media (max-width: 639px) {
+  .adjacentLink > :last-child {
+    display: none;
+  }
+}
+
+/* "< Previous" / "Next >" below 1024px; the full labels from 1024px. */
+.adjacentShort {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .adjacentLong {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .adjacentShort {
+    display: inline;
+  }
+}
+
+
+
+
+/* Narrow desktops (1024-1279px): five facts columns would be ~100px each, so
+   the strip takes two rows: Role, Team, Timeline; then Tools and Status
+   (lines count from the strip's own first column, page column 2). */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .factList > div:nth-child(1) {
+    grid-column: 1 / 3;
+    grid-row: 1;
+  }
+
+  .factList > div:nth-child(2) {
+    grid-column: 3 / 5;
+    grid-row: 1;
+  }
+
+  .factList > div:nth-child(3) {
+    grid-column: 5 / 7;
+    grid-row: 1;
+  }
+
+  .factList > div:nth-child(4) {
+    grid-column: 1 / 3;
+    grid-row: 2;
+  }
+
+  .factsAside {
+    grid-column: 3 / 7;
+    grid-row: 2;
+  }
+}
+
+/* Touch screens: list rows that are controls are 44px tall (the content list,
+   the screens' numbered notes). */
+@media (pointer: coarse) {
+  .contentsLink {
+    padding-block: calc((44px - 1lh) / 2);
+  }
+
+  .note {
+    min-height: 44px;
+    align-items: center;
+    padding-block: var(--space-2xs);
+  }
+}
+
+@media (pointer: coarse) {
+  /* Keep the live link's visible gap while its touch area grows. */
+  .liveLine {
+    margin-top: calc(var(--space-s) - (44px - 1lh) / 2);
+    margin-bottom: calc((44px - 1lh) / -2);
+  }
+}
+
+/* ---- Showcase screens (Showcase / ShowcaseFigure, Devices.js) ----
+   On the content's 6 columns: one screen across all six, then a staggered
+   pair (3 + 3, the second dropped lower), so the rhythm varies instead of
+   repeating one image per row. */
+.showcaseFigure {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  row-gap: var(--grid-gap);
+  align-items: start;
+  margin: var(--space-xl) 0 0;
+}
+
+.figureWide + .showcaseFigure,
+.showcaseFigure + .showcaseFigure {
+  margin-top: var(--space-5xl);
+}
+
+.section > .showcaseFigure {
+  max-width: none;
+}
+
+.showcaseFull {
+  grid-column: 1 / -1;
+}
+
+.showcasePairA {
+  grid-column: 1 / 4;
+}
+
+.showcasePairB {
+  grid-column: 4 / -1;
+  margin-top: 22%;
+}
+
+.showcaseCaption {
+  grid-column: 1 / 5;
+  margin-top: var(--space-s);
+}
+
+/* Phones: three in a row, the middle one raised. */
+.phoneRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9%;
+  width: 78%;
+  align-items: end;
+}
+
+.phoneCell:nth-child(2) {
+  transform: translateY(-9%);
+}
+
+/* The phones sit in their own breathing room on the page. */
+.phonePanel {
+  padding: 4% 0;
+}
+
+/* Hero: the desktop screen, a phone over its lower right corner (room is
+   left at the right and bottom so the phone overhangs the screen, not the
+   column). */
+.heroPanel {
+  position: relative;
+  padding: 0 9% 7% 0;
+}
+
+.heroScreen {
+  width: 100%;
+}
+
+.heroPhone {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 17%;
+}
+
+@media (max-width: 1023px) {
+  .showcaseFigure {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* start would shrink the panels to nothing */
+  }
+
+  .showcasePairB {
+    margin-top: 0;
+  }
+
+  .phoneRow {
+    width: 100%;
+    gap: 6%;
+  }
+}
+
+/* The asset under the details, full width (2026-10-19, Jonathan): edge to
+   edge like General Roofing's 3D laptop, on every project. */
+.heroWrap {
+  margin-top: var(--space-3xl);
+}
+
+.heroWrap > .heroFigure {
+  display: block;
+  margin: 0;
+}
+
+/* A composed screen hero (Highland Ventures: a desktop screen with a phone
+   over it) spans the full grid between the page margins instead: edge to
+   edge, the screen and phone would touch the window sides. */
+.heroWrap > .heroFigure[data-layout="hero"] {
+  padding: 0 var(--grid-margin);
+}
+
+@media (max-width: 1023px) {
+  .heroWrap > .heroFigure[data-layout="hero"] {
+    padding: 0 var(--grid-margin-sm);
+  }
+}
+
+@media (max-width: 1023px) {
+  .heroWrap {
+    margin-top: var(--space-2xl);
+  }
+}
+
+/* The rail's label in the blended grey (it composes the page label, whose
+   grey would invert wrongly under the rail's difference blend). */
+.contents .contentsLabel {
+  color: var(--ink-muted-blend);
+}
+
+/* ---- Key decisions (2026-10-18): headline, strip, screen with notes ----
+   On the content's 6 columns. The headline is the first stop; Client ask,
+   Why and Trade-off the second, read across once (2 + 2 + 2); the screen the
+   third, in columns 1-4 with its notes in 5-6 beside it, so pointing at a
+   note shows its effect right next to it. Spacing (2026-10-19): tight inside
+   a decision (headline to strip --space-l, strip to screen --space-2xl),
+   wide between decisions (--space-section). */
+.decisions > .decision {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  align-items: start;
+}
+
+.decision > .decisionTitle,
+.decision > .decisionStrip,
+.decision > .decisionFigure {
+  grid-column: 1 / -1;
+  max-width: none;
+}
+
+/* The number right before the decision, like the process steps. */
+.decisionTitle {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-s);
+  margin: 0 0 var(--space-l);
+}
+
+.decisionNo {
+  flex: none;
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+}
+
+.decisionTitle > .heading {
+  margin: 0;
+}
+
+.decisionStrip {
+  display: grid;
+  grid-template-columns: subgrid;
+  row-gap: var(--space-l);
+  margin-bottom: var(--space-2xl);
+}
+
+/* Client ask (1-2), Why (3-4), Trade-off (5-6); Why takes 3-6 when there's
+   no trade-off. */
+.decisionCell {
+  grid-column: span 2;
+  min-width: 0;
+  max-width: var(--reading-measure);
+  padding-right: var(--space-xl);
+}
+
+.decisionCell > .inlineLabel,
+.decisionNotes > .inlineLabel {
+  margin: 0 0 var(--space-xs);
+}
+
+/* Reading text, the same as In short, Context and Lessons (2026-10-19). */
+.decisionText {
+  margin: 0;
+  font-size: var(--type-prose-size);
+  line-height: 1.6;
+  letter-spacing: var(--type-prose-tracking);
+}
+
+.decisionFigure {
+  display: grid;
+  grid-template-columns: subgrid;
+  margin: 0;
+}
+
+.decisionFigure > .frameTitle {
+  grid-column: 1 / 5;
+  grid-row: 1;
+}
+
+.decisionFigure > .annotatedMedia {
+  grid-column: 1 / 5;
+  grid-row: 2;
+}
+
+.decisionWide {
+  grid-column: span 4;
+}
+
+/* A phone screen (2026-10-19): two columns wide, its notes beside it in
+   3-5, so the tall screen stays a sensible size. */
+.decision[data-device="phone"] .decisionFigure > .frameTitle,
+.decision[data-device="phone"] .decisionFigure > .annotatedMedia {
+  grid-column: 1 / 3;
+}
+
+.decision[data-device="phone"] .decisionNotes {
+  grid-column: 3 / 6;
+  max-width: 24rem;
+}
+
+/* The notes hold at the middle of the window instead of its top (Aether,
+   then General Roofing, 2026-10-19, Jonathan: "more accessible and better
+   positioned while they're stickied"), so they stay level with the part of
+   the screen in view as it scrolls and leave with its bottom. Each note is
+   a full-width row between hairlines, a clear target for the pointer and
+   for keyboard focus. */
+@media (min-width: 1024px) {
+  /* .decision raises it over the base rule below, which comes later. */
+  .decision .decisionNotes {
+    top: calc(50svh - 5.5rem);
+  }
+
+  .decisionNotes .notesList {
+    border-top: 1px solid var(--line);
+  }
+
+  .decisionNotes .notesList li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .decisionNotes .note {
+    min-height: 2.75rem;
+    align-items: center;
+    padding-block: var(--space-2xs);
+  }
+}
+
+/* Notes beside the screen, top-aligned with it; held in view (sticky) for
+   screens taller than the window. */
+.decisionNotes {
+  grid-column: 5 / -1;
+  grid-row: 2;
+  position: sticky;
+  top: 7rem;
+  align-self: start;
+  padding-left: var(--space-s);
+}
+
+.decisionNotes .notesList {
+  gap: 0;
+}
+
+@media (max-width: 1023px) {
+  .decisions > .decision,
+  .decisionStrip,
+  .decisionFigure {
+    display: block;
+  }
+
+  .decision {
+    padding-top: var(--space-5xl);
+  }
+
+  .decisionCell {
+    padding-right: 0;
+  }
+
+  .decisionCell + .decisionCell {
+    margin-top: var(--space-l);
+  }
+
+  .decisionNotes {
+    position: static;
+    margin-top: var(--space-m);
+    padding-left: 0;
+  }
+}
+
+/* ---- Blocks for the older projects (2026-10-19: Aether, Arasaka and
+   Reckless moved onto this layout with their copy as it was) ---- */
+
+/* Between blocks inside a section; the section title's margin is the gap
+   for the first; text right above the figure it explains sits closer. */
+.textPair,
+.statements,
+.highlights,
+.framedFigure {
+  margin: var(--space-3xl) 0 0;
+}
+
+.sectionTitle + .textPair,
+.sectionTitle + .statements,
+.sectionTitle + .highlights,
+.sectionTitle + .framedFigure,
+.sectionTitle + .showcaseFigure {
+  margin-top: 0;
+}
+
+.textPair + .showcaseFigure,
+.framedFigure + .textPair,
+.highlights + .textPair {
+  margin-top: var(--space-2xl);
+}
+
+/* Reading text in two columns (3 + 3) under an optional sub-heading. */
+.textPair {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  row-gap: var(--space-s);
+}
+
+.textPair > .heading {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.textPair > .trioText {
+  grid-column: span 3;
+  max-width: var(--reading-measure);
+  padding-right: var(--space-xl);
+}
+
+/* Statements (2026-10-19): the section's one bold element, large in the
+   text face under the Oswald title. The first from the left edge (columns
+   1-5), the second ending flush on the rightmost column (2-6, set right),
+   so the eye crosses the grid from one fact to the next. */
+.statements {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  row-gap: var(--space-3xl);
+}
+
+.statement {
+  grid-column: 1 / 6;
+  margin: 0;
+  font-size: var(--type-statement-size);
+  font-weight: var(--type-statement-weight);
+  line-height: 1.12;
+  letter-spacing: var(--type-statement-tracking);
+  text-wrap: balance;
+}
+
+.statement + .statement {
+  grid-column: 2 / -1;
+  text-align: right;
+}
+
+/* "[ 1 ] Tiring": three findings across. */
+.highlights {
+  padding: 0;
+  list-style: none;
+}
+
+.highlights > .decisionTitle {
+  margin: 0;
+}
+
+/* A research artefact, framed, with its title block above. */
+.framedFigure > .frameTitle {
+  margin: 0 0 var(--space-xs);
+}
+
+/* A cell in "In short" that continues the one before: no label, but the
+   same room above, so its text lines up. */
+.labelSpacer {
+  display: block;
+  height: calc(var(--type-meta-size) * 1.5 + var(--space-xs));
+}
+
+/* Photographed mockups get the screens' hairline edge too (2026-10-19,
+   reversing "no edge" the same day): light ones (Aether's white stone,
+   Reckless's concrete) blended into the page. Invisible on dark photos. */
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  outline: 1px solid var(--screen-edge);
+  outline-offset: -1px;
+}
+
+/* Full width, the sides are the window's edges: rule only the top and the
+   bottom, where the photo meets the page. */
+.heroWrap .photo {
+  outline: none;
+  box-shadow: 0 -1px 0 var(--screen-edge), 0 1px 0 var(--screen-edge);
+}
+
+.photoNarrow {
+  grid-column: 2 / 6;
+}
+
+/* A row of two phones: narrower, neither raised. */
+.phoneRow:has(> [data-count="2"]) {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 52%;
+}
+
+.phoneCell[data-count="2"]:nth-child(2) {
+  transform: none;
+}
+
+@media (max-width: 1023px) {
+  .textPair,
+  .statements {
+    display: block;
+  }
+
+  .textPair > .trioText {
+    padding-right: 0;
+  }
+
+  .textPair > * + * {
+    margin-top: var(--space-m);
+  }
+
+  .statement + .statement {
+    margin-top: var(--space-2xl);
+  }
+
+  .photoNarrow {
+    grid-column: 1 / -1;
+  }
+
+  .phoneRow:has(> [data-count="2"]) {
+    width: 70%;
+  }
+}
+
+/* Context facts under the statements (Aether): set apart from the two big
+   numbers they follow. */
+.statements + .trio {
+  margin-top: var(--space-4xl);
+}
+
+/* On phones a phone screen shown at full width is a whole screen tall:
+   three quarters is enough to read it. */
+@media (max-width: 1023px) {
+  .decision[data-device="phone"] .annotatedMedia {
+    max-width: 75%;
+  }
+}
+
+/* Scroll-tracked statements share one timeline, so the two lines fill as
+   one sentence across the block's pass through the screen. */
+.statements[data-ink="scroll"] {
+  view-timeline-name: --statements;
+  --ink-timeline: --statements;
+}
+
+/* ---- Photographic showcase (PhotoShowcase, 2026-10-19): a thematic
+   mockup photo, full width, played through a camera move by scroll. ---- */
+.photoShowcase {
+  position: relative;
+  height: 300svh;
+  margin-top: var(--space-3xl);
+}
+
+.photoStage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+  background: #cfcbc5;
+}
+
+.photoStageStill,
+.photoCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.photoStageStill {
+  object-fit: cover;
+}
+
+.photoCanvas {
+  display: block;
+  opacity: 0;
+}
+
+.photoShowcase[data-ready] .photoCanvas {
+  opacity: 1;
+}
+
+/* The page on the laptop's screen: warped onto the photo's screen by a
+   matrix3d from its top-left corner; a faint sheen like glass. */
+.photoScreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  transform-origin: 0 0;
+  visibility: hidden;
+}
+
+.photoShowcase[data-ready] .photoScreen {
+  visibility: visible;
+}
+
+.photoScreen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, rgb(255 255 255 / 0.06), transparent 45%);
+  pointer-events: none;
+}
+
+/* The capture and its pre-shrunk levels, stacked; the showcase shows one. */
+.photoPage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  visibility: hidden;
+  will-change: transform;
+}
+
+/* Phones and reduced motion: the photo, still, ruled top and bottom. */
+.photoShowcaseStill {
+  margin: var(--space-3xl) 0 0;
+}
+
+.photoShowcaseStill .photo {
+  outline: none;
+  box-shadow: 0 -1px 0 var(--screen-edge), 0 1px 0 var(--screen-edge);
+}
+
+
+/* ---- Content index below 1024px (2026-10-26) ----
+   The rail becomes a corner control, fixed bottom-left on the content margin
+   while the story is in view, blended like the navbar: "[ 2 / 5 ]" and the
+   current section. It opens the list in an ink panel (the menu's rising
+   columns). Hidden from 1024px, where the rail itself shows. */
+.indexToggle,
+.indexPanel {
+  display: none;
+}
+
+@media (max-width: 1023px) {
+  .contents {
+    display: none;
+  }
+
+  .indexToggle {
+    position: fixed;
+    z-index: 1002;
+    left: var(--grid-margin-sm);
+    bottom: calc(var(--space-s) + env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: #dedede;
+    mix-blend-mode: difference;
+    font-family: inherit;
+    font-size: var(--type-chrome-size);
+    font-weight: 600;
+    letter-spacing: var(--type-chrome-tracking);
+    line-height: 1;
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur-short) var(--ease-exit),
+      visibility 0s linear var(--dur-short);
+  }
+
+  .indexToggle[data-shown="true"] {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--dur-short) var(--ease-smooth),
+      visibility 0s;
+  }
+
+  /* The counter steps back inside the brackets: the blended muted grey,
+     with a wider space before the section name. */
+  .indexCount {
+    margin-right: 0.4em;
+    color: var(--ink-muted-blend);
+  }
+
+  .indexToggle:focus-visible {
+    outline: 2px solid #dedede;
+    outline-offset: 4px;
+  }
+
+  /* The panel: a full-screen modal dialog over everything. */
+  .indexPanel[open] {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 6rem var(--grid-margin-sm) calc(var(--space-s) + 44px + var(--space-xl) + env(safe-area-inset-bottom));
+    border: 0;
+    background: transparent;
+    color: var(--background);
+    overflow: hidden;
+  }
+
+  .indexPanel::backdrop {
+    background: transparent;
+  }
+
+  .indexColumns {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  .indexColumns span {
+    margin-right: -1px;
+    background: var(--foreground);
+    transform: translate3d(0, 101%, 0);
+    /* Closing: after the content has left (150 ms), right to left. */
+    transition: transform var(--dur-short) var(--ease-exit) calc(150ms + (7 - var(--i)) * 30ms);
+  }
+
+  .indexPanel[data-open="true"] .indexColumns span {
+    transform: translate3d(0, 0, 0);
+    transition: transform var(--dur-medium) var(--ease-smooth) calc(var(--i) * 40ms);
+  }
+
+  .indexBody {
+    position: relative;
+  }
+
+  .indexLabel {
+    margin: 0 0 var(--space-l);
+    color: #9a9a9a; /* the footer's muted grey on ink */
+    font-size: var(--type-meta-size);
+    font-weight: var(--type-meta-weight);
+    letter-spacing: var(--type-meta-tracking);
+    text-transform: uppercase;
+  }
+
+  .indexList {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Each section in the section-title style, its number in brackets sitting
+     on the title's baseline (2026-10-26). The current section in concrete;
+     the others fade to the muted grey, so where you are reads at a glance
+     (Jonathan, same day: replaced the inverted number tab, which replaced a
+     1px marker line). */
+  .indexLink {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+    min-height: 44px;
+    padding: 0.1em 0;
+    color: #9a9a9a;
+    font-family: var(--font-display);
+    font-size: var(--type-display-s-size);
+    font-weight: var(--type-display-s-weight);
+    line-height: 1;
+    letter-spacing: var(--type-display-tracking);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color var(--dur-micro) var(--ease-smooth);
+  }
+
+  .indexLink[aria-current] {
+    color: var(--background);
+  }
+
+  /* Press: the row lights up to concrete while held (its number's brackets
+     close in, the site-wide press effect). */
+  .indexLink:active {
+    color: var(--background);
+  }
+
+  .indexNumber {
+    flex: none;
+    font-family: var(--font-text);
+    font-size: var(--type-label-s-size);
+    font-weight: var(--type-label-weight);
+    letter-spacing: var(--type-label-tracking);
+  }
+
+  /* The site's line entrance (lineReveal: a 1em rise clearing a slight blur
+     and the fade on the reveal curve, 50 ms apart), not a masked rise
+     (2026-10-26). Closing, everything goes at once. */
+  .indexRise {
+    opacity: 0;
+  }
+
+  /* Closing: the entrance reversed, shorter, all together: they sink back
+     the way they came, with the columns, blurring and fading. */
+  .indexPanel[data-closing] .indexRise {
+    animation: indexLineOut var(--dur-short) var(--ease-exit) both;
+  }
+
+  .indexLabel .indexRise {
+    display: inline-block; /* so it can rise */
+  }
+
+  .indexPanel[data-open="true"] .indexRise {
+    opacity: 1;
+    transition: none;
+    animation: indexLineIn var(--dur-reveal) var(--ease-reveal) calc(260ms + var(--i) * 50ms) both;
+  }
+
+  /* "[ Close ]" where the control was, so the same spot opens and closes. */
+  .indexClose {
+    position: fixed;
+    left: var(--grid-margin-sm);
+    bottom: calc(var(--space-s) + env(safe-area-inset-bottom));
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--background);
+    font-family: inherit;
+    font-size: var(--type-chrome-size);
+    font-weight: 600;
+    letter-spacing: var(--type-chrome-tracking);
+    text-transform: uppercase;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity var(--dur-micro) var(--ease-exit);
+  }
+
+  .indexPanel[data-open="true"] .indexClose {
+    opacity: 1;
+    transition: opacity var(--dur-short) var(--ease-smooth) 200ms;
+  }
+
+  /* Drawn inside the target, like the menu's: the masks clip an outline
+     outside it to a stray line. */
+  .indexPanel :focus-visible {
+    outline: 2px solid var(--background);
+    outline-offset: -2px;
+  }
+}
+
+@keyframes indexLineIn {
+  from {
+    opacity: 0;
+    filter: blur(0.08em);
+    transform: translateY(1em);
+  }
+}
+
+@keyframes indexLineOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(0.1em);
+    transform: translateY(0.35em);
+  }
+}
+
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .indexPanel[data-open="true"] .indexRise,
+  .indexPanel[data-closing] .indexRise {
+    animation: none;
+  }
+
+  .indexToggle,
+  .indexToggle[data-shown="true"],
+  .indexColumns span,
+  .indexPanel[data-open="true"] .indexColumns span,
+  .indexRise,
+  .indexPanel[data-open="true"] .indexRise,
+  .indexClose,
+  .indexPanel[data-open="true"] .indexClose {
+    transition: none;
+  }
+}

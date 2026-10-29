@@ -1,0 +1,140 @@
+/* The transition: eight ink blocks, one per grid column. Parked below the
+   screen; they slide up to cover one after another (left to right, 40 ms
+   apart), then carry on up and off the top in the same order. No fades. */
+.panel {
+  position: fixed;
+  z-index: 5000;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  pointer-events: none;
+}
+
+.block {
+  display: block;
+  /* A hair of overlap so no seam shows between neighbouring columns. */
+  margin-right: -1px;
+  background: var(--foreground);
+  transform: translate3d(0, 100%, 0);
+}
+
+.panel[data-state="covering"] .block {
+  transform: translate3d(0, 0, 0);
+  transition: transform var(--dur-medium) var(--ease-smooth) calc(var(--i) * 40ms);
+}
+
+.panel[data-state="covered"] {
+  pointer-events: auto; /* nothing underneath is clickable mid-transition */
+}
+
+.panel[data-state="covered"] .block {
+  transform: translate3d(0, 0, 0);
+}
+
+/* The blocks open a beat after the logo starts glitching out (220 ms), so the
+   motion reads as one upward sweep: logo first, then the page. */
+.panel[data-state="revealing"] .block {
+  transform: translate3d(0, -100%, 0);
+  transition: transform var(--dur-long) var(--ease-smooth) calc(220ms + var(--i) * 40ms);
+}
+
+/* ---- Logo, broken apart with a glitch (TransitionLogo) ----
+   Each piece has its own random offsets (--g1..--g5), exit direction
+   (--gout) and delays. The keyframes jump between values in hard steps
+   (step-end: hold, then cut), like a broken signal; no easing. Parked:
+   hidden. Covering: glitch in, then hold. Revealing: glitch out. */
+.logoMask {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 3.75rem;
+  aspect-ratio: 106.29 / 151.73;
+  transform: translate(-50%, -50%);
+}
+
+.logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: #f9f9f9;
+}
+
+.piece {
+  opacity: 0;
+}
+
+.panel[data-state="covering"] .piece {
+  animation: glitchIn 420ms step-end var(--in-d) forwards;
+}
+
+.panel[data-state="covered"] .piece {
+  opacity: 1;
+  transform: none;
+}
+
+.panel[data-state="revealing"] .piece {
+  animation: glitchOut 380ms step-end var(--out-d) forwards;
+}
+
+@keyframes glitchIn {
+  0% {
+    opacity: 1;
+    transform: translateX(var(--g1));
+  }
+  18% {
+    opacity: 1;
+    transform: translateX(var(--g2));
+  }
+  36% {
+    opacity: 0.45;
+    transform: translateX(var(--g3));
+  }
+  54% {
+    opacity: 1;
+    transform: translateX(var(--g4));
+  }
+  72% {
+    opacity: 1;
+    transform: translateX(var(--g5));
+  }
+  86%,
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes glitchOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(var(--g4));
+  }
+  40% {
+    opacity: 0.45;
+    transform: translateX(var(--g2));
+  }
+  60% {
+    opacity: 1;
+    transform: translateX(var(--g1));
+  }
+  80% {
+    opacity: 1;
+    transform: translateX(var(--gout));
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(var(--gout));
+  }
+}
+
+/* Jumps (parking everything, covering instantly on back/forward). */
+.panel[data-instant] .block,
+.panel[data-instant] .piece {
+  transition: none !important;
+  animation: none !important;
+}

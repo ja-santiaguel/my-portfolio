@@ -1,0 +1,167 @@
+/* Bento tile: a solid mass with hard edges. The image fills it; the name sits
+   in a concrete tab in the bottom-left corner. */
+.tile {
+  position: relative;
+  container-type: inline-size;
+  height: 100%;
+  overflow: clip;
+  /* No fill: during the list -> grid morph the tile is drawn at its final
+     place before the image arrives, and a panel colour shows as a stray box. */
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+}
+
+/* Same geometry as the list view's parallax image (hand-off parity). */
+.parallaxImage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 130%;
+  transform: translate3d(0, -11.5%, 0);
+  will-change: transform;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.heading {
+  margin: 0;
+}
+
+/* The whole tile is the link (or button); the tab is its only visible text. */
+/* No z-index (2026-10-25): it would trap the tab under the hero portrait
+   while the portrait flies onto the first tile (z 4), hiding its name as the
+   grid scrolled in. Later in the DOM, it still sits over the tile's photo. */
+.open {
+  position: absolute;
+  inset: 0;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+/* Label, not a title: the site's standard label style (0.875rem, 600,
+   uppercase), identical on every tile so the visuals lead. */
+/* No z-index: later in the DOM, it sits over its own photo, and under the
+   flying hero portrait (z 4) when the portrait passes over its tile
+   (2026-10-26, Jonathan: other tiles' tabs floated detached over the
+   portrait mid-flight). */
+.tab {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding: 0.7rem 0.85rem;
+  background: #f3f3f3;
+  color: #151515;
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  line-height: 1.3;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-micro) var(--ease-smooth),
+    color var(--dur-micro) var(--ease-smooth);
+}
+
+/* The tile the portrait lands on keeps its name above it (like the list's
+   slide titles), so the name is there as the grid scrolls in; below the
+   fixed chrome (1000+). */
+.tile[data-flight-tile] .tab {
+  z-index: 5;
+}
+
+/* Trim the text box to the capitals (no descender space in an uppercase
+   label), and centre the icon on the first line's cap height. One line or
+   two (a long name in a narrow tile wraps), the icon sits with the letters. */
+.name {
+  text-box: trim-both cap alphabetic;
+}
+
+.icon {
+  flex-shrink: 0;
+  display: block;
+  margin-top: calc((1cap - 16px) / 2);
+}
+
+@container (max-width: 15rem) {
+  .nameLine {
+    display: block;
+  }
+}
+
+.open:focus-visible {
+  outline: 2px solid #151515;
+  outline-offset: -2px;
+}
+
+.open:focus-visible .tab {
+  background: #151515;
+  color: #f3f3f3;
+}
+
+@media (hover: hover) {
+  .tile:hover .tab {
+    background: #151515;
+    color: #f3f3f3;
+  }
+}
+
+
+/* The name tab's entrance (2026-10-20): it wipes open from the left when
+   the tile comes into view, and after a list -> grid switch once the images
+   have rearranged (ViewTrigger holds it until then). 40 ms apart across the
+   grid. Leaving (scrolled back up), it wipes shut, shorter. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-trigger-ready]) .tab:not([data-in]) {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  .tab[data-in] {
+    animation: tabIn var(--dur-medium) var(--ease-reveal) calc(var(--i, 0) * 40ms) both;
+  }
+
+  .tab[data-out] {
+    animation: tabOut var(--dur-short) var(--ease-exit) both;
+  }
+
+  /* Before a grid -> list rearrange: the tabs wipe shut first. */
+  :global(html[data-layout-leaving]) .tab {
+    animation: tabOut var(--dur-micro) var(--ease-exit) both;
+  }
+}
+
+@keyframes tabIn {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes tabOut {
+  from {
+    clip-path: inset(0 0 0 0);
+  }
+
+  to {
+    clip-path: inset(0 100% 0 0);
+  }
+}

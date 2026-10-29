@@ -2,20 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&display=swap");
+/* Custom Fonts: Helvetica Neue as Latin WOFF2 subsets (2026-10-28 ship-check;
+   made from the OTFs with fontTools: the four weights in use went from 1.7 MB
+   to 88 kB). Oswald is self-hosted by next/font (layout.js). */
 
 /* Heavy */
 @font-face {
   font-family: "Helvetica Neue";
-  src: url("/fonts/Helvetica_Neue/HelveticaNeueHeavy.otf") format("opentype");
+  font-display: swap;
+  src: url("/fonts/Helvetica_Neue/woff2/HelveticaNeueHeavy.woff2") format("woff2");
   font-weight: 800;
   font-style: normal;
 }
 @font-face {
   font-family: "Helvetica Neue";
-  src: url("/fonts/Helvetica_Neue/HelveticaNeueHeavyItalic.otf")
-    format("opentype");
+  font-display: swap;
+  src: url("/fonts/Helvetica_Neue/woff2/HelveticaNeueHeavyItalic.woff2") format("woff2");
   font-weight: 800;
   font-style: italic;
 }
@@ -23,14 +25,15 @@
 /* Medium */
 @font-face {
   font-family: "Helvetica Neue";
-  src: url("/fonts/Helvetica_Neue/HelveticaNeueMedium.otf") format("opentype");
+  font-display: swap;
+  src: url("/fonts/Helvetica_Neue/woff2/HelveticaNeueMedium.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
 }
 @font-face {
   font-family: "Helvetica Neue";
-  src: url("/fonts/Helvetica_Neue/HelveticaNeueMediumItalic.otf")
-    format("opentype");
+  font-display: swap;
+  src: url("/fonts/Helvetica_Neue/woff2/HelveticaNeueMediumItalic.woff2") format("woff2");
   font-weight: 600;
   font-style: italic;
 }
@@ -38,13 +41,15 @@
 /* Regular */
 @font-face {
   font-family: "Helvetica Neue";
-  src: url("/fonts/Helvetica_Neue/HelveticaNeueRoman.otf") format("opentype");
+  font-display: swap;
+  src: url("/fonts/Helvetica_Neue/woff2/HelveticaNeueRoman.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
 }
 @font-face {
   font-family: "Helvetica Neue";
-  src: url("/fonts/Helvetica_Neue/HelveticaNeueItalic.ttf") format("truetype");
+  font-display: swap;
+  src: url("/fonts/Helvetica_Neue/woff2/HelveticaNeueItalic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
 }
@@ -52,50 +57,300 @@
 /* Thin */
 @font-face {
   font-family: "Helvetica Neue";
-  src: url("/fonts/Helvetica_Neue/HelveticaNeueThin.otf") format("opentype");
+  font-display: swap;
+  src: url("/fonts/Helvetica_Neue/woff2/HelveticaNeueThin.woff2") format("woff2");
   font-weight: 200;
   font-style: normal;
 }
 @font-face {
   font-family: "Helvetica Neue";
-  src: url("/fonts/Helvetica_Neue/HelveticaNeueThinItalic.otf")
-    format("opentype");
+  font-display: swap;
+  src: url("/fonts/Helvetica_Neue/woff2/HelveticaNeueThinItalic.woff2") format("woff2");
   font-weight: 200;
   font-style: italic;
 }
 
 :root {
-  /* --background: #f9f6f1; */
-  --background: #f3f3f3;
-  --foreground: #151515;
-  font-family: "Helvetica Neue", sans-serif;
+  /* Color: a neutral concrete-and-ink frame; the work brings the color. */
+  --background: #f3f3f3; /* concrete */
+  --foreground: #151515; /* ink */
+  --panel: #e6e6e3; /* media panels: one step darker than the page */
+  --line: rgb(21 21 21 / 0.16); /* fine, subtle separators (1px) */
+  /* The edge of a UI screenshot on the page (2026-10-19): one value for every
+     screen, firm enough to hold a white UI against the concrete page. */
+  --screen-edge: rgb(21 21 21 / 0.22);
+  --ink-muted: #6b6b6b; /* secondary text (byline meta, spec labels), 4.8:1 on concrete */
+  --ink-faint: rgb(21 21 21 / 0.2); /* text waiting to fill with ink (InkText) */
+  --ink-muted-blend: #888888; /* the same grey inside the difference-blended chrome:
+                                 |#888 - #f3f3f3| = #6b6b6b on concrete */
+
+  /* Type */
+  --font-display: var(--font-oswald), "Arial Narrow", sans-serif;
+  --font-text: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* Type tokens: one size, weight and tracking per role. Tracking is in em so
+     it scales with the text: none on display type, a little on body, more on
+     small uppercase. Line heights stay with each component. Weights:
+     Helvetica 400/600, plus 800 for calls to action; Oswald 600/700 (Oswald
+     has no heavier weight). */
+  --type-display-xl-size: clamp(4rem, 15.5vw, 15rem); /* hero title */
+  --type-display-xl-weight: 700;
+  --type-display-l-weight: 700; /* case-study and About titles; size per page */
+  --type-display-m-size: 6rem; /* list project titles, "Interested in…" */
+  --type-display-m-weight: 600;
+  --type-display-tracking: 0;
+
+  --type-display-s-size: clamp(2.5rem, 4.2vw, 3.75rem); /* case-study section titles */
+  --type-display-s-weight: 600;
+
+  /* Statements: a fact to stop on, set large in the text face (2026-10-19,
+     Aether's problem). Regular weight and tight leading, like a pull quote. */
+  --type-statement-size: clamp(1.75rem, 3.3vw, 3rem);
+  --type-statement-weight: 400;
+  --type-statement-tracking: -0.015em;
+
+  --type-heading-size: 1.25rem; /* case-study sub-headings (decisions) */
+  --type-heading-weight: 600;
+  --type-heading-tracking: 0.01em;
+
+  --type-prose-size: 0.875rem; /* case-study reading text: the body size (2026-10-19, was 18px); the lead is the one large reading size */
+  --type-prose-weight: 400;
+  --type-prose-tracking: 0.02em;
+
+  --type-lead-size: 1.25rem; /* project summary */
+  --type-lead-weight: 400;
+  --type-lead-tracking: 0.01em;
+
+  --type-body-size: 0.875rem; /* statement, descriptions, spec values */
+  --type-body-weight: 400;
+  --type-body-tracking: 0.02em;
+
+  --type-label-size: 0.875rem; /* byline name, buttons, bento, section labels */
+  --type-label-s-size: 0.75rem; /* cursor block */
+  --type-label-weight: 600;
+  --type-label-tracking: 0.06em;
+  --type-action-weight: 800; /* "[ View … ]" calls to action: the heaviest text weight */
+
+  --type-chrome-size: 0.75rem; /* navbar, back-to-top credit */
+  --type-chrome-weight: 400;
+  --type-chrome-tracking: 0.08em; /* wider than labels: 12px needs more air to look as open */
+
+  --type-meta-size: 0.75rem; /* byline meta, time, back-to-top, spec labels */
+  --type-meta-weight: 400;
+  --type-meta-tracking: 0.1em;
+
+  /* Layout system (DESIGN.md > Grid and layout). New work uses these;
+     older components still carry the same values as raw numbers. */
+  --grid-columns: 8;
+  --grid-margin: 4rem; /* outer margin, desktop */
+  --grid-margin-sm: 1.25rem; /* outer margin, below 1024px */
+  --grid-gap: 1rem; /* column gap */
+  --gutter: clamp(1.25rem, 4.5vw, 4rem); /* fluid outer margin */
+  --header-h: 5.5rem;
+  --reading-measure: 32rem; /* ~70 characters at the prose size */
+
+  /* Spacing scale: the rhythm already used across the site. */
+  --space-3xs: 0.25rem; /* label to value, stacked lines */
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem; /* label above content, caption gap */
+  --space-s: 1rem; /* grid gap, plate gaps */
+  --space-m: 1.25rem; /* paragraph spacing, phone margin */
+  --space-l: 1.5rem;
+  --space-xl: 2rem; /* inside panels, title to text */
+  --space-2xl: 2.5rem; /* around figures */
+  --space-3xl: 3rem;
+  --space-4xl: 4rem; /* desktop margin, group breaks */
+  --space-5xl: 5rem;
+  --space-section: 7rem; /* between sections */
+  --space-section-l: 9rem; /* page top under the navbar, big breaks */
+
+  /* Motion system (Apple-style; JS mirror in src/lib/motion.js).
+     One curve: a critically damped spring (SwiftUI .smooth model), quick at
+     first, settling gently with no visible stop. Duration sets the character.
+     Exits use a short accelerating ease so things leave without lingering. */
+  --ease-smooth: linear(0, 0.0292, 0.0988, 0.1885, 0.2855, 0.3816, 0.472, 0.5543, 0.6275, 0.6913, 0.7462, 0.7929, 0.8323, 0.8653, 0.8927, 0.9154, 0.934, 0.9493, 0.9618, 0.9719, 0.9801, 0.9868, 0.9922, 0.9965, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  /* Text entrances only (2026-10-18, after mikewilcockdesign.com's wordmark):
+     an underdamped spring that passes its mark by ~4% halfway, then settles
+     softly back (damping 0.72). A deliberate exception to "no overshoot". */
+  --ease-rise: linear(0, 0.0227, 0.0813, 0.1633, 0.2587, 0.3597, 0.4603, 0.5564, 0.6451, 0.7246, 0.794, 0.8531, 0.9023, 0.9421, 0.9735, 0.9974, 1.0148, 1.0269, 1.0345, 1.0386, 1.0399, 1.0393, 1.0371, 1.0341, 1.0305, 1.0266, 1.0227, 1.019, 1.0156, 1.0125, 1.0097, 1.0074, 1.0055, 1.0039, 1.0027, 1.0017, 1.001, 1.0005, 1.0002, 1.0001, 1);
+  /* Reveals (2026-10-19, measured frame by frame from
+     mikewilcockdesign.com/work/fun-arena): an expo ease-out, off the mark at
+     once and settling for a long, soft tail (about 80% there at a quarter of
+     the time, 95% at under half). Text lines and screens coming into view;
+     display letters keep --ease-rise. */
+  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-reveal: 1100ms;
+  /* Big moves between two resting places (2026-10-20, the list <-> grid
+     rearrange): a strong ease-in-out, gentle away, purposeful through the
+     middle, soft landing (mikewilcockdesign.com's --ease-in-out, measured). */
+  --ease-move: cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-move: 900ms;
+  --dur-micro: 200ms; /* hover / press feedback */
+  --dur-short: 350ms; /* small UI changes */
+  --dur-medium: 500ms; /* layout moves (Apple's default) */
+  --dur-long: 800ms; /* large entrances */
+
+  font-family: var(--font-text);
 }
 
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
+html {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: var(--foreground) transparent;
+}
+
+/* Lenis (Locomotive Scroll v5) base styles. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Helvetica Neue", sans-serif;
+  font-family: var(--font-text);
   padding: 0;
   margin: 0;
-  letter-spacing: 0.05rem;
-  overflow: hidden;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  letter-spacing: var(--type-body-tracking);
 }
 
-body::-webkit-scrollbar {
+::selection {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+:focus-visible {
+  outline: 2px solid var(--foreground);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* View transitions (list <-> grid): a clean spring move, no wobble. */
+::view-transition-group(*) {
+  animation-duration: var(--dur-medium);
+  animation-timing-function: var(--ease-smooth);
+}
+/* The page itself swaps quickly so only the moving media holds attention. */
+::view-transition-old(root) {
+  animation-duration: var(--dur-micro);
+  animation-timing-function: var(--ease-exit);
+}
+::view-transition-new(root) {
+  animation-duration: var(--dur-short);
+  animation-timing-function: var(--ease-smooth);
+}
+/* The project photo at its true proportions, covering its frame (the
+   parallax box, a size container): never cropped inside its own box, so a
+   view transition can scale it uniformly (coverPhoto.js). */
+[data-parallax-image] {
+  container-type: size;
+}
+
+.cover-photo {
+  position: absolute;
+  /* --z: an optional zoom past cover, giving the framing room to centre a
+     subject (set per layout in content/projects.js). */
+  --w: calc(max(100cqw, calc(100cqh * var(--a))) * var(--z, 1));
+  --h: calc(max(100cqh, calc(100cqw / var(--a))) * var(--z, 1));
+  width: var(--w);
+  height: var(--h);
+  max-width: none;
+  left: calc((100cqw - var(--w)) * var(--px));
+  top: calc((100cqh - var(--h)) * var(--py));
+}
+
+/* A focal point: the subject's centre held at the frame's centre, at any
+   frame size, without ever uncovering an edge. */
+.cover-photo[data-focal] {
+  left: clamp(calc(100cqw - var(--w)), calc(50cqw - var(--fx) * var(--w)), 0px);
+  top: clamp(calc(100cqh - var(--h)), calc(50cqh - var(--fy) * var(--h)), 0px);
+}
+
+/* Nested groups (2026-10-20, Jonathan: "as if we're editing our apple
+   homescreen apps"): the frame is a clipping window that reshapes from its
+   list shape to its grid shape; the photo, a group nested inside it, keeps
+   its true proportions and scales uniformly. Nothing is re-cropped or
+   swapped mid-flight, so there's no snap. */
+@supports (view-transition-group: nearest) {
+  ::view-transition-old(.media),
+  ::view-transition-new(.media) {
+    display: none;
+  }
+
+  ::view-transition-group(.photo) {
+    animation-duration: var(--dur-move);
+    animation-timing-function: var(--ease-move);
+  }
+
+  ::view-transition-old(.photo) {
+    display: none;
+  }
+
+  ::view-transition-new(.photo) {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Project media (2026-10-19, after "ghosting" between the layouts): no
+   cross-fade of two differently cropped snapshots. The new image alone
+   moves and reshapes from the old frame to the new one (cover-fitted, the
+   group clipping it), so it stays one clear picture the whole way. */
+::view-transition-group(.media) {
+  overflow: clip;
+  /* The rearrange itself (2026-10-20): one deliberate move on the big-move
+     curve, after the titles have left. */
+  animation-duration: var(--dur-move);
+  animation-timing-function: var(--ease-move);
+}
+
+::view-transition-old(.media) {
   display: none;
 }
 
+::view-transition-new(.media) {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: none;
+  opacity: 1;
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* AnimationRiseUp's wrapper: no clip since the focus-in (2026-10-18). */
 .masking-container {
-  overflow-y: hidden;
 }
 
 .grid-8-column {
@@ -113,4 +368,212 @@ body::-webkit-scrollbar {
 .stacked {
   display: flex;
   flex-direction: column;
+}
+
+/* Site chrome (navbar, back-to-top) waits for the home page's opening montage,
+   then fades in. `filter` is used so it never fights the components' own
+   opacity animations. */
+[data-chrome] {
+  transition: filter var(--dur-long) var(--ease-smooth) 0.1s;
+}
+/* The page can't scroll while the opening montage plays (from the first
+   paint), until the window starts growing into the portrait
+   (html[data-intro-scroll], 2026-10-23); scrolling never skips it.
+   Not during a page transition (2026-10-19): overflow: hidden takes the
+   scroll-driven animations off their timeline, so the footer columns and
+   the home media clip snapped to finished the moment a link was clicked.
+   PageTransition blocks scroll input itself (wheel, touch, keys, Lenis). */
+html[data-intro="playing"]:not([data-intro-scroll]),
+html[data-intro="playing"]:not([data-intro-scroll]) body {
+  overflow: hidden;
+}
+
+html[data-intro="playing"] [data-chrome] {
+  filter: opacity(0);
+  pointer-events: none;
+}
+
+/* Custom cursor (components/Cursor.js) replaces the native one on mouse and
+   trackpad devices. Only applied once the component has mounted. */
+html.custom-cursor,
+html.custom-cursor * {
+  cursor: none !important;
+}
+
+/* Arrow-on-hover labels (components/HoverArrow.js): on hover or keyboard
+   focus of the link/button, an arrow slides in just to the left of the label.
+   The label itself never moves. */
+/* Brackets in "[ … ]" labels (Bracketed, the cursor block, List/Grid).
+   Helvetica's brackets hang below the baseline, so their centre sits ~0.1em
+   under the capitals' centre and the words look high. Raise them onto the caps. */
+.bracket {
+  position: relative;
+  top: -0.095em;
+  display: inline-block;
+  transition: translate var(--dur-short) var(--ease-smooth);
+}
+
+/* Press (2026-10-26, Jonathan: "a thematically cohesive press effect"): the
+   label's own marks answer the finger. Brackets close in on their word, a
+   quick clamp; direction chevrons nudge the way they point. In within
+   --dur-micro, back on the spring. */
+@media (prefers-reduced-motion: no-preference) {
+  :is(a, button):active .bracket-open {
+    translate: 0.2em 0;
+    transition-duration: var(--dur-micro);
+  }
+
+  :is(a, button):active .bracket-close {
+    translate: -0.2em 0;
+    transition-duration: var(--dur-micro);
+  }
+
+  :is(a, button):active .chevron-back {
+    translate: -0.2em 0;
+    transition-duration: var(--dur-micro);
+  }
+
+  :is(a, button):active .chevron-forward {
+    translate: 0.2em 0;
+    transition-duration: var(--dur-micro);
+  }
+}
+
+/* Magnifying glass, a step smaller than the 16px icons, centred on the caps. */
+.action-icon {
+  --size: 0.875rem;
+  display: inline-block;
+  width: var(--size);
+  height: var(--size);
+  vertical-align: calc((1cap - var(--size)) / 2);
+  /* Circum draws outlines as thin filled shapes (1 unit of 24). A matching
+     stroke thickens them to ~1.5px so the icon holds up next to the bold
+     label text. */
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+
+/* The arrow sits on the label's text, not its box (2026-10-26, Jonathan:
+   "ensure these arrows are always correctly centered"): aligned to the
+   label's baseline, then lifted to the capitals' centre with the cap unit,
+   so it centres on the capitals whatever wraps the text (rise masks,
+   brackets) or whichever font it's set in. Its negative margins give it no
+   size, so the label never moves and nothing grows. */
+.hover-arrow {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.hover-arrow__icon {
+  --arrow-y: calc(0.5rem - 0.5cap);
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  margin: -1rem 0.3em 0 calc(-1rem - 0.3em);
+  opacity: 0;
+  transform: translate(-0.5em, var(--arrow-y));
+  transition:
+    opacity var(--dur-micro) var(--ease-smooth),
+    transform var(--dur-short) var(--ease-smooth);
+}
+
+:is(a, button):focus-visible .hover-arrow__icon {
+  opacity: 1;
+  transform: translate(0, var(--arrow-y));
+}
+
+@media (hover: hover) {
+  :is(a, button):hover .hover-arrow__icon {
+    opacity: 1;
+    transform: translate(0, var(--arrow-y));
+  }
+}
+
+/* Back: the arrow points left and slides in from the right. */
+.hover-arrow--back .hover-arrow__icon {
+  transform: translate(0.5em, var(--arrow-y)) scaleX(-1);
+}
+
+:is(a, button):focus-visible .hover-arrow--back .hover-arrow__icon {
+  transform: translate(0, var(--arrow-y)) scaleX(-1);
+}
+
+@media (hover: hover) {
+  :is(a, button):hover .hover-arrow--back .hover-arrow__icon {
+    transform: translate(0, var(--arrow-y)) scaleX(-1);
+  }
+}
+
+/* Page transition (PageTransition.js): while the panel covers the page, every
+   load-in animation is held; they play once the reveal ends. The panel itself
+   and its logo are exempt. */
+html[data-page-transition] *:not([data-transition-panel] *),
+html[data-page-transition] *:not([data-transition-panel] *)::before,
+html[data-page-transition] *:not([data-transition-panel] *)::after {
+  animation-play-state: paused !important;
+}
+
+/* Browsers without linear(): a bezier close to the same spring. */
+@supports not (transition-timing-function: linear(0, 1)) {
+  :root {
+    --ease-smooth: cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+}
+
+/* ---- Touch targets (2026-10-16) ----
+   On touch screens a control marked .touch-target gets a hit area at least
+   44px tall without moving: the padding grows the target and the matching
+   negative margin keeps the layout. The element must wrap its rise mask (masks
+   clip vertically, so a target inside one would be cut back). */
+@media (pointer: coarse) {
+  .touch-target {
+    display: inline-block;
+    padding-block: max(0px, calc((44px - 1lh) / 2));
+    margin-block: min(0px, calc((44px - 1lh) / -2));
+  }
+}
+
+/* ---- Media entrance (2026-10-19) ----
+   Case-study screens, phones, the before/after and the process stage enter
+   like the text, on the reveal curve: 3rem up and a fade over --dur-reveal
+   (Mike Wilcock's images: 48px, 1.1 s, expo out). No blur: on a large image
+   it costs a full repaint every frame for little visible gain. Triggered
+   when the media comes into view (ViewTrigger). A pair can stagger with --d. */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-trigger-ready] [data-media]:not([data-in]) {
+    opacity: 0;
+  }
+
+  [data-media][data-in] {
+    animation: mediaReveal var(--dur-reveal) var(--ease-reveal) var(--d, 0ms) both;
+  }
+
+  /* Leaving through the bottom: sinks back half the distance and fades,
+     shorter and accelerating away. */
+  [data-media][data-out] {
+    animation: mediaOut var(--dur-short) var(--ease-exit) both;
+  }
+}
+
+@keyframes mediaReveal {
+  from {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+}
+
+/* The exit names its start values: an implicit start would be the hidden
+   base style (opacity 0 while not [data-in]), so it would run from invisible
+   to invisible and the content would still vanish at once. */
+@keyframes mediaOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
 }

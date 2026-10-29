@@ -1,0 +1,119 @@
+/* Positioned by JS at the pointer. White + difference = black on the light
+   page, inverted over images and dark areas. */
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2147483647;
+  width: 0;
+  height: 0;
+  color: #fff;
+  mix-blend-mode: difference;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-smooth);
+  will-change: transform;
+}
+
+.cursor[data-visible="true"] {
+  opacity: 1;
+}
+
+.shape {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  transition:
+    opacity var(--dur-micro) var(--ease-smooth),
+    transform var(--dur-micro) var(--ease-smooth);
+}
+
+/* Hotspots: the arrow's tip (1, 1) and the index fingertip (7.5, 1). */
+.arrow {
+  transform: translate(-1px, -1px);
+  transform-origin: 1px 1px;
+}
+
+.hand {
+  opacity: 0;
+  transform: translate(-7.5px, -1px) scale(0.85);
+  transform-origin: 7.5px 1px;
+}
+
+.cursor[data-mode="pointer"] .arrow {
+  opacity: 0;
+  transform: translate(-1px, -1px) scale(0.85);
+}
+
+.cursor[data-mode="pointer"] .hand {
+  opacity: 1;
+  transform: translate(-7.5px, -1px) scale(1);
+}
+
+.cursor[data-pressed="true"][data-mode="arrow"] .arrow {
+  transform: translate(-1px, -1px) scale(0.88);
+}
+
+.cursor[data-pressed="true"][data-mode="pointer"] .hand {
+  transform: translate(-7.5px, -1px) scale(0.88);
+}
+
+.cursor[data-mode="label"] .shape {
+  opacity: 0;
+  transform: translate(-1px, -1px) scale(0.6);
+}
+
+/* Label cursor over showcase images: a solid ink block, centred on the
+   pointer, that opens out of its middle line (the split-flap motif) and
+   closes back into it. Not blended, so it stays solid over any image. */
+.label {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 2147483647;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.labelBlock {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 0.7rem 1rem 0.65rem;
+  background: #151515;
+  /* Faint concrete edge so the block keeps its shape over dark media. */
+  box-shadow: 0 0 0 1px rgb(243 243 243 / 0.28);
+  color: #f3f3f3;
+  font-size: var(--type-label-s-size);
+  font-weight: var(--type-label-weight);
+  line-height: 1;
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+  white-space: nowrap;
+  transform: translate(-50%, -50%) scale(0.92);
+  clip-path: inset(50% 0 50% 0);
+  transition:
+    clip-path var(--dur-short) var(--ease-smooth),
+    transform var(--dur-short) var(--ease-smooth);
+}
+
+.labelBlock[data-action="false"] .actionPart {
+  display: none;
+}
+
+.label[data-show="true"] .labelBlock {
+  clip-path: inset(0 0 0 0);
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.label[data-show="true"][data-pressed="true"] .labelBlock {
+  transform: translate(-50%, -50%) scale(0.92);
+}
+
+/* No label over the page transition's blocks. */
+:global(html[data-page-transition]) .label {
+  visibility: hidden;
+}

@@ -1,0 +1,445 @@
+/* Services (2026-10-26): between the work and the footer, on the navbar's
+   8 columns and within the work's own edges, columns 2-7 (column 8 is the
+   project index's; 2026-10-26, Jonathan: "keep the right most side within
+   the grid"). The title and the status (availability, "[ Let's talk ]" under
+   it) share one baseline; then one row per service on a fine title-block rule
+   (like the slides' spec tables), in three equal pairs of columns: name on
+   2-3, what it covers on 4-5 (one item per line), the projects that show it
+   on 6-7, set right. A row's three parts start on one cap line. */
+.services {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  /* A big break after the last showcase (2026-10-26, Jonathan: more space). */
+  margin-top: var(--space-section-l);
+  padding: 0 var(--grid-margin);
+}
+
+/* The status's last line ("[ Let's talk ]") sits on the title's baseline
+   (2026-10-26, Jonathan: bottom-aligned to the title's bottom line). */
+.head {
+  grid-column: 2 / 8;
+  display: flex;
+  align-items: last baseline;
+  justify-content: space-between;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-3xl);
+}
+
+/* Oswald at the list titles' size and weight (it opens a home section like
+   they do); letters rise in like every display title. */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-display-m-size);
+  font-weight: var(--type-display-m-weight);
+  line-height: 0.95;
+  letter-spacing: var(--type-display-tracking);
+  text-transform: uppercase;
+}
+
+/* The status: availability, then the way to act on it. */
+/* "[ Let’s talk ]" under the availability line (2026-10-26, Jonathan), both
+   set right on the content's edge like the projects below. */
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-s);
+}
+
+/* ---- Availability: a status dot and its line, in the label style ---- */
+/* Just the short line (2026-10-26, Jonathan: no expanding on hover). */
+.availability {
+  --status: #2f9e5a; /* available: a calm, clear green */
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-xs); /* clear of the halo */
+  margin: 0;
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  line-height: 1.4;
+  letter-spacing: var(--type-label-tracking);
+  text-transform: uppercase;
+}
+
+.availability[data-status="limited"] {
+  --status: #d1902b;
+}
+
+.availability[data-status="unavailable"] {
+  --status: var(--ink-muted);
+}
+
+/* The indicator (2026-10-26, Jonathan: "more premium but still simple"): a
+   small solid dot in a faint halo of its own colour, centred on the first
+   line's capitals, however many lines the label wraps to. */
+.dot {
+  --size: 0.375rem;
+  position: relative;
+  flex: none;
+  width: var(--size);
+  height: var(--size);
+  /* The line's middle, lifted 0.05em to the capitals' middle. */
+  margin-top: calc((1.4em - var(--size)) / 2 - 0.05em);
+  border-radius: 50%;
+  background: var(--status);
+  box-shadow: 0 0 0 0.1875rem color-mix(in srgb, var(--status) 16%, transparent);
+}
+
+/* "Online": while available, a hairline ring leaves the halo's edge every
+   2 s (2026-10-26, Jonathan: "smoothen and quicken"), spreading 5 px on the
+   smooth spring as it fades in and out, with no rest between pulses. Drawn
+   at full size and scaled up from the halo (transform, so it glides on
+   sub-pixel steps; outline-offset snapped to whole pixels); the line is
+   finest leaving the halo and a hairline at its widest. It never reaches
+   the label. The section's one ambient motion; none under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .availability[data-status="available"] .dot::after {
+    --reach: 0.5rem;
+    content: "";
+    position: absolute;
+    inset: calc(-1 * var(--reach));
+    border: 1px solid var(--status);
+    border-radius: 50%;
+    opacity: 0;
+    animation:
+      statusSpread 2s var(--ease-smooth) var(--pulse-delay, 0s) infinite,
+      statusFade 2s linear var(--pulse-delay, 0s) infinite;
+  }
+
+  /* Entrance (2026-10-28, Jonathan: "ensure we have an entry/load-in
+     animation for our online indicator dot"): the dot switches on just after
+     its label starts to rise, fading in and growing from 40% on the smooth
+     spring (halo with it), and the pulse begins once it has landed. It
+     follows its label: on trigger in Services (leaving with it, quicker), on
+     load in About (after the label's --delay, held under a page transition). */
+  .dot {
+    --dot-delay: calc(var(--delay, 0s) + 150ms);
+    --pulse-delay: calc(var(--dot-delay) + var(--dur-short) + 150ms);
+  }
+
+  .availability:has(> [data-mode="load"]) .dot,
+  .availability:has(> [data-mode="scroll"][data-in]) .dot {
+    animation: dotIn var(--dur-short) var(--ease-smooth) var(--dot-delay) both;
+  }
+
+  :global(html[data-trigger-ready]) .availability:has(> [data-mode="scroll"]:not([data-in])) .dot {
+    opacity: 0;
+  }
+
+  .availability:has(> [data-mode="scroll"]:not([data-in])) .dot::after {
+    animation: none;
+  }
+
+  .availability:has(> [data-mode="scroll"][data-out]) .dot {
+    animation: dotOut var(--dur-micro) var(--ease-exit) both;
+  }
+
+  :global(html[data-page-transition]) .availability:has(> [data-mode="load"]) .dot,
+  :global(html[data-page-transition]) .availability:has(> [data-mode="load"]) .dot::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+@keyframes dotIn {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Names its start, so it plays from the visible dot (see lineOut). */
+@keyframes dotOut {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+/* From the halo's edge (12 px across) to the full ring (22 px). */
+@keyframes statusSpread {
+  from {
+    transform: scale(0.5455); /* 12 / 22 */
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes statusFade {
+  from {
+    opacity: 0;
+  }
+
+  12% {
+    opacity: 0.55;
+  }
+
+  85%,
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---- The services ---- */
+.list {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  position: relative;
+  grid-column: 2 / 8;
+  display: grid;
+  grid-template-columns: subgrid;
+  align-items: start;
+  /* Even air above and below a row's content, between its rules (2026-10-28). */
+  padding: var(--space-2xl) 0;
+}
+
+/* The title-block rule above each row, drawing in from the left as the row
+   comes into view (and back out, shorter, as it leaves). */
+.row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: var(--line);
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-trigger-ready]) .row:not([data-in])::before {
+    transform: scaleX(0);
+  }
+
+  .row[data-in]::before {
+    transition: transform var(--dur-reveal) var(--ease-reveal);
+  }
+
+  .row[data-out]::before {
+    transition: transform var(--dur-short) var(--ease-exit);
+  }
+}
+
+/* A plain block (not flex), so the cap trim below applies to it. */
+.name {
+  position: relative;
+  grid-column: 1 / 3;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--type-display-s-size);
+  font-weight: var(--type-display-s-weight);
+  line-height: 1;
+  letter-spacing: var(--type-display-tracking);
+  text-transform: uppercase;
+}
+
+/* The service's icon, a step up from the site's 16px (2026-10-26, Jonathan:
+   sized to the names was "way too big"), set at the start of the name on
+   the title's edge, column 2 (2026-10-26, Jonathan: "left aligned where the
+   beginning of those service labels are aligned, not outside the grid"),
+   the name after it. Circum draws within 3/24 of each side of its box, so
+   the box is nudged left by that (--ink) to put the ink on the edge.
+   Centred on the first line's capitals, however the name wraps. It enters
+   with its row, rising and clearing like a line, a beat after the rule
+   starts (and leaves with it). */
+.name {
+  --icon-size: 1.25rem;
+  --ink: calc(var(--icon-size) * 3 / 24);
+  padding-left: calc(var(--icon-size) - 2 * var(--ink) + var(--space-xs));
+}
+
+.icon {
+  position: absolute;
+  left: 0;
+  top: 0.5cap; /* the first line's capitals (the name is trimmed to them) */
+  width: var(--icon-size);
+  height: var(--icon-size);
+  translate: calc(-1 * var(--ink)) -50%;
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-trigger-ready]) .row:not([data-in]) .icon {
+    opacity: 0;
+  }
+
+  .row[data-in] .icon {
+    animation: iconIn var(--dur-reveal) var(--ease-reveal) 0.12s both;
+  }
+
+  .row[data-out] .icon {
+    animation: iconOut var(--dur-short) var(--ease-exit) both;
+  }
+}
+
+@keyframes iconIn {
+  from {
+    opacity: 0;
+    filter: blur(0.08em);
+    transform: translateY(0.75em);
+  }
+}
+
+@keyframes iconOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(0.1em);
+    transform: translateY(0.35em);
+  }
+}
+
+/* What it covers, one item per line, like the slides' spec values. */
+.items,
+.proof {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  line-height: 1.6;
+}
+
+.items {
+  grid-column: 3 / 5;
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  letter-spacing: var(--type-body-tracking);
+}
+
+/* The proof: the projects that show it, one per line, set right on the
+   content's edge (column 7). */
+.proof {
+  grid-column: 5 / 7;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Flex, so neither the link nor its label is set in a line box (whose strut
+   would push it below the row's cap line). */
+.proof > li {
+  display: flex;
+}
+
+.proofLink {
+  display: flex;
+  color: inherit;
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+/* Touch screens: the stacked project links each get a 44px row (they sat
+   22px apart, too close to tap reliably; 2026-10-28 ship-check). */
+@media (pointer: coarse) {
+  .proofLink {
+    padding-block: calc((44px - 1lh) / 2);
+  }
+}
+
+/* One cap line for the row: the name, the first item and the first project
+   start together, each trimmed to its capitals at the top (the lists' first
+   lines through RiseLine's trim="start"). */
+@supports (text-box: trim-both cap alphabetic) {
+  .name {
+    text-box: trim-both cap alphabetic;
+  }
+}
+
+/* Narrower desktops: "DEVELOPMENT" is wider than two columns at the display
+   size until ~1680px and ran into the items (2026-10-28). Here the name takes
+   three columns with its projects under it (lined up with its text, past the
+   icon), and the items take the other three; the type stays as it is. */
+@media (min-width: 1024px) and (max-width: 1679px) {
+  .name {
+    grid-column: 1 / 4;
+    grid-row: 1;
+  }
+
+  .items {
+    grid-column: 4 / 7;
+    grid-row: 1 / 3;
+  }
+
+  .proof {
+    grid-column: 1 / 4;
+    grid-row: 2;
+    align-items: flex-start;
+    margin-top: var(--space-xl);
+    padding-left: calc(1.25rem - 2 * (1.25rem * 3 / 24) + var(--space-xs));
+  }
+}
+
+/* ---- Below 1024px: one column, everything set left ---- */
+@media (max-width: 1023px) {
+  .services {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    margin-top: var(--space-section);
+    padding: 0 var(--grid-margin-sm);
+  }
+
+  .head {
+    grid-column: 1 / -1;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-l);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .title {
+    font-size: clamp(3rem, 14vw, 6rem);
+  }
+
+  .status {
+    align-items: flex-start;
+  }
+
+  .row {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    row-gap: var(--space-l);
+    padding: var(--space-xl) 0;
+  }
+
+  .name,
+  .items {
+    grid-column: 1 / -1;
+  }
+
+
+  /* The two-up rule: the second project starts on column 5. */
+  /* One per line, set left like the items above them (2026-10-26,
+     Jonathan: three projects two-up left an uneven row). */
+  .proof {
+    grid-column: 1 / -1;
+    align-items: flex-start;
+  }
+}

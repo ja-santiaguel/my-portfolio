@@ -1,0 +1,174 @@
+.text {
+  display: block;
+}
+
+/* One wrapper per laid-out line. Each line is its own view timeline, so its
+   entrance follows its own position on screen. The focus-in (2026-10-18)
+   replaced the rise out of a mask: nothing is clipped any more; the padding
+   (cancelled by negative margin) keeps the trim rules below working. */
+.line {
+  display: block;
+  padding-block: 0.3em;
+  margin-block: -0.3em;
+}
+
+.lineInner {
+  display: block;
+}
+
+/* Trimmed text: the first mask trims above the capitals, the last below the
+   baseline (the masks' padding would otherwise stop the trim). */
+.text[data-trim] {
+  text-box: normal;
+}
+
+.text[data-trim] .line:first-child {
+  text-box: trim-start cap alphabetic;
+}
+
+.text[data-trim] .line:last-child {
+  text-box: trim-end cap alphabetic;
+}
+
+.text[data-trim] .line:only-child {
+  text-box: trim-both cap alphabetic;
+}
+
+.text[data-trim="start"] .line:last-child {
+  text-box: normal;
+}
+
+.text[data-trim="start"] .line:first-child {
+  text-box: trim-start cap alphabetic;
+}
+
+/* The line entrance (2026-10-19, timed after mikewilcockdesign.com's
+   text): each line rises a full em on the reveal curve (expo out, 1.1 s),
+   clearing a slight blur and the fade on the same curve, so both are mostly
+   gone in the first quarter and the blur only shows while the line is low;
+   the long tail is the soft settle. 50 ms between lines. */
+/* In view (trigger-based since 2026-10-19, see ViewTrigger): when the text
+   comes into view its lines play the same timed entrance as on load, so it's never rushed by fast scrolling. Hidden ahead of it only once
+   the trigger is running. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-trigger-ready]) .text[data-mode="scroll"]:not([data-in]) .lineInner {
+    opacity: 0;
+  }
+
+  .text[data-mode="scroll"][data-in] .lineInner {
+    animation:
+      lineReveal var(--dur-reveal) var(--ease-reveal) calc(var(--l, 0) * 50ms) both;
+  }
+
+  /* Leaving through the bottom (scrolling back up): the entrance in reverse,
+     shorter and accelerating away, all lines together: they sink back down
+     the way they came, blurring and fading as they go. */
+  .text[data-mode="scroll"][data-out] .lineInner {
+    animation: lineOut var(--dur-short) var(--ease-exit) both;
+  }
+}
+
+/* Load: lines one after another (50 ms apart), held while the opening
+   montage plays and while a page transition covers the page. */
+@media (prefers-reduced-motion: no-preference) {
+  .text[data-mode="load"] .lineInner {
+    animation:
+      lineReveal var(--dur-reveal) var(--ease-reveal) calc(var(--delay, 0s) + var(--l, 0) * 50ms) both;
+  }
+
+  :global(html[data-intro="playing"]) .text[data-mode="load"] .lineInner,
+  :global(html[data-page-transition]) .text[data-mode="load"] .lineInner {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+@keyframes lineReveal {
+  from {
+    opacity: 0;
+    filter: blur(0.08em);
+    transform: translateY(1em);
+  }
+}
+
+@keyframes lineFocus {
+  from {
+    opacity: 0;
+    filter: blur(0.1em);
+  }
+}
+
+/* The exit names its start values: an implicit start would be the hidden
+   base style (opacity 0 while not [data-in]), so it would run from invisible
+   to invisible and the content would still vanish at once. */
+@keyframes lineOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(0.1em);
+    transform: translateY(0.35em);
+  }
+}
+
+/* Display letters, rising one after another when the title comes into view. */
+.letters {
+  display: inline-flex;
+}
+
+.letterMask {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.letter {
+  display: inline-block;
+}
+
+/* Letters rise one after another (35 ms apart) when the title comes into
+   view, over 1.1 s like the case-study title on load. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html[data-trigger-ready]) .letters:not([data-in]) .letter {
+    opacity: 0;
+  }
+
+  .letters[data-in] .letter {
+    transform-origin: 50% 100%;
+    animation:
+      letterRise 1100ms var(--ease-rise) calc(var(--i) * 35ms) both,
+      lineFocus var(--dur-short) var(--ease-smooth) calc(var(--i) * 35ms) both;
+  }
+
+  /* Leaving: the whole title sinks back and widens at once (2026-10-19:
+     letters rise one by one but leave together). */
+  .letters[data-out] .letter {
+    transform-origin: 50% 100%;
+    animation: letterOut var(--dur-short) var(--ease-exit) both;
+  }
+}
+
+/* Display letters: from a full letter-height below, about 5% wide, narrowing
+   to their true width as they land (Mike Wilcock's wordmark). */
+@keyframes letterRise {
+  from {
+    transform: translateY(0.45em) scaleX(1.05);
+  }
+}
+
+@keyframes letterOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(0.1em);
+    transform: translateY(0.45em) scaleX(1.05);
+  }
+}

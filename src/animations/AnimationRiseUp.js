@@ -1,18 +1,21 @@
 // Imports
 import { motion } from "framer-motion";
 import classNames from "classnames";
+import { springSmooth, springRise, DURATION } from "@/lib/motion";
 
+// The focus-in (2026-10-18): transparent, a third of a line low, softly
+// blurred, settling into place (no mask).
 const textRiseVariants = {
-  hidden: { y: "160%"},
-  visible: { y: 0},
+  hidden: { opacity: 0, y: "0.35em", filter: "blur(0.1em)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0em)" },
 };
 
 export default function AnimationRiseUp({
   uniqueKey,
   className,
-  duration = 1.4,
+  duration = DURATION.long / 1000,
   delay = 0,
-  ease = [0.2, 0.8, 0.3, 1],
+  ease = springSmooth,
   onClick,
   children,
 }) {
@@ -25,9 +28,10 @@ export default function AnimationRiseUp({
         animate="visible"
         variants={textRiseVariants}
         transition={{
-          duration: duration,
-          ease: ease,
-          delay: delay,
+          // The rise on the overshooting spring; blur and opacity clear early.
+          y: { duration, ease: springRise, delay },
+          opacity: { duration: DURATION.short / 1000, ease, delay },
+          filter: { duration: DURATION.short / 1000, ease, delay },
         }}
         onClick={onClick}
       >

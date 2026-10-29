@@ -1,0 +1,49 @@
+.backToTop {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  padding: 1.75rem 4rem;
+  /* Second line ("Scroll to explore" / "Return to top") in the meta style. */
+  font-size: var(--type-meta-size);
+  font-weight: var(--type-meta-weight);
+  letter-spacing: var(--type-meta-tracking);
+  text-shadow: 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.05);
+  z-index: 1000;
+  color: var(--background);
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.text {
+  line-height: 1;
+  pointer-events: auto;
+  user-select: none;
+}
+
+/* First line: the credit, in the chrome style (same as the navbar). */
+.credit {
+  font-size: var(--type-chrome-size);
+  font-weight: var(--type-chrome-weight);
+  letter-spacing: var(--type-chrome-tracking);
+}
+
+.topButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+
+.list {
+  gap: 0.2rem;
+}
+/* Decorative corner label; hidden below 1024px, where content runs to the
+   screen edge and it would sit over text. */
+@media (max-width: 1023px) {
+  .backToTop {
+    display: none;
+  }
+}

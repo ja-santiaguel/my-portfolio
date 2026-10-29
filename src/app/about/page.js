@@ -1,228 +1,198 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useLayoutEffect, useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { availability, profile, projects, toolkit } from "@/content/projects";
+import { about } from "@/content/about";
+import SmoothScroll from "@/components/home/SmoothScroll";
+import ContactSection from "@/components/home/ContactSection";
+import Reveal from "@/components/case-study/Reveal";
+import RevealSection from "@/components/case-study/RevealSection";
+import { Statements } from "@/components/case-study/CaseStudy";
+import { RiseLetters } from "@/components/home/Rise";
+import RiseText, { RiseLine } from "@/components/RiseText";
+import HoverArrow from "@/components/HoverArrow";
+import Bracketed from "@/components/Bracketed";
+import ActionLabel from "@/components/ActionLabel";
+import cs from "@/components/case-study/CaseStudy.module.css";
+import slide from "@/components/home/Slide.module.css";
+import services from "@/components/home/ServicesSection.module.css";
 import styles from "./styles.module.css";
-import classNames from "classnames";
-import gsap from "gsap";
-import LocomotiveScroll from "locomotive-scroll";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
-import { CiLinkedin, CiMail, CiInstagram } from "react-icons/ci";
+import { pageMetadata } from "@/lib/metadata";
 
-gsap.registerPlugin(ScrollTrigger);
+export const metadata = pageMetadata({
+  path: "/about",
+  title: "About | Jonathan Andrew",
+  description:
+    "Jonathan Andrew Santiaguel is a UX/UI designer and frontend developer in Greater Vancouver: his path from architecture and the kitchen to digital design, his background and his toolkit.",
+});
 
-export default function AboutMePage() {
-  const router = useRouter();
-  const headerRef = useRef(null);
-  const scrollRef = useRef(null);
-  const imageRef = useRef(null);
+const bySlug = Object.fromEntries(projects.map((p) => [p.slug, p]));
+const projectName = (p) => [p.title, p.secondTitle].filter(Boolean).join(" ");
 
-  const headerTexts = [
-    "",
-    "About Me",
-    "Interested in creating a digital experience?",
-  ];
-
-  useLayoutEffect(() => {
-    const scroll = new LocomotiveScroll({
-      el: scrollRef.current,
-      smooth: true,
-    });
-
-    const sections = document.querySelectorAll(`.${styles.container}`);
-    sections.forEach((section, index) => {
-      ScrollTrigger.create({
-        trigger: section,
-        start: "top 75%",
-        end: "bottom 75%",
-        onEnter: () => updateHeader(index),
-        onLeaveBack: () => updateHeader(index - 1),
-        // markers: true,
-      });
-    });
-
-    function updateHeader(index) {
-      const header = headerRef.current;
-      if (!header) return;
-      if (index < 0) {
-        gsap.to(header, { opacity: 0, duration: 0.25 });
-      } else {
-        gsap.to(header, {
-          opacity: 0,
-          duration: 0.25,
-          onComplete: () => {
-            header.textContent = headerTexts[index];
-            gsap.to(header, { opacity: 1, duration: 0.5 });
-          },
-        });
-      }
-    }
-
-    updateHeader(0);
-
-    const resizeObserver = new ResizeObserver(() => {
-      ScrollTrigger.refresh();
-    });
-
-    sections.forEach((section) => resizeObserver.observe(section));
-
-    // Clip path animation for the image
-    gsap.fromTo(
-      imageRef.current,
-      { clipPath: "inset(100% 0% 0% 0%)" },
-      { clipPath: "inset(0% 0% 0% 0%)", duration: 1.6, ease: "power2.out" }
-    );
-
-    return () => {
-      resizeObserver.disconnect();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+// About (redesigned 2026-10-27). The case studies' language, so it reads as
+// part of the same set: a title block first (title, lead, facts and the
+// resume beside a tall portrait, the page's one signature moment as it
+// clip-opens on load), then ruled sections on columns 2-7 whose titles'
+// letters rise and whose lines rise in on trigger, then the ink footer.
+export default function AboutPage() {
+  const { path, why, background } = about;
+  const facts = about.facts;
 
   return (
-    <main className={classNames(styles.main, "relative w-full")}>
-      <section
-        className={classNames(
-          "fixed w-full grid grid-cols-8 px-16",
-          styles.sectionHeaderContainer
-        )}
-      >
-        <div
-          ref={headerRef}
-          className={classNames(
-            "w-full bottom-0 mb-7 col-start-2 col-span-6 self-end",
-            styles.sectionHeader
-          )}
-        ></div>
-      </section>
+    <main>
+      <SmoothScroll />
 
-      {/* Header */}
-      <section
-        className={classNames(
-          styles.container,
-          "w-full grid grid-cols-8 px-16"
-        )}
-      >
-        <h1
-          className={classNames(
-            "col-start-2 col-span-3 self-end",
-            styles.projectTitle
-          )}
-        >
-          Hello, I'm Jonathan Andrew Santiaguel
+      {/* On screen at load: the title's letters, then the text line by line,
+          the facts' rules drawing in under them. */}
+      <Reveal as="header" className={styles.header}>
+        <h1 className={`${cs.title} ${styles.title}`} aria-label="About me">
+          <RiseLetters text="ABOUT" base={0} />
+          <RiseLetters text="ME" base={0.15} />
         </h1>
-        <div className="col-start-5 col-span-3">
+
+        <div className={styles.details}>
+          <p className={`${cs.lead} ${styles.lead}`}>
+            <RiseText text={about.lead} mode="load" delay={0.5} />
+          </p>
+
+          <dl className={styles.spec}>
+            {facts.map((row, i) => (
+              <div key={row.label} className={styles.specRow} style={{ "--i": i }}>
+                <dt className={`${cs.label} ${styles.specLabel}`}>
+                  <RiseLine mode="load" delay={0.62 + i * 0.05}>
+                    {row.label}
+                  </RiseLine>
+                </dt>
+                <dd className={styles.specValue}>
+                  {row.items.map((item, k) => (
+                    <RiseText key={item} as="span" text={item} mode="load" delay={0.64 + i * 0.05 + k * 0.03} className={styles.specLine} />
+                  ))}
+                </dd>
+              </div>
+            ))}
+            {/* Availability, kept current in projects.js, as in Services. */}
+            <div className={styles.specRow} style={{ "--i": facts.length }}>
+              <dt className={`${cs.label} ${styles.specLabel}`}>
+                <RiseLine mode="load" delay={0.62 + facts.length * 0.05}>
+                  Status
+                </RiseLine>
+              </dt>
+              <dd className={styles.specValue}>
+                <span className={services.availability} data-status={availability.status} style={{ "--delay": `${0.64 + facts.length * 0.05}s` }}>
+                  <span className={services.dot} aria-hidden="true" />
+                  <RiseLine mode="load" delay={0.64 + facts.length * 0.05}>
+                    {availability.label}
+                  </RiseLine>
+                </span>
+              </dd>
+            </div>
+          </dl>
+
+          <a className={`${slide.learnMoreButton} ${styles.resume} touch-target`} href={profile.resume} target="_blank" rel="noopener noreferrer" aria-label="View resume (PDF, opens in a new tab)">
+            <HoverArrow>
+              <RiseLine mode="load" delay={0.9}>
+                <ActionLabel>[ View resume ]</ActionLabel>
+              </RiseLine>
+            </HoverArrow>
+          </a>
+        </div>
+
+        <figure className={styles.portrait}>
           <Image
-            ref={imageRef}
-            src="/images/portrait_02.png"
-            alt="Photo of myself, Jonathan Andrew Santiaguel"
-            width={1440}
-            height={1080}
-            className={styles.image}
+            src={about.portrait.src}
+            width={about.portrait.width}
+            height={about.portrait.height}
+            alt={about.portrait.alt}
+            sizes="(max-width: 1023px) 100vw, 34vw"
+            className={styles.portraitImage}
           />
-        </div>
-      </section>
+        </figure>
+      </Reveal>
 
-      {/* Showcase */}
-      <section
-        className={classNames(
-          styles.container,
-          "w-full grid grid-cols-8 px-16 gap-y-16 py-16"
-        )}
-      >
-        <div className="col-start-2 col-span-6 grid grid-cols-6 gap-y-16">
-          <div className="col-start-1 col-span-4 pr-4">
-            <h4 className={styles.descriptionHeader}>My Story</h4>
-            <div className="flex flex-col">
-              <p className={styles.descriptionBody}>
-                An Architecture student, turned Junior Sous Chef, turned Digital Designer—life has
-                taken me on a journey of exploration and self-discovery, leading
-                me to where I am today. As a believer in crafting your own
-                destiny, I have always been driven by the desire to create and
-                inspire. This passion has led me to pursue a career in Digital
-                Design, where I can express my creativity and connect with
-                others through my work.
-              </p>
-              <p className={styles.descriptionBody}>
-                Beyond design, I am an avid water drinker, technology
-                enthusiast, and a well-proficient digital strategist in
-                interactive entertainment (video games). Alongside gaming, I am
-                also an advocate for mental health awareness, physical fitness,
-                and music therapy. Personally, nothing beats whipping up a strawberry
-                rhubarb crumble on a Sunday afternoon listening to old school
-                R&B.
-              </p>
-            </div>
-          </div>
-          <div className="col-start-3 col-span-4 pr-4">
-            <h4 className={styles.descriptionHeader}>Why I Design</h4>
-            <div className="flex flex-col">
-              <p className={styles.descriptionBody}>
-                Having spent my lifetime accustom to technology, I am constantly
-                connected to digital and visual interactions. Whether it be
-                through film, visual design, or interactive
-                experiences, I have always been fascinated by the power of
-                design to evoke emotions and inspire action.
-              </p>
-              <p className={styles.descriptionBody}>
-                My design philosophy is centered around the belief that good
-                design shouldn't just be seen—it should also be felt. So, as a
-                designer, I strive to create work that not only looks beautiful
-                but also resonates and reaches an audience on a deeper level.
-              </p>
-              <p className={classNames("italic", styles.descriptionBody)}>
-                Moving forward, I am excited to continue my journey in the world
-                of Digital Design, where I can push my boundaries of creativity
-                and create meaningful experiences that inspire and connect with
-                others.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Last */}
-      <section
-        className={classNames(
-          styles.container,
-          "w-full grid grid-cols-8 px-16 py-16"
-        )}
-      >
-        <div className="col-start-2 col-span-6 grid grid-cols-6 gap-y-16">
-          <div className="col-start-1 col-span-2 pr-4">
-            <h4 className={classNames("", styles.descriptionHeader)}>
-              Jonathan Andrew
-            </h4>
-            <p className={classNames("", styles.descriptionBody)}>
-              Design to express, connect, and inspire.
+      <div className={cs.layout}>
+        <div className={cs.content}>
+          <RevealSection id="path" title={path.title}>
+            <p className={`${cs.lead} ${styles.sectionLead}`}>
+              <RiseText text={path.lead} />
             </p>
-          </div>
-          <div className="col-start-3 col-span-2 flex items-center"></div>
-          <div className="col-start-5 col-span-2 flex flex-col items-end">
-            <h4 className={classNames("text-right", styles.descriptionHeader)}>
-              Get in touch
-            </h4>
-            <div className="flex flex-row gap-x-4">
-              <CiMail className="w-6 h-6 opacity-20" />
-              <a
-                href="https://www.linkedin.com/in/jonathan-andrew-santiaguel/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <CiLinkedin className="w-6 h-6" />
-              </a>
-              <a
-                href="https://www.instagram.com/jasantiaguel/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <CiInstagram className="w-6 h-6" />
-              </a>
+            {/* A real sequence, so numbered. */}
+            <ol className={`${cs.trio} ${cs.wideBlock} ${styles.steps}`}>
+              {path.steps.map((step, i) => (
+                <li key={step.title} className={styles.step}>
+                  <span className={styles.stepNo}>
+                    <RiseLine>
+                      <Bracketed>{`[ ${i + 1} ]`}</Bracketed>
+                    </RiseLine>
+                  </span>
+                  <h3 className={cs.heading}>
+                    <RiseText text={step.title} />
+                  </h3>
+                  <p className={cs.trioText}>
+                    <RiseText text={step.text} />
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </RevealSection>
+
+          <RevealSection id="why" title={why.title}>
+            <Statements lines={why.statements} />
+            <div className={styles.afterStatements}>
+              {why.text.map((text) => (
+                <p key={text} className={cs.prose}>
+                  <RiseText text={text} />
+                </p>
+              ))}
             </div>
-          </div>
+          </RevealSection>
+
+          <RevealSection id="background" title={background.title}>
+            <ol className={`${styles.rows} ${cs.wideBlock}`}>
+              {background.items.map((item) => {
+                const p = item.project && bySlug[item.project];
+                return (
+                  <li key={item.when + (item.project || item.name)} className={styles.row} data-trigger="">
+                    <span className={styles.when}>
+                      <RiseLine trim="start">{item.when}</RiseLine>
+                    </span>
+                    <h3 className={styles.what}>
+                      <RiseLine trim="start">{p ? projectName(p) : item.name}</RiseLine>
+                    </h3>
+                    <p className={styles.detail}>
+                      <RiseText text={item.detail} trim />
+                    </p>
+                    {p?.href && (
+                      <Link href={p.href} className={`${slide.learnMoreButton} ${styles.rowLink} touch-target`} aria-label={`${p.button.replace(/[[\]]/g, "").trim()}: ${projectName(p)}`}>
+                        <HoverArrow>
+                          <RiseLine trim="start">
+                            <ActionLabel>{p.button}</ActionLabel>
+                          </RiseLine>
+                        </HoverArrow>
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </RevealSection>
+
+          <RevealSection id="toolkit" title={about.toolkit.title}>
+            <dl className={`${styles.rows} ${cs.wideBlock}`}>
+              {[about.toolkit.practice, ...toolkit].map((group) => (
+                <div key={group.name} className={styles.row} data-trigger="">
+                  <dt className={styles.when}>
+                    <RiseLine trim="start">{group.name}</RiseLine>
+                  </dt>
+                  <dd className={styles.tools}>
+                    <RiseText text={group.items.join(", ")} trim />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </RevealSection>
         </div>
-      </section>
+      </div>
+
+      <ContactSection profile={profile} />
     </main>
   );
 }

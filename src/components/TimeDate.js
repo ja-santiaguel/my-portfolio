@@ -35,14 +35,14 @@ export default function TimeDate() {
     <div className="time stacked">
       <ul className={classNames(styles.list, "stacked")}>
         <li>
-          <AnimationRiseUp className={styles.navText} delay={2.4}>
+          <AnimationRiseUp className={styles.navText} delay={0.2} duration={0.8}>
             <div className={styles.text} suppressHydrationWarning>
               GREATER VANCOUVER
             </div>
           </AnimationRiseUp>
         </li>
         <li>
-          <AnimationRiseUp className={styles.navText} delay={2.5}>
+          <AnimationRiseUp className={styles.navText} delay={0.25} duration={0.8}>
             <div className={styles.text} suppressHydrationWarning>
               {formatTime(currentTime)}
             </div>

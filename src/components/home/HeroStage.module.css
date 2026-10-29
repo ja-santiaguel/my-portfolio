@@ -1,0 +1,414 @@
+/* Hero slot geometry lives in custom properties so the slot, the flyer's
+   pre-JS position, and the words around it always agree. */
+.stage {
+  position: relative;
+  /* Never let anything in the hero widen the page. `clip` creates no scroll container. */
+  overflow-x: clip;
+  --slot-w: clamp(13rem, 28vw, 26rem);
+  --slot-h: calc(var(--slot-w) * 1.25);
+  --slot-top: calc(50svh - var(--slot-h) / 2 + 1.5rem);
+  /* Sized so the longest flip word always fits the width (tuned for 10
+     letters; the longest now is DEVELOPER, 9). */
+  --type-display-xl-size: min(clamp(4rem, 15.5vw, 15rem), calc((100vw - 2.5rem) / 5.4));
+  --overlap: calc(var(--type-display-xl-size) * 0.3);
+  --montage-side: max(96px, calc(var(--slot-w) * 0.5));
+}
+
+.hero {
+  position: relative;
+  height: 100svh;
+  overflow: clip;
+}
+
+/* Original display treatment: Oswald 800, uppercase. Solid #151515 is what the
+   original #dedede + difference blend renders on concrete. */
+.heroTitle {
+  margin: 0;
+  font-family: var(--font-oswald), sans-serif;
+  font-weight: var(--type-display-xl-weight);
+  font-size: var(--type-display-xl-size);
+  letter-spacing: var(--type-display-tracking);
+  line-height: 0.95;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+/* The mask box has a little vertical padding so split-flap halves can pull
+   apart without being clipped; the offsets below cancel it out. */
+.word {
+  --mask-pad: 0.08em;
+  position: absolute;
+  left: 0;
+  right: 0;
+  padding-block: var(--mask-pad);
+  overflow: hidden;
+  color: #151515;
+  text-align: center;
+}
+
+/* Letters rise in one by one (see SplitFlapWord). */
+.word > span {
+  display: inline-block;
+}
+
+/* Behind the portrait: the photo covers its lower edge. */
+.wordTop {
+  z-index: 0;
+  bottom: calc(100svh - var(--slot-top) - var(--overlap) - var(--mask-pad));
+}
+
+/* Also behind the portrait: the photo covers its upper edge. */
+.wordBottom {
+  z-index: 0;
+  top: calc(var(--slot-top) + var(--slot-h) - var(--overlap) - var(--mask-pad));
+}
+
+/* Measuring reference for the portrait card. */
+.heroSlot {
+  position: absolute;
+  left: calc(50% - var(--slot-w) / 2);
+  top: var(--slot-top);
+  width: var(--slot-w);
+  height: var(--slot-h);
+}
+
+/* Side text around the portrait.
+   Left: byline (full name / location / edition), right-aligned against
+   the portrait. Right: what I offer, in the original body size, left-aligned
+   against the portrait. Both hang from one shared top line, the same distance
+   from the portrait. Below 1024px: stacked under the title, left-aligned. */
+.sides {
+  display: contents;
+}
+
+.side {
+  position: absolute;
+  z-index: 3;
+  top: calc(var(--slot-top) + var(--slot-h) * 0.44);
+  margin: 0;
+}
+
+.sideLeft {
+  right: calc(50% + var(--slot-w) / 2 + 2.5rem);
+}
+
+.byline {
+  text-align: right;
+}
+
+/* Same size and line height as the statement, so both sides share one
+   baseline rhythm across the portrait. */
+.bylineLine {
+  margin: 0;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Where supported, trim each line to its capitals and space the lines with
+   one explicit gap, so the gaps match whatever the font sizes (line-height
+   alone leaves more room around the smaller meta lines). The statement is
+   trimmed too, so both sides still start on the same cap line. */
+@supports (text-box: trim-both cap alphabetic) {
+  .byline,
+  .statement {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .bylineLine {
+    text-box: trim-both cap alphabetic;
+  }
+}
+
+.sideRight {
+  left: calc(50% + var(--slot-w) / 2 + 2.5rem);
+  width: min(21rem, calc(50% - var(--slot-w) / 2 - 6.5rem));
+}
+
+/* Byline: name in the label style (600, ink); location and edition in the
+   meta style (400, muted grey). */
+.name {
+  font-size: var(--type-label-size);
+  font-weight: var(--type-label-weight);
+  letter-spacing: var(--type-label-tracking);
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+/* Original description body style; its lines are set like the byline's
+   (.bylineLine), one beat each. */
+.statement {
+  font-size: var(--type-body-size);
+  font-weight: var(--type-body-weight);
+  letter-spacing: var(--type-body-tracking);
+}
+
+/* Under .statement to outrank RiseText's own display. */
+.statement .statementFlow {
+  display: none;
+}
+
+.meta {
+  color: var(--ink-muted);
+  font-size: var(--type-meta-size);
+  font-weight: var(--type-meta-weight);
+  line-height: 1.6;
+  letter-spacing: var(--type-meta-tracking);
+  text-transform: uppercase;
+}
+
+/* ---- The frame: montage window -> hero card -> first project ---- */
+/* Above the side text (z 3), so the photo flies in front of the byline and
+   statement; the title words (z 0) stay behind it. Still below the fixed
+   chrome and the slide titles (1000+). */
+.flyer {
+  position: absolute;
+  z-index: 4;
+  left: calc(50% - var(--slot-w) / 2);
+  top: var(--slot-top);
+  width: var(--slot-w);
+  height: var(--slot-h);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.flyerReveal {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #e6e6e3;
+  animation: cutUp var(--dur-long) var(--ease-smooth) 0.1s both;
+}
+
+/* Portrait, positioned by JS around the subject. Pre-JS values reproduce the
+   1.5x subject-focused crop in the hero card (focus 0.5 / 0.66). */
+.portraitBox {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 150%;
+  height: 160%;
+  transform: translate(-16.67%, -34.75%);
+}
+
+.fill {
+  object-fit: cover;
+}
+
+.coverImage {
+  object-fit: cover;
+}
+
+/* Same geometry as the project panel's parallax image. */
+.coverParallax {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 130%;
+  transform: translate3d(0, -11.5%, 0);
+  will-change: transform;
+}
+
+/* First project, wiped in from below during the scroll transition. */
+.cover {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(100% 0 0 0);
+}
+
+/* Click target over the flying image; only live while data-active="true". */
+.flyerLink {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.flyerLink[data-active="true"] {
+  pointer-events: auto;
+}
+
+/* Solid backing: nothing (not even the portrait) shows until the first cut. */
+.montage {
+  position: absolute;
+  inset: 0;
+  display: none;
+  background: #e6e6e3;
+}
+
+.montageFrame {
+  object-fit: cover;
+  visibility: hidden;
+}
+
+.montageFrame[data-on] {
+  visibility: visible;
+  animation: montageCut var(--cut, 150ms) linear both;
+}
+
+/* ---- Opening montage: only the media window shows until it lands ---- */
+/* Pre-paint position of the montage: a small square centred on the portrait. */
+:global(html[data-intro="playing"]) .flyer {
+  left: calc(50% - var(--montage-side) / 2);
+  top: calc(var(--slot-top) + (var(--slot-h) - var(--montage-side)) / 2);
+  width: var(--montage-side);
+  height: var(--montage-side);
+}
+
+:global(html[data-intro="playing"]) .montage {
+  display: block;
+}
+
+/* The first image is in the window from the first paint, so it grows in with
+   it; the cuts then play over it. */
+:global(html[data-intro="playing"]) .montageFrame:first-child {
+  visibility: visible;
+}
+
+/* The montage window grows from nothing at its centre to the small square
+   (the spring at long duration: quick to open, gentle to settle), with the
+   first image inside; the cuts take over as it settles. After the montage
+   ("done") nothing replays. */
+:global(html[data-intro="playing"]) .flyerReveal {
+  transform-origin: 50% 50%;
+  transform: scale(0);
+}
+
+/* Started by the intro script (data-grow) once the page is up and the first
+   image is decoded, so the growth is always seen from nothing. */
+:global(html[data-intro="playing"]) .flyerReveal[data-grow] {
+  animation: growIn var(--dur-long) var(--ease-smooth) both;
+}
+
+@keyframes growIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+:global(html[data-intro="done"]) .flyerReveal {
+  animation: none;
+}
+
+:global(html[data-intro="playing"]) .side {
+  animation: none;
+  opacity: 0;
+}
+
+@keyframes cutUp {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Each cut eases in from a slight push. */
+@keyframes montageCut {
+  from {
+    transform: scale(1.08);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* Desktop: keep the longest word clear of the fixed corner labels (back-to-top, layout toggle). */
+@media (min-width: 1024px) {
+  .stage {
+    --type-display-xl-size: min(15rem, calc((100vw - 30rem) / 4.95));
+  }
+}
+
+/* Below 1024px there is no room beside the portrait (2026-10-25): the hero
+   reads as a drawing sheet. The title and portrait stay the centred drawing;
+   the byline and statement become its title block, anchored to the foot of
+   the frame under a fine rule, on the grid: byline on columns 1-4, statement
+   from column 5 (the two-up rule), both from one top line, as they sit either
+   side of the portrait on desktop. The drawing centres in the space above. */
+@media (max-width: 1023px) {
+  .stage {
+    --sheet-foot: calc(var(--space-xl) + env(safe-area-inset-bottom));
+    --slot-top: calc(50svh - var(--slot-h) / 2 - 2.75rem);
+  }
+
+  .sides {
+    position: absolute;
+    z-index: 3;
+    left: var(--grid-margin-sm);
+    right: var(--grid-margin-sm);
+    bottom: var(--sheet-foot);
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    align-items: start;
+    padding-top: var(--space-l);
+  }
+
+  /* The title block's rule: draws in from the left with the side text, after
+     the opening montage or a page transition. */
+  .sides::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--line);
+    transform-origin: left center;
+    transition: transform var(--dur-reveal) var(--ease-reveal) 0.35s;
+  }
+
+  :global(html[data-intro="playing"]) .sides::before,
+  :global(html[data-page-transition]) .sides::before {
+    transform: scaleX(0);
+    transition: none;
+  }
+
+  .side {
+    position: static;
+    width: auto;
+  }
+
+  .byline {
+    grid-column: 1 / 5;
+    text-align: left;
+  }
+
+  /* The full name wraps inside its four columns on narrow phones. */
+  .bylineLine {
+    white-space: normal;
+  }
+
+  .statement {
+    grid-column: 5 / 9;
+  }
+
+  /* The sentence as one balanced paragraph in the narrow column. */
+  .statement .statementLine {
+    display: none;
+  }
+
+  .statement .statementFlow {
+    display: block;
+    text-wrap: balance;
+  }
+}
+
+@media (max-width: 1023px) and (prefers-reduced-motion: reduce) {
+  .sides::before {
+    transition: none;
+  }
+}
+

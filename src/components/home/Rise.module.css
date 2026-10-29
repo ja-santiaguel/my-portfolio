@@ -1,0 +1,60 @@
+/* Focus-in (2026-10-18): the wrappers no longer clip. */
+.mask {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.maskBlock {
+  display: block;
+}
+
+.item {
+  display: inline-block;
+  opacity: 0;
+}
+
+.maskBlock > .item {
+  display: block;
+}
+
+.letters {
+  display: flex;
+  flex-direction: row;
+}
+
+/* The entrance (2026-10-18): the rise on the overshooting spring over ~1.1 s
+   (Mike Wilcock's wordmark settle), the focus (blur, opacity) clearing early
+   while the letter is still low. */
+[data-reveal="in"] .item {
+  transform-origin: 50% 100%;
+  animation:
+    rise 1100ms var(--ease-rise) var(--d, 0s) both,
+    focus var(--dur-short) var(--ease-smooth) var(--d, 0s) both;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(0.45em) scaleX(1.05);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes focus {
+  from {
+    opacity: 0;
+    filter: blur(0.1em);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .item {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

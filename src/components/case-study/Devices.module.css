@@ -1,0 +1,140 @@
+/* Screen displays (Devices.js). Sizes are proportional (cqw), so the phone
+   scales with its column. */
+.panel {
+  display: grid;
+  place-items: center;
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+}
+
+/* The hairline edge as an overlay on top of the screenshot (an outline
+   could be painted under it). */
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  box-shadow: inset 0 0 0 1px var(--screen-edge);
+  pointer-events: none;
+}
+
+.screenImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* iPhone 16 Pro: 71.5 x 149.6 mm; titanium rim, thin black bezel. */
+.phone {
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  aspect-ratio: 71.5 / 149.6;
+  padding: 1.1%;
+  border-radius: 17.5% / 8.4%;
+  background: #3a3a3c;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+}
+
+.display {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border: 2.4cqw solid #050505;
+  border-radius: 15.5% / 7.4%;
+  background: #000;
+}
+
+.status {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* 1px over the page, so its top edge (often on a fractional pixel, blended
+     with the black display behind it) never shows as a seam (2026-10-22). */
+  height: calc(6.3% + 1px);
+  padding: 1.4cqw 8.5cqw 0;
+  font: 600 4.2cqw/1 -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #111;
+}
+
+.phone[data-tone="light"] .status {
+  color: #fff;
+}
+
+.icons {
+  display: flex;
+  gap: 1.4cqw;
+  align-items: center;
+}
+
+.icons svg {
+  width: 5.6cqw;
+  height: auto;
+  fill: currentColor;
+}
+
+.icons svg:last-child {
+  width: 7.6cqw;
+}
+
+.page {
+  position: absolute;
+  inset: 6.3% 0 0;
+  overflow: hidden;
+}
+
+.pageImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.island {
+  position: absolute;
+  top: 1.3%;
+  left: 50%;
+  z-index: 2;
+  width: 32%;
+  height: 4.3%;
+  border-radius: 999px;
+  background: #000;
+  transform: translateX(-50%);
+}
+
+.button {
+  position: absolute;
+  width: 0.9cqw;
+  border-radius: 1cqw;
+  background: #2c2c2e;
+}
+
+.button[data-side="left"] {
+  left: -0.7cqw;
+}
+
+.button[data-side="right"] {
+  right: -0.7cqw;
+  top: 26%;
+  height: 13%;
+}
+
+.button[data-n="1"] { top: 15%; height: 5%; }
+.button[data-n="2"] { top: 23%; height: 9%; }
+.button[data-n="3"] { top: 34%; height: 9%; }
+
+/* fit="screen": a whole app screen behind the status bar, bottom-anchored. */
+.phone[data-fit="screen"] .page {
+  inset: 0;
+}
+
+.phone[data-fit="screen"] .pageImage {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}

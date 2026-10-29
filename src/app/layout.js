@@ -1,54 +1,59 @@
 // Imports
+import { Oswald } from "next/font/google";
 import "@/styles/globals.css";
+import { pageMetadata, siteUrl } from "@/lib/metadata";
 // Components
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import SlidingText from "@/components/SlidingText";
+import BackToTop from "@/components/BackToTop";
+import Cursor from "@/components/Cursor";
+import PageTransition, { NavigationGate } from "@/components/PageTransition";
+import ViewTrigger from "@/components/ViewTrigger";
+
+// The display face, self-hosted by next/font (2026-10-28 ship-check; it was
+// a render-blocking Google Fonts stylesheet). The variable font covers every
+// weight; CSS uses it through --font-oswald (globals.css --font-display).
+const oswald = Oswald({ subsets: ["latin"], display: "swap", variable: "--font-oswald" });
 
 export const metadata = {
-  title: "(WIP) Jonathan Andrew - Digital Designer",
-  description:
-    "Portfolio of Jonathan Andrew, a Digital Designer based in Greater Vancouver, British Columbia.",
+  metadataBase: new URL(siteUrl),
+  ...pageMetadata({
+    path: "/",
+    title: "Jonathan Andrew | UX/UI Designer & Frontend Developer",
+    description:
+      "Portfolio of Jonathan Andrew Santiaguel, a UX/UI designer and frontend developer in Greater Vancouver, BC, designing and building websites and apps from research to launch.",
+  }),
 };
+
+// Decides before first paint whether the home page opens with the montage:
+// every full load (or refresh) of "/", never with reduced motion. Navigating
+// back to "/" inside the site does not replay it.
+const introScript = `try{if(location.pathname==="/"&&!location.hash&&!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.intro="playing"}}catch(e){}`;
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={oswald.variable} suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: introScript }} />
         <link
           rel="icon"
           href="/favicon-light.svg"
-          type="image/svgxml"
+          type="image/svg+xml"
           media="(prefers-color-scheme: light)"
         />
         <link
           rel="icon"
           href="/favicon-dark.svg"
-          type="image/svgxml"
+          type="image/svg+xml"
           media="(prefers-color-scheme: dark)"
         />
-        <link
-          href="https://fonts.googleapis.com/css2?family=My+Soul&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Geologica:wght,CRSV@100..900,1&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
-          rel="stylesheet"
-        ></link>
       </head>
       <body className="antialiased">
-        <SlidingText />
         <Header />
-        {children}
-        <Footer />
+        <NavigationGate>{children}</NavigationGate>
+        <BackToTop />
+        <Cursor />
+        <PageTransition />
+        <ViewTrigger />
       </body>
     </html>
   );

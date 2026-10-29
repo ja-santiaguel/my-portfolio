@@ -1,0 +1,135 @@
+.word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* One character position. The hidden sizer (the real text) gives it its
+   width; .upper and .lower draw the letter. */
+.cell {
+  position: relative;
+  display: inline-block;
+  --gap: 0.035em; /* how far each half pulls away when split */
+  --t: 160ms; /* current phase duration, set from JS */
+  /* Width animates when letters change, so the centred word re-centres
+     smoothly; letters never spill into their neighbours while it does. */
+  transition: width var(--t) var(--ease-smooth);
+  overflow-x: clip;
+}
+
+.sizer {
+  visibility: hidden;
+}
+
+.upper,
+.lower {
+  position: absolute;
+  inset: 0;
+  transform: translateY(0) scaleY(1);
+  transform-origin: 50% 50%; /* the middle line of the letter */
+  transition: transform var(--t) var(--ease-smooth);
+}
+
+.upper::before,
+.upper::after,
+.lower::before,
+.lower::after {
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  backface-visibility: hidden;
+}
+
+.upper::before,
+.lower::before {
+  content: attr(data-static);
+}
+
+/* At rest the letter is drawn whole by .upper (no seam). */
+.lower {
+  visibility: hidden;
+}
+
+/* Split: the letter becomes two halves (overlapping by a hair, so no gap
+   shows until they're pulled apart). */
+.halves .upper {
+  clip-path: inset(0 0 49.5% 0);
+}
+
+.halves .lower {
+  visibility: visible;
+  clip-path: inset(50% 0 0 0);
+}
+
+.apart .upper {
+  transform: translateY(calc(var(--gap) * -1)) scaleY(1);
+}
+
+.apart .lower {
+  transform: translateY(var(--gap)) scaleY(1);
+}
+
+/* A letter that disappears collapses into its middle line; one that appears
+   opens out of it. */
+.collapsed .upper,
+.collapsed .lower {
+  transform: translateY(0) scaleY(0);
+}
+
+/* Flip: the old letter's top half falls, then the new letter's bottom half
+   drops into place. Each flap hinges on the middle line of its half. */
+.upper::after,
+.lower::after {
+  content: attr(data-flap);
+  display: none;
+  transform-origin: 50% 50%;
+}
+
+.flipping .upper::after {
+  display: block;
+  animation: flapTop var(--flip) linear forwards;
+}
+
+.flipping .lower::after {
+  display: block;
+  animation: flapBottom var(--flip) linear forwards;
+}
+
+@keyframes flapTop {
+  0% {
+    transform: perspective(4em) rotateX(0deg);
+    animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45);
+  }
+  50%,
+  100% {
+    transform: perspective(4em) rotateX(-90deg);
+  }
+}
+
+@keyframes flapBottom {
+  0%,
+  50% {
+    transform: perspective(4em) rotateX(90deg);
+    animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1);
+  }
+  100% {
+    transform: perspective(4em) rotateX(0deg);
+  }
+}
+
+/* Load-in: letters rise into view one after another (same duration, curve
+   and stagger as the showcase titles). Held during the opening montage. */
+.word[data-rise] .cell {
+  animation: cellRise var(--dur-long) var(--ease-smooth) both;
+  animation-delay: calc(var(--rise-delay, 0s) + var(--i) * 0.05s);
+}
+
+:global(html[data-intro="playing"]) .word[data-rise] .cell {
+  animation: none;
+  transform: translateY(160%);
+}
+
+@keyframes cellRise {
+  from {
+    transform: translateY(160%);
+  }
+}

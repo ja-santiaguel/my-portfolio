@@ -2,9 +2,12 @@
   position: relative;
   top: 0.05rem;
   /* font-size: 0.75rem; */
-  font-weight: 400;
+  /* Muted grey; the header is difference-blended, so it uses the blend grey. */
+  color: var(--ink-muted-blend);
+  font-size: var(--type-meta-size);
+  font-weight: var(--type-body-weight);
   font-style: italic;
-  letter-spacing: 0.05rem;
+  letter-spacing: var(--type-meta-tracking);
 }
 
 .navText {
@@ -13,5 +16,5 @@
 
 .list {
   left: 1rem;
-  gap: 0.25rem;
+  gap: 0.2rem; /* same stacked-line gap as the wordmark and corner label */
 }

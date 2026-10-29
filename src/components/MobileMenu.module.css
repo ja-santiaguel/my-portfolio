@@ -1,0 +1,227 @@
+/* The phone and tablet menu (MobileMenu.js). Above the page and below the
+   navbar (which stays on top so its button can close the menu); the page
+   transition covers both. Hidden from 1024px. */
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 2500;
+  display: flex;
+  flex-direction: column;
+  padding: 6rem var(--grid-margin-sm) 2rem; /* the content and navbar margin */
+  color: var(--background);
+  visibility: hidden;
+  pointer-events: none;
+  /* Stay visible until the content and then the columns have gone. */
+  transition: visibility 0s linear calc(150ms + var(--dur-short) + 7 * 30ms);
+}
+
+.menu[data-open="true"] {
+  visibility: visible;
+  pointer-events: auto;
+  transition: visibility 0s;
+}
+
+@media (min-width: 1024px) {
+  .menu {
+    display: none;
+  }
+}
+
+/* ---- Eight ink columns, like the page transition's blocks ---- */
+.columns {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+
+/* Mirrored from the content index (2026-10-26, Jonathan): that opens from
+   the bottom-left corner, rising left to right; the menu opens from the
+   top-right button, so its columns drop from the top, right to left, and
+   close back up from the left. */
+.columns span {
+  margin-right: -1px; /* no seam between neighbours */
+  background: var(--foreground);
+  transform: translate3d(0, -101%, 0);
+  /* Closing: after the content has lifted out (150 ms), back up, left to
+     right, shorter than opening. */
+  transition: transform var(--dur-short) var(--ease-exit) calc(150ms + var(--i) * 30ms);
+}
+
+.menu[data-open="true"] .columns span {
+  transform: translate3d(0, 0, 0);
+  /* Opening: down, right to left, 40ms apart (the page transition's pace). */
+  transition: transform var(--dur-medium) var(--ease-smooth) calc((7 - var(--i)) * 40ms);
+}
+
+/* ---- Content: the destinations at the top right, under the button that
+   opened them; the contact details at the foot (2026-10-26) ---- */
+.content {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-3xl);
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.links,
+.details {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mask {
+  margin: 0;
+}
+
+/* The site's line entrance, not a masked rise (2026-10-26), mirrored to
+   follow the columns: the menu drops from the top, so its lines fall in from
+   above (a 1em drop clearing a slight blur and the fade on the reveal curve,
+   50 ms apart) and, closing, lift back out the way they came (shorter,
+   all together) before the columns follow them up. The content index does
+   the same the other way up. */
+.link,
+.detail,
+.rise {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  opacity: 0;
+  transition: color var(--dur-micro) var(--ease-smooth);
+}
+
+.menu[data-open="true"] :is(.link, .detail, .rise) {
+  opacity: 1;
+  animation: menuLineIn var(--dur-reveal) var(--ease-reveal) calc(260ms + var(--i) * 50ms) both;
+}
+
+.menu[data-closing] :is(.link, .detail, .rise) {
+  animation: menuLineOut var(--dur-short) var(--ease-exit) both;
+}
+
+@keyframes menuLineIn {
+  from {
+    opacity: 0;
+    filter: blur(0.08em);
+    transform: translateY(-1em);
+  }
+}
+
+@keyframes menuLineOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(0.1em);
+    transform: translateY(-0.35em);
+  }
+}
+
+/* Press: the destination dims to the muted grey while held. */
+.link:active,
+.detail:active {
+  color: #9a9a9a;
+}
+
+/* The destinations, large: Oswald, 44px+ rows. */
+.link {
+  padding-block: 0.05em;
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 15vw, 6rem);
+  font-weight: var(--type-display-m-weight);
+  line-height: 1;
+  letter-spacing: var(--type-display-tracking);
+  text-transform: uppercase;
+}
+
+/* Set right like the destinations above it (2026-10-26). */
+.contact {
+  position: relative;
+  padding-top: var(--space-l);
+  text-align: right;
+}
+
+.contact .detail {
+  justify-content: flex-end;
+}
+
+/* The rule draws in as the menu opens (2026-10-25), with the label under it
+   (460ms in, after the four destinations), like the site's other fine rules: from the right since the
+   contact block is set right (2026-10-26); closing, it retracts with the
+   content. */
+.contact::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgb(243 243 243 / 0.18);
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform var(--dur-short) var(--ease-exit);
+}
+
+.menu[data-open="true"] .contact::before {
+  transform: scaleX(1);
+  transition: transform var(--dur-reveal) var(--ease-reveal) 460ms;
+}
+
+.label {
+  margin-bottom: var(--space-2xs);
+  color: #9a9a9a; /* the footer's muted grey on ink, 6.9:1 */
+  font-size: var(--type-meta-size);
+  font-weight: var(--type-meta-weight);
+  letter-spacing: var(--type-meta-tracking);
+  text-transform: uppercase;
+}
+
+/* Contact details in the chrome style, each a 44px row. */
+.detail {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--type-chrome-size);
+  font-weight: var(--type-chrome-weight);
+  letter-spacing: var(--type-chrome-tracking);
+  text-transform: uppercase;
+}
+
+/* Drawn inside the target. */
+.menu :focus-visible {
+  outline: 2px solid var(--background);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu,
+  .menu[data-open="true"],
+  .columns span,
+  .menu[data-open="true"] .columns span,
+  .contact::before,
+  .menu[data-open="true"] .contact::before,
+  .link,
+  .detail,
+  .rise,
+  .menu[data-open="true"] :is(.link, .detail, .rise) {
+    transition: none;
+    animation: none;
+  }
+
+  .menu[data-closing] :is(.link, .detail, .rise) {
+    animation: none;
+  }
+}
