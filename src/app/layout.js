@@ -8,6 +8,7 @@ import BackToTop from "@/components/BackToTop";
 import Cursor from "@/components/Cursor";
 import PageTransition, { NavigationGate } from "@/components/PageTransition";
 import ViewTrigger from "@/components/ViewTrigger";
+import ScrollTimelineFallback from "@/components/ScrollTimelineFallback";
 
 // The display face, self-hosted by next/font (2026-10-28 ship-check; it was
 // a render-blocking Google Fonts stylesheet). The variable font covers every
@@ -54,6 +55,7 @@ export default function RootLayout({ children }) {
         <Cursor />
         <PageTransition />
         <ViewTrigger />
+        <ScrollTimelineFallback />
       </body>
     </html>
   );

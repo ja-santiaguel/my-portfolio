@@ -32,7 +32,7 @@ export default function ContactSection({ profile }) {
       {/* The ink: eight columns, like the page transition's blocks. As the
           footer scrolls in they rise one after another, left to right, and
           settle into a straight edge as it fills the screen. */}
-      <div className={styles.columns} aria-hidden="true">
+      <div className={styles.columns} aria-hidden="true" data-ending-columns="">
         {Array.from({ length: 8 }, (_, i) => (
           <span key={i} style={{ "--i": i }} />
         ))}

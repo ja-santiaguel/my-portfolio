@@ -10,12 +10,19 @@ import styles from "./InkText.module.css";
 //
 // mode="scroll" (2026-10-19, Aether's context): the fill follows the scroll
 // instead, each word inking over its own stretch of the block's pass through
-// the screen (CSS scroll-driven), and un-inking as you scroll back.
+// the screen (CSS scroll-driven, or ScrollTimelineFallback where that's
+// unsupported), and un-inking as you scroll back.
 export default function InkText({ text, start = 0, total, mode = "trigger", className = "" }) {
   const words = text.split(" ");
   const n = total ?? start + words.length;
   return (
-    <span className={`${styles.ink} ${className}`} data-mode={mode} data-trigger={mode === "trigger" ? "" : undefined} style={{ "--n": n }}>
+    <span
+      className={`${styles.ink} ${className}`}
+      data-mode={mode}
+      data-trigger={mode === "trigger" ? "" : undefined}
+      data-ink-scroll={mode === "scroll" ? "" : undefined}
+      style={{ "--n": n }}
+    >
       {words.map((w, i) => (
         <span key={i} className={styles.word} style={{ "--w": start + i }}>
           {w}

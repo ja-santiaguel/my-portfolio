@@ -66,8 +66,9 @@ Design decisions live in `DESIGN.md`. Process decisions:
 
 ## Implementation notes
 
-- Hero `<Image>`: don't use `priority` or `loading="eager"` while on React 19.0. It sends HTTP preload headers with a mis-encoded `srcset`, which causes a 3840w double download (see R03).
+- Hero `<Image>`: on React 19.0, `priority`/`loading="eager"` sent HTTP preload headers with a mis-encoded `srcset`, which caused a 3840w double download (see R03). Fixed by React 19.2 (2026-10-29): the preload is now an HTML `<link>` and only one width loads, so the first montage frame (the home LCP) uses `priority`. Re-check the image requests after any React or Next upgrade.
 - Hover styles go inside `@media (hover: hover)`.
+- CSS scroll timelines (`animation-timeline: view()`) don't run in Firefox, so every scroll-driven effect needs a JS fallback with the same range and keyframes: `ScrollTimelineFallback.js` (footer columns, scroll ink) and `useMediaParallax.js` (home slide clip). Add new ones there.
 - Motion: tokens and rules live in the `motion` skill (`.claude/skills/motion/SKILL.md`); read it before any motion work.
 - React 19 re-applies `dangerouslySetInnerHTML` whenever the object's identity changes. Create it once (`useState(() => ({ __html }))`) for any imperatively animated markup, or every parent re-render resets it (this caused the split-flap title to "switch back").
 

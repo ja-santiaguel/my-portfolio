@@ -48,6 +48,7 @@ export default function ProjectSlide({ project, flightTarget = false }) {
         data-vt-class="media"
         data-flight-target={flightTarget || undefined}
         data-parallax=""
+        data-parallax-reveal=""
         // Per-cover framing (2026-10-19): a narrower parallax range, so a
         // subject high in the photo rests nearer the middle of the frame.
         data-parallax-from={lead.parallax?.[0]}
