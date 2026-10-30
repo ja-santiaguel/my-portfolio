@@ -13,6 +13,7 @@ import TimeDate from "./TimeDate";
 import AnimationRiseUp from "../animations/AnimationRiseUp";
 import HoverArrow from "./HoverArrow";
 import Bracketed from "./Bracketed";
+import Wordmark from "./Wordmark";
 import MobileMenu from "./MobileMenu";
 import { scrollToTarget } from "@/lib/scroll";
 
@@ -102,15 +103,17 @@ export default function Header() {
                 className={styles.logoIcon}
               />
             </AnimationRiseUp>
-            <ul className={classNames(styles.logoWordmark, "stacked")}>
+            {/* The name as outlines (Wordmark), read out as one name. */}
+            <span className="visually-hidden">{profile.name}</span>
+            <ul className={classNames(styles.logoWordmark, "stacked")} aria-hidden="true">
               <li className={styles.logoText}>
                 <AnimationRiseUp className={styles.navText} delay={0.1} duration={RISE}>
-                  Jonathan
+                  <Wordmark word="Jonathan" />
                 </AnimationRiseUp>
               </li>
               <li className={styles.logoText}>
                 <AnimationRiseUp className={styles.navText} delay={0.15} duration={RISE}>
-                  Andrew
+                  <Wordmark word="Andrew" />
                 </AnimationRiseUp>
               </li>
             </ul>
