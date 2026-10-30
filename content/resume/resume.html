@@ -99,15 +99,18 @@
     text-transform: uppercase;
   }
 
+  /* The links left-aligned under the name and title, the location on the
+     right (2026-10-29, Jonathan). */
   .contact {
-    grid-column: 2;
-    margin: 0.12in 0 0;
+    grid-column: 1 / -1;
+    margin: 0.14in 0 0;
     padding: 0;
     list-style: none;
     display: flex;
-    justify-content: space-between;
-    gap: var(--gap);
+    gap: 0.3in;
   }
+
+  .contact .location { margin-left: auto; }
 
   /* "[ … ]": the site's link style. */
   .bracket::before { content: "[\2009"; }
@@ -118,7 +121,7 @@
      so the page still ends at the bottom margin. */
   .section {
     border-top: 1px solid var(--line);
-    padding: 0.2in 0 0.25in;
+    padding: 0.16in 0 0.2in;
   }
 
   .section > h2 {
@@ -214,14 +217,14 @@
       <li><a class="bracket" href="https://www.jasantiaguel.com/">Portfolio</a></li>
       <li><a class="bracket" href="https://www.linkedin.com/in/jonathan-andrew-santiaguel/">LinkedIn</a></li>
       <li><a href="mailto:santiaguel.ja@gmail.com">santiaguel.ja@gmail.com</a></li>
-      <li>Surrey, BC</li>
+      <li class="location">Surrey, BC</li>
     </ul>
   </header>
 
   <section class="section grid" style="margin-top:0.24in">
     <h2>Profile</h2>
     <div class="body">
-      <p class="summary">Digital designer in Greater Vancouver, working across UX/UI design and frontend development. I take websites and apps from research and wireframes to launch, in Figma, Webflow, Figma Sites and React / Next.js, and have designed, written and launched two client websites on my own.</p>
+      <p class="summary">UX/UI designer and frontend developer in Greater Vancouver. I design and build websites and apps people connect with and act on, from research to launch, in Figma, Webflow, Figma Sites and React / Next.js. I work directly with clients and in teams, turning feedback into iterations that make the work clearer and easier to use.</p>
     </div>
   </section>
 
@@ -235,10 +238,10 @@
         </div>
         <p class="meta label muted">Solo / UX/UI design, copywriting, development / Figma, Figma Sites</p>
         <ul>
-          <li>Redesigned, wrote and built a four-page site in about two weeks for a Lower Mainland roofer with 30+ years of experience, to turn visitors into quote requests. The client approved the layout as first designed.</li>
-          <li>Put proof before promises: surfaced a Home Depot partnership, GAF certification and a 5.0 Google rating that the old site buried or never mentioned.</li>
-          <li>Gave every screen one action: a quote button in each page’s header, a 24-hour reply promise and a four-field form (the old one asked for five).</li>
-          <li>Split visitors into two paths: a 24/7 banner and emergency line for active leaks, the quote form for planned projects.</li>
+          <li>Redesigned, wrote and built a four-page site in about two weeks for a Lower Mainland roofer with 30+ years of experience, to turn visitors into quote requests.</li>
+          <li>Designed it in Figma and refined it through client feedback; the layout was approved as first designed.</li>
+          <li>Put proof before promises: surfaced a Home Depot partnership, GAF certification and its Google rating that the old site buried or never mentioned.</li>
+          <li>Gave every screen one action: a quote button in each page’s header, and a quote form in the homepage hero that asks only what a first quote needs, with a 24-hour reply promise.</li>
         </ul>
       </article>
       <article class="entry">
@@ -248,8 +251,10 @@
         </div>
         <p class="meta label muted">Solo / UI design, copywriting, development / Figma, Webflow</p>
         <ul>
-          <li>Designed a four-page site in Figma for a new venture capital group, then built and launched it in Webflow in about three weeks, to establish its presence.</li>
-          <li>Gave founders a way in: a contact form where they can share their idea.</li>
+          <li>Designed a four-page site in Figma for a new venture capital group to establish its presence, then built and launched it in Webflow in about three weeks.</li>
+          <li>Iterated the design in Figma with the client through rounds of feedback before building.</li>
+          <li>Wrote the site’s copy from the client’s draft, shaping it into clear, concise messaging.</li>
+          <li>Built it responsive from desktop to phone, with a contact form where founders can share their idea.</li>
         </ul>
       </article>
     </div>

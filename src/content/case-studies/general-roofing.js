@@ -91,7 +91,7 @@ export const generalRoofing = {
         callouts: [
           { rect: [80.6, 2.3, 12.7, 4.1], text: "The quote button in the header of every page" },
           { rect: [63.4, 31.9, 27.8, 4.9], text: "A promise to reply within 24 hours" },
-          { rect: [63.4, 37.6, 27.8, 27.2], text: "Four required fields (the old form asked for five)" },
+          { rect: [63.4, 37.6, 27.8, 27.2], text: "Four fields: only what a first quote needs" },
         ],
       },
       {
@@ -103,7 +103,7 @@ export const generalRoofing = {
         callouts: [
           { rect: [4.9, 77.4, 25.6, 13.7], text: "Home Depot partnership, never mentioned on the old site" },
           { rect: [34.4, 77.4, 23.3, 13.7], text: "GAF certification, previously only a logo mid-page" },
-          { rect: [61.7, 79.2, 18.9, 10.2], text: "5.0 Google rating" },
+          { rect: [61.7, 79.2, 18.9, 10.2], text: "The Google rating" },
         ],
       },
       {
