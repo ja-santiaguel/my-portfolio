@@ -7,7 +7,10 @@ import { springSmooth, springRise, DURATION } from "@/lib/motion";
 // blurred, settling into place (no mask).
 const textRiseVariants = {
   hidden: { opacity: 0, y: "0.35em", filter: "blur(0.1em)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0em)" },
+  // Settled, no filter at all (2026-10-29): a lingering blur(0em) kept the
+  // text on its own layer, which iOS drew thinner and soft, on a lighter
+  // box through the navbar's difference blend.
+  visible: { opacity: 1, y: 0, filter: "blur(0em)", transitionEnd: { filter: "none" } },
 };
 
 export default function AnimationRiseUp({

@@ -11,7 +11,11 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: 100svh;
+  /* The large viewport (2026-10-29, was 100svh): on phones the browser bars
+     collapse at the page's end, and a footer of the small viewport's height
+     then left a strip of page above it and its columns' scroll timeline a
+     few percent short of flat (the staircase stayed). */
+  min-height: 100lvh;
   margin-top: var(--space-section-l); /* room after the last project */
   padding: var(--space-section) var(--grid-margin) 1.75rem; /* details row level with the corner label */
   color: var(--ending-ink);

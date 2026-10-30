@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, SoftShadows, useTexture } from "@react-three/drei";
+import { TRIANGLE_LEFT, TRIANGLE_RIGHT } from "@/lib/glyphs";
 
 // The 3D showcase: a laptop on a table in a family home, the live General
 // Roofing homepage on its screen. Everything is driven by one number,
@@ -137,10 +138,10 @@ function layoutKeys() {
         const half = (KEY - 0.008) / 2;
         const lower = rowTop + KEY - half / 2;
         const upper = rowTop + half / 2;
-        keys.push({ x: x0 + KEY / 2, z: lower, w: KEY, d: half, legend: { c: "◀", small: true } });
+        keys.push({ x: x0 + KEY / 2, z: lower, w: KEY, d: half, legend: { c: TRIANGLE_LEFT, small: true } });
         keys.push({ x: x0 + U + KEY / 2, z: upper, w: KEY, d: half, legend: { c: "▲", small: true } });
         keys.push({ x: x0 + U + KEY / 2, z: lower, w: KEY, d: half, legend: { c: "▼", small: true } });
-        keys.push({ x: x0 + 2 * U + KEY / 2, z: lower, w: KEY, d: half, legend: { c: "▶", small: true } });
+        keys.push({ x: x0 + 2 * U + KEY / 2, z: lower, w: KEY, d: half, legend: { c: TRIANGLE_RIGHT, small: true } });
         return;
       }
       const kw = w * U - GAP;

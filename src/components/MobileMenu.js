@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { profile } from "@/content/projects";
 import { getLenis, scrollToTarget } from "@/lib/scroll";
+import { ARROW_OUT } from "@/lib/glyphs";
 import styles from "./MobileMenu.module.css";
 
 // The phone and tablet menu (below 1024px; 2026-10-16). Opened by the
@@ -155,9 +156,9 @@ export default function MobileMenu({ open, onClose, toggleRef }) {
           <ul className={styles.details}>
             {[
               { href: `mailto:${profile.email}`, label: profile.email },
-              { href: profile.resume, label: "Resume ↗", external: "Resume (PDF, opens in a new tab)" },
-              { href: profile.linkedin, label: "LinkedIn ↗", external: "LinkedIn (opens in a new tab)" },
-              { href: profile.instagram, label: "Instagram ↗", external: "Instagram (opens in a new tab)" },
+              { href: profile.resume, label: `Resume ${ARROW_OUT}`, external: "Resume (PDF, opens in a new tab)" },
+              { href: profile.linkedin, label: `LinkedIn ${ARROW_OUT}`, external: "LinkedIn (opens in a new tab)" },
+              { href: profile.instagram, label: `Instagram ${ARROW_OUT}`, external: "Instagram (opens in a new tab)" },
             ].map((d, i) => (
               <li key={d.href} className={styles.mask}>
                 <a

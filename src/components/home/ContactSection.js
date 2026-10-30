@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { ARROW_OUT, COPYRIGHT } from "@/lib/glyphs";
 import Bracketed from "../Bracketed";
 import HoverArrow from "../HoverArrow";
 import slide from "./Slide.module.css";
@@ -85,22 +86,22 @@ export default function ContactSection({ profile }) {
           </div>
           <div className={`${styles.detail} ${styles.resume}`}>
             <a className="touch-target" href={profile.resume} target="_blank" rel="noopener noreferrer" aria-label="Resume (PDF, opens in a new tab)">
-              <Line>Resume ↗</Line>
+              <Line>Resume {ARROW_OUT}</Line>
             </a>
           </div>
           <div className={`${styles.detail} ${styles.linkedin}`}>
             <a className="touch-target" href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (opens in a new tab)">
-              <Line>LinkedIn ↗</Line>
+              <Line>LinkedIn {ARROW_OUT}</Line>
             </a>
           </div>
           <div className={`${styles.detail} ${styles.instagram}`}>
             <a className="touch-target" href={profile.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram (opens in a new tab)">
-              <Line>Instagram ↗</Line>
+              <Line>Instagram {ARROW_OUT}</Line>
             </a>
           </div>
         </div>
         <p className={`${styles.detail} ${styles.end}`}>
-          <Line>© {new Date().getFullYear()}</Line>
+          <Line>{COPYRIGHT} {new Date().getFullYear()}</Line>
           <Line>{profile.name}</Line>
         </p>
       </div>
