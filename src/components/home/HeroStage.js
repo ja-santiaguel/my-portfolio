@@ -448,8 +448,10 @@ export default function HeroStage({ profile, projects }) {
             />
           </div>
           <div ref={refs.montage} className={styles.montage} aria-hidden="true">
-            {media.map((item) => (
-              <Image key={item.src} src={item.src} alt="" fill sizes="(min-width: 1024px) 15vw, 40vw" className={styles.montageFrame} />
+            {/* The first cut is the page's LCP, so it preloads (safe since
+                React 19.2; see the portrait's note). */}
+            {media.map((item, i) => (
+              <Image key={item.src} src={item.src} alt="" fill priority={i === 0} sizes="(min-width: 1024px) 15vw, 40vw" className={styles.montageFrame} />
             ))}
           </div>
           <div ref={refs.cover} className={styles.cover} aria-hidden="true">

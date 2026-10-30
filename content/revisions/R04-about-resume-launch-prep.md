@@ -32,7 +32,7 @@ Recruiters decide in under a minute, so the facts they look for (role, location,
 - **axe:** no serious or critical issues beyond the difference-blended navbar and corner label (axe can't see blend modes; they render dark on concrete) and InkText words before they fill.
 - **Touch targets:** "[ Menu ]" 38 → 44 px; Services project links 22 → 44 px rows.
 - **Page transitions:** cover and reveal on every route, for clicks and for back/forward.
-- **Page weight:** fonts 1.7 MB → 88 kB (Latin WOFF2 subsets of the four Helvetica Neue weights in use), which brings the first load of `/` from about 2 MB to under 1 MB. [TODO: Lighthouse scores once deployed]
+- **Page weight:** fonts 1.7 MB → 88 kB (Latin WOFF2 subsets of the four Helvetica Neue weights in use), which brings the first load of `/` from about 2 MB to under 1 MB. **Lighthouse** (PageSpeed Insights on the live site, 2026-10-29): Best Practices and SEO 100 on every route, mobile and desktop; Accessibility 95–97; Performance 97–100 everywhere except the home page on mobile (81: LCP 4.7 s, the lazy-loaded hero montage frame, then its intro reveal).
 - **Before:** [TODO: no capture of the old About page was taken before the rebuild]
 
 ## Learned

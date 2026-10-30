@@ -138,11 +138,14 @@ export default function WorkSection({ projects }) {
 
   return (
     <section id="work" ref={sectionRef} className={styles.work} aria-labelledby="work-title">
+      {/* Outside the bar: the bar is visibility: hidden out of view, which
+          would also hide the heading from assistive tech (Lighthouse,
+          2026-10-29). */}
+      <h2 id="work-title" className="visually-hidden">
+        Selected work
+      </h2>
       <div className={classNames(styles.bar, { [styles.barVisible]: inView })}>
         <div>
-          <h2 id="work-title" className="visually-hidden">
-            Selected work
-          </h2>
           <div className={styles.toggle} role="group" aria-label="Layout">
             {VIEWS.map(({ id, label }) => (
               <button
