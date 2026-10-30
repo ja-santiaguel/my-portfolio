@@ -339,6 +339,9 @@
    side of the portrait on desktop. The drawing centres in the space above. */
 @media (max-width: 1023px) {
   .stage {
+    /* A smaller floor on phones (2026-10-29, Jonathan: "slightly lower" the
+       portrait so the type leads; 13rem -> 11.75rem, about 10%). */
+    --slot-w: clamp(11.75rem, 28vw, 26rem);
     --sheet-foot: calc(var(--space-xl) + env(safe-area-inset-bottom));
     --slot-top: calc(50svh - var(--slot-h) / 2 - 2.75rem);
   }
