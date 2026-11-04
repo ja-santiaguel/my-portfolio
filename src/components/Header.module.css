@@ -217,17 +217,25 @@
   }
 
   /* Slides away while scrolling down; back on scrolling up. Leaving is
-     shorter than arriving. */
-  .header {
-    transition: transform var(--dur-short) var(--ease-exit);
+     shorter than arriving. As .header[data-chrome] (2026-11-03, Jonathan:
+     on phones it vanished at once): globals.css's [data-chrome] transition
+     (the fade-in after the opening montage) has the same specificity and
+     loads later in production, so it took the slide away. Both rules carry
+     both transitions. */
+  .header[data-chrome] {
+    transition:
+      transform var(--dur-short) var(--ease-exit),
+      filter var(--dur-long) var(--ease-smooth) 0.1s;
   }
 
   .header[data-hidden="true"] {
     transform: translateY(-100%);
   }
 
-  .header[data-hidden="false"] {
-    transition: transform var(--dur-medium) var(--ease-smooth);
+  .header[data-chrome][data-hidden="false"] {
+    transition:
+      transform var(--dur-medium) var(--ease-smooth),
+      filter var(--dur-long) var(--ease-smooth) 0.1s;
   }
 
   /* Over the menu, so its button can close it. */
@@ -237,8 +245,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .header,
-  .header[data-hidden="false"] {
+  .header[data-chrome],
+  .header[data-chrome][data-hidden="false"] {
     transition: none;
   }
 }

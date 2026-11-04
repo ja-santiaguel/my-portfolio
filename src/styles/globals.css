@@ -220,6 +220,17 @@
   font-family: var(--font-text);
 }
 
+/* The chrome a step heavier on high-resolution screens (2026-11-03, Jonathan:
+   the navbar name and "[ Menu ]" looked "too thin" on his iPhone). Phones and
+   Retina screens draw 12px Helvetica Neue at its true weight; Windows at 1x
+   draws it noticeably heavier, the look he wants. Medium (600) on a 2x screen
+   comes out close to that. Navbar, back-to-top and the footer's details. */
+@media (min-resolution: 2dppx) {
+  :root {
+    --type-chrome-weight: 600;
+  }
+}
+
 html {
   scrollbar-gutter: stable;
   scrollbar-width: thin;
