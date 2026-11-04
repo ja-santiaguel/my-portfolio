@@ -121,7 +121,9 @@
      so the page still ends at the bottom margin. */
   .section {
     border-top: 1px solid var(--line);
-    padding: 0.16in 0 0.2in;
+    /* 0.16in 0 0.2in until 2026-11-03: with the toolkit's rows the page ran
+       into its bottom margin (Jonathan: "uncomfortably little spacing"). */
+    padding: 0.14in 0 0.17in;
   }
 
   .section > h2 {
@@ -217,7 +219,7 @@
       <li><a class="bracket" href="https://www.jasantiaguel.com/">Portfolio</a></li>
       <li><a class="bracket" href="https://www.linkedin.com/in/jonathan-andrew-santiaguel/">LinkedIn</a></li>
       <li><a href="mailto:santiaguel.ja@gmail.com">santiaguel.ja@gmail.com</a></li>
-      <li class="location">Surrey, BC</li>
+      <li class="location">Greater Vancouver, BC</li>
     </ul>
   </header>
 
@@ -285,19 +287,32 @@
       <dl class="skills">
         <div>
           <dt class="label">UX/UI design</dt>
-          <dd>User research &amp; testing, user flows &amp; information architecture, wireframing &amp; prototyping, interface &amp; interaction design, design systems, UX writing, Figma ecosystem</dd>
+          <dd>User research &amp; testing, user flows &amp; information architecture, wireframing &amp; prototyping, interface &amp; interaction design, design systems, UX writing</dd>
         </div>
         <div>
           <dt class="label">Web development</dt>
-          <dd>Responsive websites, landing pages built to convert, interaction &amp; motion, accessibility &amp; performance, SEO; Webflow, Framer, Figma Sites, React / Next.js, HTML, CSS, Tailwind CSS, JavaScript</dd>
+          <dd>Responsive websites, landing pages built to convert, interaction &amp; motion, accessibility &amp; performance, SEO</dd>
         </div>
         <div>
           <dt class="label">Creative</dt>
-          <dd>Art direction &amp; concept, editorial and poster design, photo editing &amp; compositing in Adobe Creative Suite</dd>
+          <dd>Art direction &amp; concept, editorial and poster design, photo editing &amp; compositing</dd>
+        </div>
+        <!-- The tools: the About page's toolkit, word for word (2026-11-03, Jonathan). -->
+        <div>
+          <dt class="label">Design</dt>
+          <dd>Figma, Photoshop, Illustrator, InDesign, After Effects</dd>
         </div>
         <div>
-          <dt class="label">Also</dt>
-          <dd>GitHub, Supabase, Python, SQL, AI tools (Claude, GPT)</dd>
+          <dt class="label">Front end</dt>
+          <dd>React / Next.js, TypeScript, JavaScript, HTML / CSS, Tailwind CSS, Framer Motion, GSAP, Three.js, Webflow, Framer, Figma Sites, Vercel</dd>
+        </div>
+        <div>
+          <dt class="label">Back end</dt>
+          <dd>Supabase, SQL, Python, GitHub</dd>
+        </div>
+        <div>
+          <dt class="label">AI</dt>
+          <dd>Claude, Claude Code, ChatGPT, Cursor, GitHub Copilot, Midjourney, Figma AI</dd>
         </div>
       </dl>
     </div>

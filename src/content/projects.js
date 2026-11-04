@@ -207,5 +207,5 @@ export const toolkit = [
     items: ["React / Next.js", "TypeScript", "JavaScript", "HTML / CSS", "Tailwind CSS", "Framer Motion", "GSAP", "Three.js", "Webflow", "Framer", "Figma Sites", "Vercel"],
   },
   { name: "Back end", items: ["Supabase", "SQL", "Python", "GitHub"] },
-  { name: "AI", items: ["Claude", "Claude Code", "ChatGPT", "Cursor", "GitHub Copilot", "Midjourney", "Figma AI", "Adobe Firefly"] },
+  { name: "AI", items: ["Claude", "Claude Code", "ChatGPT", "Cursor", "GitHub Copilot", "Midjourney", "Figma AI"] },
 ];
