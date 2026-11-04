@@ -45,6 +45,12 @@
 .logoIcon {
   width: 1.75rem;
   height: 1.75rem;
+  /* The name shares the navbar's cap line; the icon centres on the name's
+     capitals (cap line of JONATHAN to baseline of ANDREW), so it reaches a
+     little above that line (2026-11-03, Jonathan). Its centre sat 0.73px
+     low at 12px. */
+  position: relative;
+  top: -0.06em;
 }
 
 
@@ -188,8 +194,11 @@
 }
 
 /* ---- Phones and tablets: logo and "[ Menu ]" (2026-10-16) ---- */
+/* No line of its own (line-height 1, 2026-11-03): the button sat on the
+   body's 18px line, 3px below the top the name starts at. */
 .menuCell {
   display: none;
+  line-height: 1;
 }
 
 .menuButton {
@@ -198,6 +207,9 @@
   background: none;
   color: inherit;
   font: inherit;
+  /* Every "[ … ]" button at one weight, the calls to action's (2026-11-03,
+     Jonathan: "bracket buttons should be consistent"). */
+  font-weight: var(--type-action-weight);
   /* One line box the height of its text, so .touch-target's padding brings
      the hit area to a full 44px (it was 38px, 2026-10-28 ship-check). */
   line-height: 1;

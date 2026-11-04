@@ -42,7 +42,7 @@
   color: inherit;
   font: inherit;
   font-size: var(--type-label-size);
-  font-weight: var(--type-label-weight);
+  font-weight: var(--type-action-weight); /* every "[ … ]" button at one weight (2026-11-03) */
   letter-spacing: var(--type-label-tracking);
   text-transform: uppercase;
   cursor: pointer;

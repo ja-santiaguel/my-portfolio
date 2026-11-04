@@ -53,7 +53,7 @@
   margin-bottom: var(--back-gap);
   color: inherit;
   font-size: var(--type-label-size);
-  font-weight: var(--type-label-weight);
+  font-weight: var(--type-action-weight); /* every "[ … ]" button at one weight (2026-11-03) */
   letter-spacing: var(--type-label-tracking);
   text-decoration: none;
   text-transform: uppercase;
@@ -898,7 +898,7 @@
   will-change: transform;
   font: inherit;
   font-size: var(--type-label-s-size);
-  font-weight: var(--type-label-weight);
+  font-weight: var(--type-action-weight); /* every "[ … ]" button at one weight (2026-11-03) */
   letter-spacing: var(--type-label-tracking);
   line-height: 1;
   text-transform: uppercase;
@@ -2054,7 +2054,7 @@
     mix-blend-mode: difference;
     font-family: inherit;
     font-size: var(--type-chrome-size);
-    font-weight: 600;
+    font-weight: var(--type-action-weight); /* every "[ … ]" button at one weight (2026-11-03) */
     letter-spacing: var(--type-chrome-tracking);
     line-height: 1;
     text-transform: uppercase;
@@ -2225,7 +2225,7 @@
     color: var(--background);
     font-family: inherit;
     font-size: var(--type-chrome-size);
-    font-weight: 600;
+    font-weight: var(--type-action-weight);
     letter-spacing: var(--type-chrome-tracking);
     text-transform: uppercase;
     cursor: pointer;
