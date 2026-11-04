@@ -52,10 +52,13 @@
 .title {
   margin: 0 0 var(--space-xl);
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: calc((100cqw - 2 * var(--grid-margin)) / 9.6);
-  font-weight: var(--type-display-m-weight);
+  font-weight: var(--type-display-mixed-weight); /* paired with its serif letters */
   line-height: 0.9;
-  letter-spacing: var(--type-display-tracking);
+  letter-spacing: var(--type-display-mixed-tracking);
+  word-spacing: var(--type-display-mixed-word-spacing);
   text-transform: uppercase;
 }
 
@@ -239,7 +242,7 @@
     transform: scaleX(0);
   }
 
-  /* The question: letters 20 ms apart (39 of them, so the line lands within
+  /* The question: letters 20 ms apart (31 of them, so the line lands within
      about a second), on the display letters' overshooting spring. */
   .title[data-in] .letter {
     transform-origin: 50% 100%;

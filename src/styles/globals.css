@@ -4,7 +4,8 @@
 
 /* Custom Fonts: Helvetica Neue as Latin WOFF2 subsets (2026-10-28 ship-check;
    made from the OTFs with fontTools: the four weights in use went from 1.7 MB
-   to 88 kB). Oswald is self-hosted by next/font (layout.js). */
+   to 88 kB). Archivo and Bodoni Moda are self-hosted by next/font
+   (layout.js). */
 
 /* Heavy */
 @font-face {
@@ -85,19 +86,45 @@
                                  |#888 - #f3f3f3| = #6b6b6b on concrete */
 
   /* Type */
-  --font-display: var(--font-oswald), "Arial Narrow", sans-serif;
+  --font-display: var(--font-archivo), "Arial Narrow", sans-serif;
+  --font-serif: var(--font-serif-face), Georgia, serif; /* mixed display letters only (Bodoni Moda italic) */
+  --type-serif-weight: 500; /* lib/serifLetters.js reads this and --font-serif */
+  /* Bodoni Moda's display cut at every size: canvas (where serifLetters.js
+     measures) draws optical size 96 whatever the size, while the page would
+     switch to wider small-size shapes below 96px, on phones. */
+  --type-serif-variation: "opsz" 96;
   --font-text: "Helvetica Neue", Helvetica, Arial, sans-serif;
   /* Type tokens: one size, weight and tracking per role. Tracking is in em so
      it scales with the text: none on display type, a little on body, more on
      small uppercase. Line heights stay with each component. Weights:
-     Helvetica 400/600, plus 800 for calls to action; Oswald 600/700 (Oswald
-     has no heavier weight). */
+     Helvetica 400/600, plus 800 for calls to action; Archivo 600/700 (the
+     weights Oswald had; the titles with serif letters set their own). */
   --type-display-xl-size: clamp(4rem, 15.5vw, 15rem); /* hero title */
-  --type-display-xl-weight: 700;
   --type-display-l-weight: 700; /* case-study and About titles; size per page */
-  --type-display-m-size: 6rem; /* list project titles, "Interested in…" */
+  --type-display-m-size: 6rem; /* list project titles, "Ready to create…" */
   --type-display-m-weight: 600;
   --type-display-tracking: 0;
+  /* The titles with serif letters (hero, footer question): lighter, so the
+     sans sits with the serif instead of swamping it (2026-11-02, Jonathan:
+     "better balance/pair with the serif"; at 800 Archivo carried 2.5x the
+     serif's ink at the same cap height, at 600 about 2x). */
+  --type-display-mixed-weight: 600;
+  /* The home showcase and Services titles (2026-11-02, Jonathan: "too slim"
+     at 600): Archivo 700 is the closest to the Oswald 600 they had (stem 0.19
+     of the cap height against Oswald's 0.20; Archivo 600 is 0.17). */
+  --type-display-showcase-weight: 700;
+  /* A little air between their letters, and more between the footer's words,
+     so a line of mixed letters still reads as words (2026-11-02, Jonathan:
+     "a jumble of letters"). */
+  --type-display-mixed-tracking: 0.015em;
+  --type-display-mixed-word-spacing: 0.12em; /* word gaps about 3.5x the letter gaps (0.06em read as one run, 2026-11-02) */
+  /* Archivo ExtraCondensed (2026-11-02, replacing Oswald), sized so its
+     capitals set the same widths Oswald did at the same font size: every
+     display size, fit and line break stays as tuned. The cap height (0.745em)
+     is Oswald's alphabet width over Archivo's (x1.086) on Archivo's own cap
+     height. Every rule with --font-display sets both. */
+  --type-display-stretch: 62.5%;
+  --type-display-adjust: cap-height 0.745;
 
   --type-display-s-size: clamp(2.5rem, 4.2vw, 3.75rem); /* case-study section titles */
   --type-display-s-weight: 600;
@@ -398,6 +425,42 @@ html[data-intro="playing"] [data-chrome] {
 html.custom-cursor,
 html.custom-cursor * {
   cursor: none !important;
+}
+
+/* Mixed display letters (2026-11-02, lib/serifLetters.js): a serif capital
+   among the display face's, the same height to the pixel. The script sets the
+   variables; until it runs the letter is close and unclipped. */
+[data-serif] {
+  clip-path: inset(var(--serif-clip-top, -0.5em) -0.5em var(--serif-clip-bottom, -0.5em) -0.5em);
+}
+
+[data-serif-glyph] {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: var(--type-serif-weight);
+  font-variation-settings: var(--type-serif-variation);
+  font-stretch: normal;
+  font-size-adjust: none;
+  font-size: var(--serif-size, 1.17em);
+  line-height: 0; /* never taller than the display line it sits in */
+  /* Room for the italic's lean, then optical spacing (lib/serifLetters.js). */
+  padding: 0 var(--serif-pad-right, 0) 0 var(--serif-pad-left, 0);
+  margin: 0 var(--serif-margin-right, 0) 0 var(--serif-margin-left, 0);
+  transform: translateY(var(--serif-shift, 0));
+}
+
+/* Hidden until fitted (2026-11-02: they showed at a rough size, then
+   shrank, while the fonts loaded). Only when JavaScript runs (html[data-js],
+   set before first paint), so without it they still show. */
+html[data-js] [data-serif]:not([data-serif-fitted]) [data-serif-glyph] {
+  visibility: hidden;
+}
+
+[data-serif-probe] {
+  display: inline-block;
+  width: 0;
+  height: 0;
 }
 
 /* Arrow-on-hover labels (components/HoverArrow.js): on hover or keyboard

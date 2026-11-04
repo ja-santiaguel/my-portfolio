@@ -12,7 +12,9 @@
   --t: 160ms; /* current phase duration, set from JS */
   /* Width animates when letters change, so the centred word re-centres
      smoothly; letters never spill into their neighbours while it does. */
-  transition: width var(--t) var(--ease-smooth);
+  transition:
+    width var(--t) var(--ease-smooth),
+    margin var(--t) var(--ease-smooth);
   overflow-x: clip;
 }
 
@@ -24,7 +26,10 @@
 .lower {
   position: absolute;
   inset: 0;
-  transform: translateY(0) scaleY(1);
+  /* No transform at rest (2026-11-02): a transformed layer is painted on a
+     whole pixel, which moved the serif letters' clip up to half a pixel past
+     the capitals. The split and collapse below still ease from here. */
+  transform: none;
   transform-origin: 50% 50%; /* the middle line of the letter */
   transition: transform var(--t) var(--ease-smooth);
 }
@@ -114,6 +119,56 @@
   100% {
     transform: perspective(4em) rotateX(0deg);
   }
+}
+
+/* Serif cells (2026-11-02, lib/serifLetters.js fitSerifCell sets the
+   variables): the serif italic (Bodoni Moda), cut to the display capitals' height.
+   The letters and flaps are zero-height boxes placed on the baseline, so they
+   still move with the halves; the flaps hinge on the cell's middle line. */
+.cell[data-serif-cell] .sizer,
+.cell[data-serif-cell] .upper::before,
+.cell[data-serif-cell] .upper::after,
+.cell[data-serif-cell] .lower::before,
+.cell[data-serif-cell] .lower::after {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: var(--type-serif-weight);
+  font-variation-settings: var(--type-serif-variation);
+  font-stretch: normal;
+  font-size-adjust: none;
+  font-size: var(--serif-size, 1.17em);
+  line-height: 0;
+  /* Room for the italic's lean, so the cell's clip never cuts it (the
+     letters centre in what's left, exactly over the sizer's). */
+  padding: 0 var(--serif-pad-right, 0) 0 var(--serif-pad-left, 0);
+}
+
+.cell[data-serif-cell] .sizer {
+  display: inline-block;
+}
+
+/* Hidden until fitted, like the footer's (globals.css); only the letter
+   layers, so the cell keeps its place. */
+:global(html[data-js]) .cell[data-serif-cell]:not([data-serif-fitted]) .upper,
+:global(html[data-js]) .cell[data-serif-cell]:not([data-serif-fitted]) .lower {
+  visibility: hidden;
+}
+
+/* Optical spacing: the cell keeps room for the lean, its margins set the
+   space its neighbours see. */
+.cell[data-serif-cell] {
+  margin: 0 var(--serif-margin-right, 0) 0 var(--serif-margin-left, 0);
+}
+
+.cell[data-serif-cell] .upper::before,
+.cell[data-serif-cell] .upper::after,
+.cell[data-serif-cell] .lower::before,
+.cell[data-serif-cell] .lower::after {
+  inset: auto 0;
+  top: var(--serif-top, 50%);
+  height: 0;
+  transform-origin: 50% var(--serif-origin, 0);
+  clip-path: inset(var(--serif-clip-top, -1em) -0.5em var(--serif-clip-bottom, -1em) -0.5em);
 }
 
 /* Load-in: letters rise into view one after another (same duration, curve

@@ -23,7 +23,7 @@ Priorities, in order: portfolio quality → UX clarity → visual design → per
 - Inspect before changing. Refine working code; don't rewrite it without a reason.
 - Prefer lightweight solutions; don't add a dependency without saying why it's worth it.
 - **Never commit or push unless Jonathan asks.**
-- **Never change copy, fonts or type styles unless Jonathan asks.** Layout or interaction work keeps his existing text and type system (Oswald display titles, 0.875rem uppercase labels, pre-line body, "[ … ]" buttons; see `DESIGN.md`). Propose type or copy changes separately.
+- **Never change copy, fonts or type styles unless Jonathan asks.** Layout or interaction work keeps his existing text and type system (Archivo ExtraCondensed display titles with Bodoni Moda italic letters mixed in, 0.875rem uppercase labels, pre-line body, "[ … ]" buttons; see `DESIGN.md`). Propose type or copy changes separately.
 - Never invent facts (metrics, quotes, team details, results). Use `[TODO: …]` and ask.
 
 ## Inspiration
@@ -69,6 +69,7 @@ Design decisions live in `DESIGN.md`. Process decisions:
 - Hero `<Image>`: on React 19.0, `priority`/`loading="eager"` sent HTTP preload headers with a mis-encoded `srcset`, which caused a 3840w double download (see R03). Fixed by React 19.2 (2026-10-29): the preload is now an HTML `<link>` and only one width loads, so the first montage frame (the home LCP) uses `priority`. Re-check the image requests after any React or Next upgrade.
 - Hover styles go inside `@media (hover: hover)`.
 - CSS scroll timelines (`animation-timeline: view()`) don't run in Firefox, so every scroll-driven effect needs a JS fallback with the same range and keyframes: `ScrollTimelineFallback.js` (footer columns, scroll ink) and `useMediaParallax.js` (home slide clip). Add new ones there.
+- Mixed display letters: braces mark serif letters in the source ("De{s}ign{e}r"); `src/lib/serifLetters.js` sizes and clips them to Archivo's cap line and baseline (zero pixel overhang, Jonathan's rule) and spaces each against its neighbours' outlines. Static letters use `[data-serif]` markup and `useSerifLetters`; the split-flap cells use `fitSerifCell`. Verify any change with a pixel scan (headless Chrome screenshot plus Pillow, at 1x and 2x), not by eye.
 - Motion: tokens and rules live in the `motion` skill (`.claude/skills/motion/SKILL.md`); read it before any motion work.
 - React 19 re-applies `dangerouslySetInnerHTML` whenever the object's identity changes. Create it once (`useState(() => ({ __html }))`) for any imperatively animated markup, or every parent re-render resets it (this caused the split-flap title to "switch back").
 

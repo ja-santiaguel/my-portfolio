@@ -5,6 +5,9 @@
 export const arasaka = {
   slug: "arasaka",
   name: "Arasaka Estate",
+  // The title with its serif letters (braces; 2026-11-03, every E serif, as in
+  // the hero; RiseLetters).
+  titleMixed: "Ara{s}ak{a} Estat{e}",
   lead: "A conceptual magazine cover meant to reel the viewer into the powerhouse that is the ARASAKA ESTATE.",
   spec: [
     { label: "Role", items: ["Art Direction & Concept", "Graphical Editing"] },

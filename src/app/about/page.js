@@ -46,7 +46,7 @@ export default function AboutPage() {
       <Reveal as="header" className={styles.header}>
         <h1 className={`${cs.title} ${styles.title}`} aria-label="About me">
           <RiseLetters text="ABOUT" base={0} />
-          <RiseLetters text="ME" base={0.15} />
+          <RiseLetters text="M{E}" base={0.15} />
         </h1>
 
         <div className={styles.details}>

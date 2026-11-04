@@ -13,6 +13,9 @@ const img = (name, width, height, alt) => ({
 export const highlandVentures = {
   slug: "highland-ventures",
   name: "Highland Ventures",
+  // The title with its serif letters (braces; 2026-11-03, every E serif, as in
+  // the hero; RiseLetters).
+  titleMixed: "Hi{g}hl{a}nd V{e}ntur{e}s",
   lead: "A small, modern website for a new venture capital group, built to establish its presence and give founders a way to get in touch.",
   outcome: "Client project, launched October 2025",
   spec: [

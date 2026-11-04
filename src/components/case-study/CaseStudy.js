@@ -334,9 +334,12 @@ export function AdjacentProjects({ previous, next }) {
             <RiseLettersScroll key={word} text={word} start={words.slice(0, i).join("").length} />
           ))}
       </span>
+      {/* Rises in after the title, like the home slides' buttons (2026-11-02). */}
       <span className={slide.learnMoreButton}>
         <HoverArrow back={side === "previous"}>
-          <ActionLabel>{p.button}</ActionLabel>
+          <RiseLine>
+            <ActionLabel>{p.button}</ActionLabel>
+          </RiseLine>
         </HoverArrow>
       </span>
     </Link>

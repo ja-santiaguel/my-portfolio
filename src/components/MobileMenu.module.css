@@ -136,10 +136,12 @@
   color: #9a9a9a;
 }
 
-/* The destinations, large: Oswald, 44px+ rows. */
+/* The destinations, large: the display face, 44px+ rows. */
 .link {
   padding-block: 0.05em;
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: clamp(3.25rem, 15vw, 6rem);
   font-weight: var(--type-display-m-weight);
   line-height: 1;

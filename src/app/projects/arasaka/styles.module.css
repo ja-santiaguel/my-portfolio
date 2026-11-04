@@ -36,6 +36,8 @@
 
 .projectTitle {
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   /* font-size: 10rem; */
   font-weight: var(--type-display-l-weight);
   letter-spacing: var(--type-display-tracking);
@@ -69,6 +71,8 @@
 
 .sectionHeader {
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: var(--type-display-m-size);
   font-weight: var(--type-display-m-weight);
   letter-spacing: var(--type-display-tracking);

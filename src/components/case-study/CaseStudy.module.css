@@ -102,6 +102,8 @@
   column-gap: 0.22em;
   margin: 0 0 var(--space-xl) -0.05em; /* optical: Oswald's side bearing */
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: clamp(3.5rem, 9.5vw, 9.5rem);
   font-weight: var(--type-display-l-weight);
   line-height: 0.9;
@@ -463,6 +465,8 @@
 .sectionTitle {
   margin: 0 0 var(--space-xl);
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: var(--type-display-s-size);
   font-weight: var(--type-display-s-weight);
   line-height: 0.95;
@@ -1136,6 +1140,8 @@
 
 .nextTitle {
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: var(--type-display-m-size);
   font-weight: var(--type-display-m-weight);
   line-height: 0.95;
@@ -1174,6 +1180,20 @@
     transform: scaleX(0);
   }
 
+  /* Leaving the page: the rule draws back to the left with the text. */
+  :global(html[data-page-leaving]) .facts::before {
+    animation: lineErase var(--dur-short) var(--ease-exit) both;
+  }
+}
+
+@keyframes lineErase {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
 }
 
 @keyframes lineDraw {
@@ -1794,7 +1814,7 @@
 }
 
 /* Statements (2026-10-19): the section's one bold element, large in the
-   text face under the Oswald title. The first from the left edge (columns
+   text face under the display title. The first from the left edge (columns
    1-5), the second ending flush on the rightmost column (2-6, set right),
    so the eye crosses the grid from one fact to the next. */
 .statements {
@@ -2141,6 +2161,8 @@
     padding: 0.1em 0;
     color: #9a9a9a;
     font-family: var(--font-display);
+    font-stretch: var(--type-display-stretch);
+    font-size-adjust: var(--type-display-adjust);
     font-size: var(--type-display-s-size);
     font-weight: var(--type-display-s-weight);
     line-height: 1;

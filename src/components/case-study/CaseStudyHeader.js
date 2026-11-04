@@ -13,7 +13,7 @@ import RiseText, { RiseLine } from "../RiseText";
 // the 3D showcase below. It's on screen at load, so it rises in on load rather than with
 // scroll: the title's letters, then the text below line by line.
 export default function CaseStudyHeader({ study }) {
-  const { name, lead, outcome, spec, live } = study;
+  const { name, titleMixed, lead, outcome, spec, live } = study;
   return (
     <Reveal as="header" className={styles.header}>
       {/* The way back to the work (2026-10-18), in the navigation column, on
@@ -26,7 +26,7 @@ export default function CaseStudyHeader({ study }) {
         </HoverArrow>
       </Link>
       <h1 className={styles.title} aria-label={name}>
-        {name
+        {(titleMixed ?? name)
           .toUpperCase()
           .split(" ")
           .map((word, i) => (

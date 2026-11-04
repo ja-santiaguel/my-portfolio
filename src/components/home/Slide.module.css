@@ -1,7 +1,7 @@
 /* Project slides in list view.
    Desktop: text in columns 2–4 (vertically centred), media in 5–7.
    Below 1024px: media, then the text stack.
-   Type: Oswald 600 titles (lighter than the hero's 800), Helvetica body. */
+   Type: display 600 titles (lighter than the page titles' 700), Helvetica body. */
 .slide {
   position: relative;
   display: grid;
@@ -80,8 +80,10 @@
   z-index: 1001;
   margin: 0 0 2.25rem;
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: var(--type-display-m-size);
-  font-weight: var(--type-display-m-weight);
+  font-weight: var(--type-display-showcase-weight);
   line-height: 0.95;
   letter-spacing: var(--type-display-tracking);
   color: #dedede;

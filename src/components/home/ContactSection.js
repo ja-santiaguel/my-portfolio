@@ -1,9 +1,10 @@
 import { Fragment } from "react";
 import { ARROW_OUT, COPYRIGHT } from "@/lib/glyphs";
+import { parseMixed, plainText } from "@/lib/serifLetters";
 import Bracketed from "../Bracketed";
 import HoverArrow from "../HoverArrow";
 import slide from "./Slide.module.css";
-import { FitLine } from "./FooterParts";
+import { FitLine, MailLink } from "./FooterParts";
 import styles from "./ContactSection.module.css";
 
 // The footer: the site's ink ending across all eight columns (2026-10-15).
@@ -12,7 +13,12 @@ import styles from "./ContactSection.module.css";
 // line to the margins). The details row continues the fixed corner label,
 // which sits in columns 1-2 and serves as the footer's credit and "return to
 // top". It never snaps (data-snap="free" opts it out of settle snapping).
-const QUESTION = ["Interested in creating", "a digital experience?"];
+// Braces mark the serif letters (lib/serifLetters.js), chosen by the rules in
+// content/projects.js (heroWords): open shapes, never a stem letter inside a
+// word, spread evenly; one in a short word, two in a long one.
+// The question (2026-11-02, Jonathan: "ready to create a visual experience?";
+// it was "Interested in creating a digital experience?").
+const QUESTION = ["Re{a}dy to cre{a}te", "a vi{s}u{a}l exp{e}rien{c}e?"];
 
 // A details line. The footer's text enters on a trigger (2026-10-19): when
 // the question comes into view its letters rise, then "[ Let's talk ]", the
@@ -42,18 +48,31 @@ export default function ContactSection({ profile }) {
       {/* Letters rise one after another when the question comes into view
           (it starts the footer's text sequence). */}
       <FitLine as="h2" id="contact-title" className={styles.title} data-trigger="">
-        <span className="visually-hidden">{QUESTION.join(" ")}</span>
+        <span className="visually-hidden">{QUESTION.map(plainText).join(" ")}</span>
         {QUESTION.map((line) => (
           <span key={line} className={styles.titleLine} data-fit-line="" aria-hidden="true">
-            {line.split(" ").map((word, w) => (
-              <Fragment key={word}>
+            {line.split(" ").map(parseMixed).map(({ text, serif }, w) => (
+              <Fragment key={text}>
                 {w > 0 && " "}
                 <span className={styles.word}>
-                  {word.split("").map((ch) => (
+                  {text.split("").map((ch, c) => (
                     <span key={letter} className={styles.letterMask}>
-                      <span className={styles.letter} style={{ "--i": letter++ }}>
-                        {ch}
-                      </span>
+                      {serif.has(c) ? (
+                        <span
+                          className={styles.letter}
+                          style={{ "--i": letter++ }}
+                          data-serif=""
+                          data-prev={text[c - 1] ?? ""}
+                          data-next={text[c + 1] ?? ""}
+                        >
+                          <span data-serif-glyph="">{ch}</span>
+                          <span data-serif-probe="" />
+                        </span>
+                      ) : (
+                        <span className={styles.letter} style={{ "--i": letter++ }}>
+                          {ch}
+                        </span>
+                      )}
                     </span>
                   ))}
                 </span>
@@ -65,13 +84,23 @@ export default function ContactSection({ profile }) {
 
       {/* The answer to the question, centred under it: opens an email (worded
           apart from the navbar's "Get in touch"). */}
-      <a className={`${slide.learnMoreButton} ${styles.cta} touch-target`} href={`mailto:${profile.email}`}>
+      <MailLink
+        email={profile.email}
+        className={`${slide.learnMoreButton} ${styles.cta} touch-target`}
+        copied={
+          <HoverArrow>
+            <Line>
+              <Bracketed>[ Email copied ]</Bracketed>
+            </Line>
+          </HoverArrow>
+        }
+      >
         <HoverArrow>
           <Line>
             <Bracketed>[ Let’s talk ]</Bracketed>
           </Line>
         </HoverArrow>
-      </a>
+      </MailLink>
 
       <div className={styles.details}>
         {/* Email, socials and the résumé: one centred row, evenly spaced, set

@@ -90,6 +90,20 @@ export default function PageTransition() {
     panel.current.dataset.state = state;
   };
 
+  // The page being left plays its exits while the blocks close over it
+  // (html[data-page-leaving], 2026-11-02: Jonathan saw "[ Back to work ]"'s
+  // page vanish before the transition played, because the hold for the next
+  // page's entrances, below, also hid this one's). Once covered, the hold
+  // goes on for the page arriving underneath.
+  const leave = () => {
+    html().dataset.pageLeaving = "";
+    lock();
+  };
+  const hold = () => {
+    html().dataset.pageTransition = "";
+    delete html().dataset.pageLeaving;
+  };
+
   const reveal = () => {
     clearTimeout(safety.current);
     // Not before the logo has assembled; then two frames so the new page has
@@ -132,8 +146,7 @@ export default function PageTransition() {
 
       e.preventDefault();
       e.stopPropagation();
-      html().dataset.pageTransition = "";
-      lock();
+      leave();
       assembledAt.current = performance.now() + ASSEMBLED_MS;
       setState("covering");
       const target = url.pathname + url.search + url.hash;
@@ -141,6 +154,7 @@ export default function PageTransition() {
         if (ev.target.dataset?.last === undefined || ev.propertyName !== "transform") return;
         panel.current.removeEventListener("transitionend", onCovered);
         phase.current = "covered";
+        hold();
         router.push(target, { scroll: false }); // scrolled by resetScroll
         safety.current = setTimeout(reveal, SAFETY_MS);
       };
@@ -157,14 +171,14 @@ export default function PageTransition() {
       // Hold the new page (already rendering) until the blocks have closed.
       let open;
       gate = new Promise((resolve) => (open = resolve));
-      html().dataset.pageTransition = "";
-      lock();
+      leave();
       assembledAt.current = performance.now() + ASSEMBLED_MS;
       setState("covering");
       const onCovered = (ev) => {
         if (ev.target.dataset?.last === undefined || ev.propertyName !== "transform") return;
         panel.current.removeEventListener("transitionend", onCovered);
         phase.current = "covered";
+        hold();
         gate = null;
         open();
         safety.current = setTimeout(reveal, SAFETY_MS);
@@ -181,6 +195,7 @@ export default function PageTransition() {
       void panel.current.offsetWidth;
       delete panel.current.dataset.instant;
       delete html().dataset.pageTransition;
+      delete html().dataset.pageLeaving;
       unlock();
     };
 

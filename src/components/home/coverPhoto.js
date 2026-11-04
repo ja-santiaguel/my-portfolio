@@ -19,6 +19,25 @@ export function squareFocus(media) {
   return a < 1 ? `50% ${axis(f[1], 1 / a)}%` : `${axis(f[0], a)}% 50%`;
 }
 
+// A photo's subject centred in a square window (the opening montage,
+// 2026-11-03): object-position centres it along the side that overflows; along
+// the side that fits there's no room to move, so the photo zooms just enough
+// to slide the subject to the middle. Uses `scale` and `translate`, which
+// stack with the cuts' own transform animation. `media.montage` is the
+// subject's centre as fractions of the photo.
+export function squareCentre(media) {
+  const f = media.montage;
+  if (!f) return undefined;
+  const a = media.width / media.height;
+  const off = (a < 1 ? f[0] : f[1]) - 0.5; // along the side that fits
+  const zoom = Math.abs(off) < 0.005 ? 1 : 1 / (1 - 2 * Math.abs(off));
+  const shift = `${(-off * zoom * 100).toFixed(2)}%`;
+  return {
+    objectPosition: squareFocus({ ...media, focus: f }),
+    ...(zoom > 1 ? { scale: zoom.toFixed(3), translate: a < 1 ? `${shift} 0` : `0 ${shift}` } : {}),
+  };
+}
+
 export function coverPhotoProps(media, frame) {
   const position = frame?.position ?? media.position;
   const [px = "50%", py = "50%"] = (position || "").split(" ").filter(Boolean);

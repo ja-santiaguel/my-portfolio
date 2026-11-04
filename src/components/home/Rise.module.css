@@ -32,6 +32,27 @@
     focus var(--dur-short) var(--ease-smooth) var(--d, 0s) both;
 }
 
+/* Leaving the page (PageTransition, 2026-11-02): the letters sink back and
+   widen together while the blocks close, like a title scrolled away. */
+:global(html[data-page-leaving]) [data-reveal="in"] .item {
+  transform-origin: 50% 100%;
+  animation: riseOut var(--dur-short) var(--ease-exit) both;
+}
+
+@keyframes riseOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(0.1em);
+    transform: translateY(0.45em) scaleX(1.05);
+  }
+}
+
 @keyframes rise {
   from {
     transform: translateY(0.45em) scaleX(1.05);

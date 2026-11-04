@@ -5,6 +5,7 @@ import { RiseLettersScroll, RiseLine } from "../RiseText";
 import HoverArrow from "../HoverArrow";
 import Bracketed from "../Bracketed";
 import slide from "./Slide.module.css";
+import { MailLink } from "./FooterParts";
 import { CiMonitor, CiViewBoard } from "react-icons/ci";
 import { CATEGORIES } from "../CategoryIcon";
 
@@ -13,7 +14,7 @@ import { CATEGORIES } from "../CategoryIcon";
 const ICONS = { board: CiViewBoard, monitor: CiMonitor, creative: CATEGORIES.creative.Icon };
 
 // Services (2026-10-26), between the work and the footer: proof first, then
-// what Jonathan can do for you, then "Interested in creating a digital
+// what Jonathan can do for you, then "Ready to create a visual
 // experience?". The services are disciplines (UX/UI design, web development,
 // creative); each row says what it covers and links to the projects that
 // show it, so every claim has evidence one tap away. Rows sit on fine title-block rules, like the slides'
@@ -37,13 +38,23 @@ export default function ServicesSection({ services, projects, availability, emai
             </p>
           )}
           {email && (
-            <a className={`${slide.learnMoreButton} touch-target`} href={`mailto:${email}`}>
+            <MailLink
+              email={email}
+              className={`${slide.learnMoreButton} touch-target`}
+              copied={
+                <HoverArrow>
+                  <RiseLine>
+                    <Bracketed>[ Email copied ]</Bracketed>
+                  </RiseLine>
+                </HoverArrow>
+              }
+            >
               <HoverArrow>
                 <RiseLine>
                   <Bracketed>[ Let’s talk ]</Bracketed>
                 </RiseLine>
               </HoverArrow>
-            </a>
+            </MailLink>
           )}
         </div>
       </div>
@@ -79,7 +90,9 @@ export default function ServicesSection({ services, projects, availability, emai
                     <li key={p.slug}>
                       <Link href={p.href} className={styles.proofLink}>
                         <HoverArrow>
-                          <RiseLine trim={i === 0 && "start"}>{projectName(p)}</RiseLine>
+                          <RiseLine trim={i === 0 && "start"}>
+                            <Bracketed>{`[ ${projectName(p)} ]`}</Bracketed>
+                          </RiseLine>
                         </HoverArrow>
                       </Link>
                     </li>

@@ -1,17 +1,28 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { parseMixed } from "@/lib/serifLetters";
+import useSerifLetters from "@/lib/useSerifLetters";
 import styles from "./Rise.module.css";
 
 // The original text entrance: each line (or letter) rises out of a mask.
 // Plays when an ancestor has data-reveal="in" (see useReveal).
 
-export function Rise({ delay = 0, block = false, children }) {
+// `serif` ({ prev, next }: its neighbours) sets the letter in the serif,
+// fitted to the capitals (lib/serifLetters.js); it rises with the rest.
+export function Rise({ delay = 0, block = false, serif, children }) {
   return (
     <span className={block ? styles.maskBlock : styles.mask}>
-      <span className={styles.item} style={{ "--d": `${delay}s` }}>
-        {children}
-      </span>
+      {serif ? (
+        <span className={styles.item} style={{ "--d": `${delay}s` }} data-serif="" data-prev={serif.prev} data-next={serif.next}>
+          <span data-serif-glyph="">{children}</span>
+          <span data-serif-probe="" />
+        </span>
+      ) : (
+        <span className={styles.item} style={{ "--d": `${delay}s` }}>
+          {children}
+        </span>
+      )}
     </span>
   );
 }
@@ -24,11 +35,21 @@ export function RiseLines({ text, base = 0, step = 0.1 }) {
   ));
 }
 
-export function RiseLetters({ text, base = 0 }) {
+// Braces mark serif letters (2026-11-03, page titles: "A{e}th{e}r"), as in
+// the hero and the footer.
+export function RiseLetters({ text: source, base = 0 }) {
+  const ref = useRef(null);
+  useSerifLetters(ref);
+  const { text, serif } = parseMixed(source);
+  const side = (i) => (serif.has(i) ? "" : text[i] ?? ""); // a serif neighbour counts as a word's edge
   return (
-    <span className={styles.letters} aria-hidden="true">
+    <span ref={ref} className={styles.letters} aria-hidden="true">
       {text.split("").map((letter, i) => (
-        <Rise key={`${text}-${i}`} delay={base + i * 0.05}>
+        <Rise
+          key={`${text}-${i}`}
+          delay={base + i * 0.05}
+          serif={serif.has(i) ? { prev: side(i - 1), next: side(i + 1) } : undefined}
+        >
           {letter === " " ? " " : letter}
         </Rise>
       ))}

@@ -19,6 +19,9 @@ const img = (name, width, height, alt) => ({
 export const generalRoofing = {
   slug: "general-roofing",
   name: "General Roofing",
+  // The title with its serif letters (braces; 2026-11-03, every E serif, as in
+  // the hero; RiseLetters).
+  titleMixed: "G{e}n{e}ral Roofin{g}",
   lead: "A new website for a Lower Mainland roofing company, designed to turn visitors into quote requests.",
   outcome: "Client project, launched July 2026",
   spec: [

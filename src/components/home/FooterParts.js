@@ -1,14 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import useSerifLetters from "@/lib/useSerifLetters";
 
-// The footer's live part: fitting the question to the margins.
+// The footer's live part: fitting the question to the margins, and its serif
+// letters to its capitals (once fitted: they follow the text's size).
 
 // Text that spans its container exactly (desktop): measures the widest
 // [data-fit-line] child (or the text itself) at its CSS size and scales the
 // font so it meets both margins. Below 1024px it wraps and keeps its CSS size.
 export function FitLine({ as: Tag = "p", className, children, ...rest }) {
   const ref = useRef(null);
+  useSerifLetters(ref);
 
   useEffect(() => {
     const el = ref.current;
@@ -37,5 +40,37 @@ export function FitLine({ as: Tag = "p", className, children, ...rest }) {
     <Tag ref={ref} className={className} {...rest}>
       {children}
     </Tag>
+  );
+}
+
+// "[ Let’s talk ]" (2026-11-03, Jonathan: it had "no function"). A mailto link
+// only does something where a mail app is set up, so on many computers the
+// click looked dead. It still opens the mail app where there is one, and it
+// also copies the address and says so ("[ Email copied ]") for a few seconds.
+export function MailLink({ email, className, copied: copiedLabel, children }) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 3000);
+    return () => clearTimeout(timer);
+  }, [copied]);
+
+  const onClick = () => {
+    navigator.clipboard?.writeText(email).then(
+      () => setCopied(true),
+      () => {}
+    );
+  };
+
+  return (
+    <>
+      <a className={className} href={`mailto:${email}`} onClick={onClick}>
+        {copied ? copiedLabel : children}
+      </a>
+      <span className="visually-hidden" role="status">
+        {copied ? `Email address copied: ${email}` : ""}
+      </span>
+    </>
   );
 }

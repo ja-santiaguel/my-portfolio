@@ -7,6 +7,7 @@ import styles from "./HeroStage.module.css";
 import { getLenis } from "@/lib/scroll";
 import { springSmooth, DURATION } from "@/lib/motion";
 import SplitFlapWord from "./SplitFlapWord";
+import { squareCentre } from "./coverPhoto";
 import Link from "next/link";
 import { mediaCursorLabel } from "@/content/projects";
 import RiseText from "../RiseText";
@@ -452,8 +453,20 @@ export default function HeroStage({ profile, projects }) {
                 note): the window grows as the cuts play, so each larger cut
                 becomes the page's LCP, and a lazy one started late
                 (Lighthouse, 2026-10-29). They're small (40vw on phones). */}
+            {/* Each cut's subject held at the window's centre (2026-11-03,
+                Jonathan: so it doesn't jump between cuts; content/projects.js
+                `montage`). */}
             {media.map((item) => (
-              <Image key={item.src} src={item.src} alt="" fill priority sizes="(min-width: 1024px) 15vw, 40vw" className={styles.montageFrame} />
+              <Image
+                key={item.src}
+                src={item.src}
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 1024px) 15vw, 40vw"
+                className={styles.montageFrame}
+                style={squareCentre(item)}
+              />
             ))}
           </div>
           <div ref={refs.cover} className={styles.cover} aria-hidden="true">

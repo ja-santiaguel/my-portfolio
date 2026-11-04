@@ -26,13 +26,15 @@
   margin-bottom: var(--space-3xl);
 }
 
-/* Oswald at the list titles' size and weight (it opens a home section like
+/* The display face at the list titles' size and weight (it opens a home section like
    they do); letters rise in like every display title. */
 .title {
   margin: 0;
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: var(--type-display-m-size);
-  font-weight: var(--type-display-m-weight);
+  font-weight: var(--type-display-showcase-weight);
   line-height: 0.95;
   letter-spacing: var(--type-display-tracking);
   text-transform: uppercase;
@@ -247,8 +249,10 @@
   grid-column: 1 / 3;
   margin: 0;
   font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
   font-size: var(--type-display-s-size);
-  font-weight: var(--type-display-s-weight);
+  font-weight: var(--type-display-showcase-weight);
   line-height: 1;
   letter-spacing: var(--type-display-tracking);
   text-transform: uppercase;
@@ -346,11 +350,13 @@
   display: flex;
 }
 
+/* Bracketed at the action weight, like every other link that goes somewhere
+   (2026-11-02, Jonathan). */
 .proofLink {
   display: flex;
   color: inherit;
   font-size: var(--type-label-size);
-  font-weight: var(--type-label-weight);
+  font-weight: var(--type-action-weight);
   letter-spacing: var(--type-label-tracking);
   text-decoration: none;
   text-transform: uppercase;

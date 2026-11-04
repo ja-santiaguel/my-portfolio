@@ -14,10 +14,15 @@ export const profile = {
   // portrait), a one-line statement, name, location and edition.
   // Each word flips between its two options, bottom word first, so the title
   // cycles frontend developer / frontend designer / visual designer / visual
-  // developer (2026-10-12).
+  // developer (2026-10-12). Braces mark the serif letters (lib/serifLetters.js),
+  // chosen by Jonathan's rules (2026-11-02): letters with open, sweeping
+  // shapes (S, A, C, G, R, E); never a stem letter (D, H, I, T, L, M, N)
+  // inside a word; spread evenly, never side by side. Every E in the title is
+  // serif (three letters in DEVELOPER and DESIGNER, 2026-11-02), so the E
+  // they share stays put through the flip.
   heroWords: [
-    ["Frontend", "Visual"],
-    ["Developer", "Designer"],
+    ["F{r}ont{e}nd", "Vi{s}u{a}l"],
+    ["D{e}v{e}lop{e}r", "D{e}si{g}n{e}r"],
   ],
   heroTitle: "Frontend Developer", // stable accessible title
   // The statement (2026-10-27, Jonathan), set like the byline opposite: one
@@ -52,11 +57,14 @@ export const projects = [
     ],
     href: "/projects/aether",
     button: "[ View case study ]",
+    // `montage`: the subject's centre as fractions of the photo (measured
+    // 2026-11-03), held at the centre of the opening montage's square window
+    // so the subject doesn't jump between cuts (HeroStage.js).
     media: [
-      { src: "/images/projects/aether/cover-phone.webp", width: 2628, height: 4238, alt: "Aether home screen on a phone resting on a white stone", fit: "cover" },
-      { src: "/images/mockups/aether/mobile_mockup_aether_01.jpg", width: 1950, height: 1300, alt: "Mockup of Aether Mobile App Home Screen", fit: "contain" },
-      { src: "/images/mockups/aether/mobile_mockup_aether_02.jpg", width: 1950, height: 1300, alt: "Mockup of Aether Mobile App Library Screen", fit: "contain" },
-      { src: "/images/mockups/aether/mobile_mockup_aether_03.jpg", width: 3900, height: 2600, alt: "Mockup of Aether Mobile App Form Screen", fit: "contain" },
+      { src: "/images/projects/aether/cover-phone.webp", montage: [0.5, 0.5], width: 2628, height: 4238, alt: "Aether home screen on a phone resting on a white stone", fit: "cover" },
+      { src: "/images/mockups/aether/mobile_mockup_aether_01.jpg", montage: [0.505, 0.51], width: 1950, height: 1300, alt: "Mockup of Aether Mobile App Home Screen", fit: "contain" },
+      { src: "/images/mockups/aether/mobile_mockup_aether_02.jpg", montage: [0.48, 0.49], width: 1950, height: 1300, alt: "Mockup of Aether Mobile App Library Screen", fit: "contain" },
+      { src: "/images/mockups/aether/mobile_mockup_aether_03.jpg", montage: [0.5, 0.505], width: 3900, height: 2600, alt: "Mockup of Aether Mobile App Form Screen", fit: "contain" },
     ],
   },
   {
@@ -74,7 +82,7 @@ export const projects = [
     href: "/projects/general-roofing",
     button: "[ View case study ]",
     media: [
-      { src: "/images/projects/general-roofing/cover-concrete.webp", width: 2048, height: 3072, alt: "General Roofing’s homepage on a laptop on a low concrete step in the corner of two plaster walls, a shaft of rainy window light across them", fit: "cover",
+      { src: "/images/projects/general-roofing/cover-concrete.webp", montage: [0.61, 0.57], width: 2048, height: 3072, alt: "General Roofing’s homepage on a laptop on a low concrete step in the corner of two plaster walls, a shaft of rainy window light across them", fit: "cover",
         // The laptop body (its base, a little left of the screen) held at the frame centre, in the tall list frame and the wide grid cell (2026-10-20: the body centred, the screen may sit slightly right).
         list: { focus: [0.51, 0.568], zoom: 1.15 },
         grid: { focus: [0.51, 0.582], zoom: 1.2 } },
@@ -95,7 +103,7 @@ export const projects = [
     href: "/projects/highland-ventures",
     button: "[ View showcase ]",
     media: [
-      { src: "/images/projects/highland-ventures/cover-stone.webp", width: 2048, height: 3072, alt: "The Highland Ventures homepage on a black laptop on the corner of a pale stone table, striped window light across it", fit: "cover",
+      { src: "/images/projects/highland-ventures/cover-stone.webp", montage: [0.52, 0.39], width: 2048, height: 3072, alt: "The Highland Ventures homepage on a black laptop on the corner of a pale stone table, striped window light across it", fit: "cover",
         // The laptop sits high and right in the photo: its centre (measured)
         // held at the frame's centre in the list and the grid (2026-10-20; re-measured for the 2026-10-21 photo).
         position: "57% 50%", parallax: [-8, 0],
@@ -119,8 +127,8 @@ export const projects = [
     href: "/projects/arasaka",
     button: "[ View showcase ]",
     media: [
-      { src: "/images/projects/arasaka/cover-magazines.webp", width: 2400, height: 3696, alt: "Mockup Magazine Cover of the embodiment of ARASAKA ESTATE", fit: "cover" },
-      { src: "/images/mockups/arasaka/magazine_mockup_02.png", width: 9536, height: 3750, alt: "Mockup Magazine Cover of the embodiment of ARASAKA ESTATE, spread", fit: "contain" },
+      { src: "/images/projects/arasaka/cover-magazines.webp", montage: [0.48, 0.505], width: 2400, height: 3696, alt: "Mockup Magazine Cover of the embodiment of ARASAKA ESTATE", fit: "cover" },
+      { src: "/images/mockups/arasaka/magazine_mockup_02.png", montage: [0.5, 0.5], width: 9536, height: 3750, alt: "Mockup Magazine Cover of the embodiment of ARASAKA ESTATE, spread", fit: "contain" },
     ],
   },
 ];
@@ -188,9 +196,16 @@ export const services = [
 // The toolkit: the résumé's fuller skill set (2026-10-27). Built as a last
 // Services row, then taken out the same day (Jonathan: it didn't flow
 // there); shown on the About page's Toolkit rows.
+// Widened 2026-11-03 (Jonathan: "include more prominent common AI tools that
+// most professionals in my industries use. same with design and front end").
+// From this site's own build: Framer Motion, GSAP, Three.js, Vercel, Claude
+// Code; the rest confirmed by Jonathan (he removed Miro and FigJam).
 export const toolkit = [
-  { name: "Design", items: ["Figma", "Photoshop", "Illustrator", "InDesign"] },
-  { name: "Front end", items: ["React / Next.js", "JavaScript", "HTML / CSS", "Tailwind CSS", "Webflow", "Framer", "Figma Sites"] },
+  { name: "Design", items: ["Figma", "Photoshop", "Illustrator", "InDesign", "After Effects"] },
+  {
+    name: "Front end",
+    items: ["React / Next.js", "TypeScript", "JavaScript", "HTML / CSS", "Tailwind CSS", "Framer Motion", "GSAP", "Three.js", "Webflow", "Framer", "Figma Sites", "Vercel"],
+  },
   { name: "Back end", items: ["Supabase", "SQL", "Python", "GitHub"] },
-  { name: "AI", items: ["Claude", "GPT"] },
+  { name: "AI", items: ["Claude", "Claude Code", "ChatGPT", "Cursor", "GitHub Copilot", "Midjourney", "Figma AI", "Adobe Firefly"] },
 ];

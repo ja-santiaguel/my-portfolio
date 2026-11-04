@@ -81,6 +81,12 @@
     animation: none;
     opacity: 0;
   }
+
+  /* Leaving the page (PageTransition): the lines sink out together while the
+     blocks close (2026-11-02; they used to vanish before it played). */
+  :global(html[data-page-leaving]) .text[data-mode="load"] .lineInner {
+    animation: lineOut var(--dur-short) var(--ease-exit) both;
+  }
 }
 
 @keyframes lineReveal {

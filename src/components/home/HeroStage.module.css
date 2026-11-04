@@ -20,14 +20,16 @@
   overflow: clip;
 }
 
-/* Original display treatment: Oswald 800, uppercase. Solid #151515 is what the
+/* Display treatment: Archivo ExtraCondensed 800 (Oswald until 2026-11-02), uppercase. Solid #151515 is what the
    original #dedede + difference blend renders on concrete. */
 .heroTitle {
   margin: 0;
-  font-family: var(--font-oswald), sans-serif;
-  font-weight: var(--type-display-xl-weight);
+  font-family: var(--font-display);
+  font-stretch: var(--type-display-stretch);
+  font-size-adjust: var(--type-display-adjust);
+  font-weight: var(--type-display-mixed-weight);
   font-size: var(--type-display-xl-size);
-  letter-spacing: var(--type-display-tracking);
+  letter-spacing: var(--type-display-mixed-tracking);
   line-height: 0.95;
   text-transform: uppercase;
   user-select: none;
@@ -377,6 +379,12 @@
   :global(html[data-page-transition]) .sides::before {
     transform: scaleX(0);
     transition: none;
+  }
+
+  /* Leaving the page: drawn back with the text (2026-11-02). */
+  :global(html[data-page-leaving]) .sides::before {
+    transform: scaleX(0);
+    transition: transform var(--dur-short) var(--ease-exit);
   }
 
   .side {

@@ -16,6 +16,9 @@ const phone = (name, width, height, alt, statusBg) => ({ image: shot(name, width
 export const aether = {
   slug: "aether",
   name: "Aether",
+  // The title with its serif letters (braces; 2026-11-03, every E serif, as in
+  // the hero; RiseLetters).
+  titleMixed: "A{e}th{e}r",
   lead: "AETHER is a mobile application designed to ease the burden of form-filling for caregivers by streamlining complex documentation into an intuitive and efficient experience.",
   // Status from Jonathan (2026-10-19): built in his BCIT program, fully
   // built, never released publicly.

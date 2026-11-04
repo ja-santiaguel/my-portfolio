@@ -1,5 +1,5 @@
 // Imports
-import { Oswald } from "next/font/google";
+import { Archivo, Bodoni_Moda } from "next/font/google";
 import "@/styles/globals.css";
 import { pageMetadata, siteUrl } from "@/lib/metadata";
 // Components
@@ -11,9 +11,21 @@ import ViewTrigger from "@/components/ViewTrigger";
 import ScrollTimelineFallback from "@/components/ScrollTimelineFallback";
 
 // The display face, self-hosted by next/font (2026-10-28 ship-check; it was
-// a render-blocking Google Fonts stylesheet). The variable font covers every
-// weight; CSS uses it through --font-oswald (globals.css --font-display).
-const oswald = Oswald({ subsets: ["latin"], display: "swap", variable: "--font-oswald" });
+// a render-blocking Google Fonts stylesheet). Archivo replaced Oswald
+// (2026-11-02, Jonathan): the variable font covers every weight and width;
+// CSS sets it ExtraCondensed through --font-archivo (globals.css
+// --font-display). Bodoni Moda italic (2026-11-02, Jonathan; Instrument Serif
+// before) is the second face of the mixed display letters
+// (lib/serifLetters.js): variable, with its optical-size axis, so display
+// sizes get the high-contrast cut.
+const bodoniModa = Bodoni_Moda({
+  subsets: ["latin"],
+  style: "italic",
+  axes: ["opsz"],
+  display: "swap",
+  variable: "--font-serif-face",
+});
+const archivo = Archivo({ subsets: ["latin"], display: "swap", variable: "--font-archivo", axes: ["wdth"] });
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
@@ -25,14 +37,16 @@ export const metadata = {
   }),
 };
 
-// Decides before first paint whether the home page opens with the montage:
+// Marks the page as running JavaScript (html[data-js], so the serif letters can
+// wait hidden until they are fitted), and decides before first paint whether
+// the home page opens with the montage:
 // every full load (or refresh) of "/", never with reduced motion. Navigating
 // back to "/" inside the site does not replay it.
-const introScript = `try{if(location.pathname==="/"&&!location.hash&&!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.intro="playing"}}catch(e){}`;
+const introScript = `try{document.documentElement.dataset.js="";if(location.pathname==="/"&&!location.hash&&!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.dataset.intro="playing"}}catch(e){}`;
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={oswald.variable} suppressHydrationWarning>
+    <html lang="en" className={`${archivo.variable} ${bodoniModa.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: introScript }} />
         <link

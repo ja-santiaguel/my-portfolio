@@ -161,14 +161,25 @@ export default function ViewTrigger() {
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
+    // Leaving the page (html[data-page-leaving], PageTransition): what's on
+    // screen plays its exit while the blocks close over it (2026-11-02).
+    const leavePage = () => {
+      const vh = window.innerHeight;
+      watched.forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) leave(el, false);
+      });
+    };
+
     // The cover lifted: play what arrived underneath it.
     const release = new MutationObserver(() => {
+      if (html.hasAttribute("data-page-leaving")) leavePage();
       if (held() || !pending.size) return;
       const list = [...pending];
       pending.clear();
       requestAnimationFrame(() => list.forEach((el) => el.isConnected && enter(el)));
     });
-    release.observe(html, { attributes: true, attributeFilter: ["data-page-transition", "data-layout-switching"] });
+    release.observe(html, { attributes: true, attributeFilter: ["data-page-transition", "data-page-leaving", "data-layout-switching"] });
 
     // New pages and re-measured text add elements later.
     const mo = new MutationObserver((records) => {

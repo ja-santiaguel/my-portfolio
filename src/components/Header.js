@@ -13,7 +13,6 @@ import TimeDate from "./TimeDate";
 import AnimationRiseUp from "../animations/AnimationRiseUp";
 import HoverArrow from "./HoverArrow";
 import Bracketed from "./Bracketed";
-import Wordmark from "./Wordmark";
 import MobileMenu from "./MobileMenu";
 import { scrollToTarget } from "@/lib/scroll";
 
@@ -103,17 +102,21 @@ export default function Header() {
                 className={styles.logoIcon}
               />
             </AnimationRiseUp>
-            {/* The name as outlines (Wordmark), read out as one name. */}
+            {/* The name in the navbar's own text style (2026-11-02, Jonathan:
+                match the links' weight on every screen). It was outlines from
+                2026-10-29, which can't: each system draws small text at its
+                own weight (Windows heavier, iPhones true), outlines never
+                change. Read out as one name. */}
             <span className="visually-hidden">{profile.name}</span>
             <ul className={classNames(styles.logoWordmark, "stacked")} aria-hidden="true">
               <li className={styles.logoText}>
                 <AnimationRiseUp className={styles.navText} delay={0.1} duration={RISE}>
-                  <Wordmark word="Jonathan" />
+                  Jonathan
                 </AnimationRiseUp>
               </li>
               <li className={styles.logoText}>
                 <AnimationRiseUp className={styles.navText} delay={0.15} duration={RISE}>
-                  <Wordmark word="Andrew" />
+                  Andrew
                 </AnimationRiseUp>
               </li>
             </ul>

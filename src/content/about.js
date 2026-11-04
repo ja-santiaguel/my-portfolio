@@ -66,6 +66,11 @@ export const about = {
       { when: "2025", project: "highland-ventures", detail: "Website, client project, solo" },
       { when: "2024", project: "aether", detail: "Mobile app, BCIT, team of 10" },
       { when: "2023–2025", name: "Digital Design & Development", detail: "British Columbia Institute of Technology" },
+      // The kitchen (2026-11-03, Jonathan: "add appealing cooking position ...
+      // with the location as various restaurants"). The role is the one in
+      // My path; the pressure is from its text. [TODO: Jonathan to give the
+      // years; left blank on the live site until then.]
+      { when: "", name: "Junior sous chef", detail: "Various restaurants, high-pressure service" },
       { when: "2016", name: "Drafting", detail: "Kwantlen Polytechnic University" },
     ],
   },

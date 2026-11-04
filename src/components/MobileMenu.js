@@ -83,7 +83,7 @@ export default function MobileMenu({ open, onClose, toggleRef }) {
       delete html.dataset.menuOpen;
       if (main) main.inert = false;
       // A page transition holds the scroll itself; don't restart it mid-way.
-      if (!("pageTransition" in html.dataset)) getLenis()?.start();
+      if (!("pageTransition" in html.dataset) && !("pageLeaving" in html.dataset)) getLenis()?.start();
     };
   }, [open, onClose, toggleRef]);
 
