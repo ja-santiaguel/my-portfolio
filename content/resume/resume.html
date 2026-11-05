@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Jonathan Andrew Santiaguel – Resume</title>
-<!-- Résumé (2026-10-27), rebuilt from the 9-23-26 PDF and the portfolio's
+<!-- Resume (2026-10-27), rebuilt from the 9-23-26 PDF and the portfolio's
      own facts, in the site's type and grid: Oswald display titles, Helvetica
      Neue text, uppercase labels, "[ … ]" links, fine title-block rules, and
      the section names on the left columns like the Services rows. Print to
@@ -13,7 +13,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=block" rel="stylesheet">
 <style>
   @font-face { font-family: "Helvetica Neue"; src: url("../../public/fonts/Helvetica_Neue/HelveticaNeueRoman.otf") format("opentype"); font-weight: 400; }
-  @font-face { font-family: "Helvetica Neue"; src: url("../../public/fonts/Helvetica_Neue/HelveticaNeueMedium.otf") format("opentype"); font-weight: 600; }
+  @font-face { font-family: "Helvetica Neue"; src: url("../../public/fonts/Helvetica_Neue/HelveticaNeueBold.otf") format("opentype"); font-weight: 700; }
   @font-face { font-family: "Helvetica Neue"; src: url("../../public/fonts/Helvetica_Neue/HelveticaNeueItalic.ttf") format("truetype"); font-weight: 400; font-style: italic; }
 
   @page { size: letter; margin: 0; }
@@ -67,13 +67,14 @@
 
   .label {
     font-size: 7.2pt;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.06em;
     line-height: 1.35;
     text-transform: uppercase;
   }
 
   .muted { color: var(--muted); }
+  .label.muted, .edu h3 .label.muted { font-weight: 400; } /* bold is for ink text only (2026-11-04) */
 
   /* ---- Head ---- */
   .name {
@@ -113,8 +114,9 @@
   .contact .location { margin-left: auto; }
 
   /* "[ … ]": the site's link style. */
-  .bracket::before { content: "[\2009"; }
-  .bracket::after { content: "\2009]"; }
+  /* Margins, not thin spaces: Helvetica Neue Bold has no U+2009 glyph. */
+  .bracket::before { content: "["; margin-right: 0.2em; }
+  .bracket::after { content: "]"; margin-left: 0.2em; }
 
   /* ---- Sections: name on columns 1-2, content on 3-8, on a fine rule ----
      No footer since 2026-10-29 (Jonathan): its space went into the sections,
@@ -154,7 +156,7 @@
   .entry h3 {
     margin: 0;
     font-size: 9pt;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.02em;
   }
 
@@ -206,7 +208,7 @@
 
   /* Education: one line each, the school beside the program. */
   .edu .entry + .entry { margin-top: 0.05in; }
-  .edu h3 .label { margin-left: 0.1in; font-weight: 600; }
+  .edu h3 .label { margin-left: 0.1in; font-weight: 700; }
 
 </style>
 </head>
