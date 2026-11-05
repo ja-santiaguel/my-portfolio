@@ -190,6 +190,17 @@
   --space-section: 7rem; /* between sections */
   --space-section-l: 9rem; /* page top under the navbar, big breaks */
 
+  /* Label groups (2026-11-03, Jonathan: a grey label sat about as far from
+     its own text as from the group above, so groups blurred together). A
+     label is set at line-height 1 and sits --space-label above its text
+     (about 1rem from the label's baseline to the text's capitals, a
+     paragraph's own line gap; softened the same day, Jonathan: 0.75rem was
+     "too strong"). Stacked groups sit --space-label-group apart (about 2.5rem
+     from the last baseline to the next label's capitals). Above a rule or a
+     screen, which have no leading of their own, a label takes --space-xs. */
+  --space-label: var(--space-3xs);
+  --space-label-group: var(--space-xl);
+
   /* Motion system (Apple-style; JS mirror in src/lib/motion.js).
      One curve: a critically damped spring (SwiftUI .smooth model), quick at
      first, settling gently with no visible stop. Duration sets the character.

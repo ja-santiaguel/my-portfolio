@@ -153,7 +153,8 @@
 
 .label,
 .inlineLabel {
-  margin: 0 0 var(--space-xs);
+  margin: 0 0 var(--space-label); /* tight on its own content (2026-11-03) */
+  line-height: 1;
   color: var(--ink-muted);
   font-size: var(--type-meta-size);
   font-weight: var(--type-meta-weight);
@@ -362,7 +363,7 @@
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   column-gap: var(--grid-gap);
-  row-gap: var(--space-l);
+  row-gap: var(--space-label-group);
   margin: 0;
 }
 
@@ -497,7 +498,6 @@
 
 .inlineLabel {
   display: block;
-  margin-bottom: 0.35rem;
 }
 
 .section > .figureWide,
@@ -559,6 +559,7 @@
 .frameTitle {
   grid-column: 1 / span var(--span, 6);
   grid-row: 1;
+  margin-bottom: var(--space-xs); /* a screen has no leading of its own */
 }
 
 /* A hairline edge, so white screens read as objects on the page instead of
@@ -899,7 +900,9 @@
   font: inherit;
   font-size: var(--type-label-s-size);
   font-weight: var(--type-action-weight); /* every "[ … ]" button at one weight (2026-11-03) */
-  letter-spacing: var(--type-label-tracking);
+  /* 12px buttons take the chrome's wider tracking, like [ Menu ]; the 14px
+     ones keep the label tracking (2026-11-03, Jonathan). */
+  letter-spacing: var(--type-chrome-tracking);
   line-height: 1;
   text-transform: uppercase;
   cursor: pointer;
@@ -1054,6 +1057,12 @@
 .lesson .trioText {
   margin: 0;
 }
+
+/* "Next time" starts a new label group: the group gap, not the paragraph
+   gap (2026-11-03). */
+.lesson .trioText + .trioText:has(> .inlineLabel) {
+  margin-top: calc(var(--space-label-group) - var(--space-m));
+}
 .bullets {
   margin: 0;
   padding: 0;
@@ -1126,6 +1135,7 @@
 
 .adjacentLink .label {
   margin: 0;
+  line-height: 1.5; /* sits over a display title, not a label group */
 }
 
 .adjacentTitle {
@@ -1232,7 +1242,7 @@
   .factList {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-l) var(--grid-gap);
+    gap: var(--space-label-group) var(--grid-gap);
     width: 100%;
   }
 
@@ -1657,7 +1667,7 @@
 
 .decisionCell > .inlineLabel,
 .decisionNotes > .inlineLabel {
-  margin: 0 0 var(--space-xs);
+  margin: 0 0 var(--space-label);
 }
 
 /* Reading text, the same as In short, Context and Lessons (2026-10-19). */
@@ -1712,6 +1722,11 @@
     top: calc(50svh - 5.5rem);
   }
 
+  /* The list opens with a rule, which has no leading to make the gap. */
+  .decisionNotes > .inlineLabel {
+    margin-bottom: var(--space-xs);
+  }
+
   .decisionNotes .notesList {
     border-top: 1px solid var(--line);
   }
@@ -1758,7 +1773,7 @@
   }
 
   .decisionCell + .decisionCell {
-    margin-top: var(--space-l);
+    margin-top: var(--space-label-group);
   }
 
   .decisionNotes {
@@ -1858,7 +1873,7 @@
    same room above, so its text lines up. */
 .labelSpacer {
   display: block;
-  height: calc(var(--type-meta-size) * 1.5 + var(--space-xs));
+  height: calc(var(--type-meta-size) + var(--space-label));
 }
 
 /* Photographed mockups get the screens' hairline edge too (2026-10-19,

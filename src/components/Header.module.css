@@ -101,14 +101,16 @@
   /* The mark is narrower than its square box: sized to the drawing, its ink
      starts on the margin like the text below it. */
   .logoIcon {
+    top: 0; /* no name to centre on here */
     width: auto;
     aspect-ratio: 106.29 / 151.73;
   }
 
-  /* .header .nav: beats the global .grid-8-column on the same element. */
+  /* .header .nav: beats the global .grid-8-column on the same element.
+     Centred: "[ Menu ]" sits on the icon's middle (2026-11-04). */
   .header .nav {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
   }
@@ -128,6 +130,13 @@
 
   .navText {
     white-space: nowrap;
+  }
+
+  /* The icon alone (2026-11-04, Jonathan): the name stays for screen readers
+     (the link's visually hidden text). .logo raises this over the global
+     .stacked on the same element. */
+  .logo .logoWordmark {
+    display: none;
   }
 
   /* No room for a column each: Work and About me stack. */
@@ -182,6 +191,14 @@
   .iconTarget {
     padding: 22px 8px 6px;
     margin: -22px -8px -6px;
+  }
+}
+
+/* The icon alone is narrower than a finger: the target keeps 44px, growing
+   right so the icon stays on the margin. */
+@media (pointer: coarse) and (max-width: 1023px) {
+  .logo {
+    min-width: 44px;
   }
 }
 

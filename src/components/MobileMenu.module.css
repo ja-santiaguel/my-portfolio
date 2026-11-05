@@ -182,8 +182,13 @@
   transition: transform var(--dur-reveal) var(--ease-reveal) 460ms;
 }
 
+/* Tight on the details it heads (2026-11-03, the site's label rule): the
+   first 44px row's own padding is the gap, so the label reaches into it
+   (it isn't interactive) and sits about 1rem from the first detail,
+   closer than the details are to each other. */
 .label {
-  margin-bottom: var(--space-2xs);
+  margin-bottom: calc(var(--space-label) - 0.4375rem);
+  line-height: 1;
   color: #9a9a9a; /* the footer's muted grey on ink, 6.9:1 */
   font-size: var(--type-meta-size);
   font-weight: var(--type-meta-weight);

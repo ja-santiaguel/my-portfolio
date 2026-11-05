@@ -166,23 +166,34 @@ export const generalRoofing = {
 
   lessons: {
     title: "What I learned",
-    // What happened, then what I'd do next time (from the long-form draft in
-    // content/case-studies/general-roofing.md).
+    // What the work taught me and how I'll use it (rewritten 2026-11-04,
+    // Jonathan: positive and forward-looking, about why trust leads a roofer's
+    // site, in the paragraph form Aether uses). Figures are from Roofr's
+    // 2026 homeowner study (292 U.S. homeowners, fieldwork November 2025):
+    // https://roofr.com/blog/how-homeowners-choose-a-roofer and
+    // https://www.roofingcontractor.com/articles/102503-what-homeowners-actually-want-from-their-roofer-and-its-probably-not-what-you-think
+    // Jonathan did this research (2026-11-04); the figures are Roofr's, so keep them attributed.
     items: [
       {
-        title: "Collect content before design",
-        happened: "Both revision rounds went to copy and photos the client supplied mid-project.",
-        next: "I'd gather the client's photos, facts and credentials before high fidelity, so revisions refine the design instead of catching up on content.",
+        title: "Trust is the real purchase",
+        paragraphs: [
+          "In Roofr’s survey of 292 U.S. homeowners, 63% were hiring a roofer for the first time and only 11% put lowest price first. With a product they can’t easily judge, people are buying trust.",
+          "Trust led every decision here, and I’ll start future service projects by asking what customers can’t check for themselves.",
+        ],
       },
       {
-        title: "Hear the client first-hand",
-        happened: "Feedback reached me through my partner, and detail was lost on the way.",
-        next: "I'd join the kickoff call to hear priorities in the client's own words and ask follow-up questions on the spot.",
+        title: "Let others make the claim",
+        paragraphs: [
+          "82% of those homeowners checked reviews before hiring. A GAF certification, a Home Depot partnership and a 5.0 Google rating carry weight because someone else is vouching for the company.",
+          "So the proof sits directly under the headline, and I’ll keep putting third-party proof ahead of a brand’s own promises.",
+        ],
       },
       {
-        title: "Check the tool before scoping",
-        happened: "The brief's interactive map of completed projects became a Google Maps embed.",
-        next: "I'd confirm what the build tool supports before features go into the proposal.",
+        title: "Clarity is part of the service",
+        paragraphs: [
+          "74% said they wouldn’t hire without an inspection, and 59% ranked transparent pricing in their top three trust factors.",
+          "The five-step process puts the inspection before any pricing, and I’ll treat “what happens next?” as core design work on any big purchase.",
+        ],
       },
     ],
   },

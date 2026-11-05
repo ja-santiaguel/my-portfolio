@@ -3,7 +3,7 @@
 Status: built at /projects/general-roofing in the 55-second structure (2026-10-12). Live copy is in src/content/case-studies/general-roofing.js; this file keeps the long-form draft and the client-quote draft.
 Sources: the client brief (via partner), the live site (generalroofing.ca, captured 2026-10-09), the old Webflow site (Wayback Machine snapshot from 2026-06-14, rebuilt with its original styles from Webflow's CDN), Jonathan's answers.
 Raw captures (working files, not for the public folder): `content/case-studies/general-roofing/` (`before-*` and `after-*`).
-Word budget: ~800 words (UX case study structure, shortened: no formal research phase was run).
+Word budget: ~800 words (UX case study structure, shortened; Jonathan's research into how homeowners decide to trust a roofer is in section 9).
 
 ---
 
@@ -104,11 +104,13 @@ How to use it: send it to the client (through your partner) as "Would you be hap
 
 > Drafted for you; keep only what rings true.
 
-**Collect content before design.** Both revision rounds went to copy and assets the client supplied mid-project. Next time I'd gather the client's photos and facts before hi-fi, so revisions improve the design instead of catching up on content.
+Rewritten 2026-11-04 (Jonathan: positive and forward-looking, about why trust leads a roofer's site). Figures come from Roofr's 2026 homeowner study: 292 U.S. homeowners who hired a roofer in the past two years, fieldwork November 2025. Jonathan did this research (2026-11-04); the figures are Roofr's, so keep them attributed. Sources: https://roofr.com/blog/how-homeowners-choose-a-roofer and https://www.roofingcontractor.com/articles/102503-what-homeowners-actually-want-from-their-roofer-and-its-probably-not-what-you-think
 
-**Hear the client first-hand.** Feedback reached me through my partner. Joining the kickoff call would let me hear priorities in the client's own words and ask follow-up questions on the spot.
+**Trust is the real purchase.** In Roofr’s survey of 292 U.S. homeowners, 63% were hiring a roofer for the first time and only 11% put lowest price first. With a product they can’t easily judge, people are buying trust. Trust led every decision here, and I’ll start future service projects by asking what customers can’t check for themselves.
 
-**Check the tool before scoping.** The brief's interactive project map became a Google Maps embed. Next time I'd confirm what Figma Sites supports before features go into the proposal.
+**Let others make the claim.** 82% of those homeowners checked reviews before hiring. A GAF certification, a Home Depot partnership and a 5.0 Google rating carry weight because someone else is vouching for the company. So the proof sits directly under the headline, and I’ll keep putting third-party proof ahead of a brand’s own promises.
+
+**Clarity is part of the service.** 74% said they wouldn’t hire without an inspection, and 59% ranked transparent pricing in their top three trust factors. The five-step process puts the inspection before any pricing, and I’ll treat “what happens next?” as core design work on any big purchase.
 
 ---
 

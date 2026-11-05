@@ -366,6 +366,14 @@
     grid-column: 1;
   }
 
+  /* The year is the row's label: on the title it dates, like every label
+     (--space-label, 2026-11-03), at about 1rem; the rules keep the rows
+     apart. */
+  .when {
+    line-height: 1;
+    margin-bottom: calc(var(--space-label) - 0.125rem);
+  }
+
   .rowLink {
     justify-self: start;
     margin-top: var(--space-2xs);

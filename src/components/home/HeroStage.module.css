@@ -402,6 +402,23 @@
     white-space: normal;
   }
 
+  /* One gap between every line of the title block, wrapped or not
+     (2026-11-03, Jonathan: "JONATHAN ANDREW" to "SANTIAGUEL" sat further
+     apart than the lines below it). Lines that wrap are set one cap height
+     plus the block's 0.625rem gap apart, the same gap the separate lines get,
+     and the statement wraps on the same rhythm. */
+  .sides .bylineLine {
+    line-height: calc(1cap + 0.625rem);
+  }
+
+  /* RiseText pads each wrapped line 0.3em and cancels it with -0.3em
+     margins, but two touching lines collapse their margins into one -0.3em,
+     so each wrapped line added 0.3em. The second margin at -0.6em collapses
+     to that, which brings the net back to zero. */
+  .sides .bylineLine > span + span {
+    margin-top: -0.6em;
+  }
+
   .statement {
     grid-column: 5 / 9;
   }
