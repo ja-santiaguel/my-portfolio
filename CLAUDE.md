@@ -1,6 +1,6 @@
 # Jonathan Andrew — portfolio
 
-Personal portfolio of Jonathan Andrew Santiaguel, a digital designer in Greater Vancouver targeting UI/UX and frontend design roles. Deployed on Vercel. The site is an AI-assisted build (Claude Code).
+Personal portfolio of Jonathan Andrew Santiaguel, a UX/UI designer and frontend developer in Greater Vancouver targeting UI/UX and frontend design roles. Deployed on Vercel. The site is an AI-assisted build (Claude Code).
 
 ## Goal and audience
 

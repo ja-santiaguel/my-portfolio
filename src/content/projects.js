@@ -24,7 +24,7 @@ export const profile = {
     ["F{r}ont{e}nd", "Vi{s}u{a}l"],
     ["D{e}v{e}lop{e}r", "D{e}si{g}n{e}r"],
   ],
-  heroTitle: "Frontend Developer", // stable accessible title
+  heroTitle: "UX/UI Designer & Frontend Developer", // stable accessible title
   // The statement (2026-10-27, Jonathan), set like the byline opposite: one
   // line per line break, longest first and shortening like the byline's
   // name, location and edition, so the two sides mirror across the portrait.

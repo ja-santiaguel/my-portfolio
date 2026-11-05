@@ -9,7 +9,7 @@
 // shapes the structure; the kitchen taught testing, adjusting, discipline).
 
 export const about = {
-  lead: "I’m Jonathan Andrew Santiaguel, a designer and frontend developer in Greater Vancouver. I design and build websites and apps that people connect with and act on, from research to launch.",
+  lead: "I’m Jonathan Andrew Santiaguel, a UX/UI designer and frontend developer in Greater Vancouver. I design and build websites and apps that people connect with and act on, from research to launch.",
 
   // The header's title block (the availability row is added from projects.js).
   facts: [
@@ -27,7 +27,7 @@ export const about = {
 
   path: {
     title: "My path",
-    lead: "An architecture student, turned junior sous chef, turned digital designer. Each step left something I still work by.",
+    lead: "An architecture student, turned junior sous chef, turned UX/UI designer. Each step left something I still work by.",
     // A real sequence, so numbered ("[ n ]").
     steps: [
       {
