@@ -2,6 +2,7 @@
 import { Archivo, Bodoni_Moda } from "next/font/google";
 import "@/styles/globals.css";
 import { pageMetadata, siteUrl } from "@/lib/metadata";
+import { Analytics } from "@vercel/analytics/next";
 // Components
 import Header from "@/components/Header";
 import BackToTop from "@/components/BackToTop";
@@ -70,6 +71,7 @@ export default function RootLayout({ children }) {
         <PageTransition />
         <ViewTrigger />
         <ScrollTimelineFallback />
+        <Analytics />
       </body>
     </html>
   );
