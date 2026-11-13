@@ -207,6 +207,12 @@
   text-transform: uppercase;
 }
 
+/* The dialog takes focus when opened by touch; it isn't a control. */
+.menu:focus,
+.menu:focus-visible {
+  outline: none;
+}
+
 /* Drawn inside the target. */
 .menu :focus-visible {
   outline: 2px solid var(--background);

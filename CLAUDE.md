@@ -37,6 +37,7 @@ Kept in `DESIGN.md` (benchmark: https://www.noth.in/).
 - `ship-check`: before calling UI work done, and before any deploy.
 - `revision-log`: major milestones only (fold iterations into the open entry; a handful of screenshots each).
 - `motion`: **always** before creating, editing or reviewing anything that moves (tokens, the restraint rules for entering and exiting elements, exceptions).
+- Global design skills (`impeccable`, `awwwards`, `ui-ux-pro-max`) are critique lenses only: `DESIGN.md` and the `motion` skill always override them (palette, type, easing, libraries), and they never write design-system files into this repo.
 
 ## Quality floor (non-negotiable)
 

@@ -46,6 +46,20 @@ export default function MobileMenu({ open, onClose, toggleRef }) {
     return () => clearTimeout(t);
   }, [open]);
 
+  // How the visitor last acted (a key or a pointer), so opening the menu can
+  // tell a tap from Enter or Space on the toggle.
+  const lastInput = useRef("pointer");
+  useEffect(() => {
+    const onPointer = () => (lastInput.current = "pointer");
+    const onKey = () => (lastInput.current = "keyboard");
+    document.addEventListener("pointerdown", onPointer, true);
+    document.addEventListener("keydown", onKey, true);
+    return () => {
+      document.removeEventListener("pointerdown", onPointer, true);
+      document.removeEventListener("keydown", onKey, true);
+    };
+  }, []);
+
   // Lock the page, trap focus, close on Escape.
   useEffect(() => {
     if (!open) return;
@@ -56,7 +70,12 @@ export default function MobileMenu({ open, onClose, toggleRef }) {
     getLenis()?.stop();
 
     const focusables = () => [toggleRef.current, ...panel.current.querySelectorAll("a[href], button")].filter(Boolean);
-    focusables()[1]?.focus({ preventScroll: true });
+    // Opened from the keyboard, focus lands on the first link (with its ring);
+    // from a tap or click, on the dialog itself, so no ring appears around
+    // "Home". iOS Safari treats a script's focus after a tap as focus-visible,
+    // and that put a box around "Home" (2026-11-10, Jonathan).
+    const viaKeyboard = lastInput.current === "keyboard";
+    (viaKeyboard ? focusables()[1] : panel.current)?.focus({ preventScroll: true });
 
     const onKey = (e) => {
       if (e.key === "Escape") {
@@ -67,7 +86,8 @@ export default function MobileMenu({ open, onClose, toggleRef }) {
       if (e.key !== "Tab") return;
       const list = focusables();
       const i = list.indexOf(document.activeElement);
-      const next = e.shiftKey ? (i <= 0 ? list.length - 1 : i - 1) : i === list.length - 1 ? 0 : i + 1;
+      // From the dialog itself (i = -1), Tab goes to the first link.
+      const next = i === -1 ? (e.shiftKey ? list.length - 1 : 1) : e.shiftKey ? (i === 0 ? list.length - 1 : i - 1) : i === list.length - 1 ? 0 : i + 1;
       e.preventDefault();
       list[next].focus();
     };
@@ -121,6 +141,7 @@ export default function MobileMenu({ open, onClose, toggleRef }) {
       role="dialog"
       aria-modal="true"
       aria-label="Menu"
+      tabIndex={-1}
       aria-hidden={!open}
     >
       <div className={styles.columns} aria-hidden="true">
