@@ -24,7 +24,8 @@ import styles from "./CaseStudy.module.css";
 //   at first ({ zoom, at }: a slight zoom, the focus shown at `at`), so the
 //   push-in also pans, like the off-centre laptops.
 //
-// Phones, small windows and reduced motion get the still photo.
+// Phones, small windows and reduced motion get the still photo. Without
+// WebGL2 the move plays flat (CSS transforms, no depth parallax).
 
 const VERT = `#version 300 es
 in vec2 p;
@@ -90,6 +91,7 @@ export default function PhotoShowcase({ scene }) {
   const canvasRef = useRef(null);
   const screenRef = useRef(null);
   const pageRefs = useRef([]); // the full capture, then its pre-shrunk levels
+  const stillRef = useRef(null); // the photo under the canvas; moved itself without WebGL
   const [mode, setMode] = useState("pending"); // pending | motion | still
 
   useEffect(() => {
@@ -109,11 +111,14 @@ export default function PhotoShowcase({ scene }) {
     if (mode !== "motion") return;
     const section = sectionRef.current;
     const canvas = canvasRef.current;
+    // Without WebGL2 (switched off for privacy or security, or blocked on a
+    // locked-down work machine; 2026-11-21, Jonathan's Firefox), the same
+    // camera move plays flat: the still photo itself is scaled and panned
+    // with a CSS transform, every surface at the laptop lid's depth, so the
+    // live screen stays glued to it. Only the depth parallax is lost.
     const gl = canvas.getContext("webgl2", { antialias: false, premultipliedAlpha: false });
-    if (!gl) {
-      setMode("still");
-      return;
-    }
+    const flat = !gl;
+    const still = stillRef.current;
 
     // Camera: zoom 0 -> ZOOM (+ depth), the focus (screen centre) drifting
     // slightly towards the middle of the frame. The screen's box matches the
@@ -174,33 +179,39 @@ export default function PhotoShowcase({ scene }) {
     };
 
     // GL setup.
-    const compile = (type, src) => {
-      const s = gl.createShader(type);
-      gl.shaderSource(s, src);
-      gl.compileShader(s);
-      return s;
-    };
-    const prog = gl.createProgram();
-    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
-    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
-    gl.linkProgram(prog);
-    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
-      setMode("still");
-      return;
+    let uCover, uTarget, uZoom, uDepthZoom;
+    if (!flat) {
+      const compile = (type, src) => {
+        const s = gl.createShader(type);
+        gl.shaderSource(s, src);
+        gl.compileShader(s);
+        return s;
+      };
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+        setMode("still");
+        return;
+      }
+      gl.useProgram(prog);
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, "p");
+      gl.enableVertexAttribArray(loc);
+      gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      const u = (n) => gl.getUniformLocation(prog, n);
+      uCover = u("uCover"); uTarget = u("uTarget"); uZoom = u("uZoom"); uDepthZoom = u("uDepthZoom");
+      gl.uniform1i(u("uImg"), 0);
+      gl.uniform1i(u("uDepth"), 1);
+      gl.uniform2f(u("uFocus"), fx, fy);
+      gl.uniform1f(uDepthZoom, DEPTH_ZOOM);
+    } else {
+      canvas.style.display = "none";
+      still.style.willChange = "transform";
     }
-    gl.useProgram(prog);
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, "p");
-    gl.enableVertexAttribArray(loc);
-    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    const u = (n) => gl.getUniformLocation(prog, n);
-    const uCover = u("uCover"), uFocus = u("uFocus"), uTarget = u("uTarget"), uZoom = u("uZoom"), uDepthZoom = u("uDepthZoom");
-    gl.uniform1i(u("uImg"), 0);
-    gl.uniform1i(u("uDepth"), 1);
-    gl.uniform2f(uFocus, fx, fy);
-    gl.uniform1f(uDepthZoom, DEPTH_ZOOM);
 
     const texture = (unit, src) =>
       new Promise((resolve) => {
@@ -222,14 +233,15 @@ export default function PhotoShowcase({ scene }) {
 
     let cover = [1, 1], W = 0, H = 0, ready = false, alive = true;
     const resize = () => {
-      const r = canvas.getBoundingClientRect();
+      const r = canvas.parentElement.getBoundingClientRect(); // the stage; the canvas fills it
       W = r.width; H = r.height;
+      const va = W / H, ia = image.width / image.height;
+      cover = va > ia ? [1, ia / va] : [va / ia, 1];
+      if (flat) return;
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(W * dpr);
       canvas.height = Math.round(H * dpr);
       gl.viewport(0, 0, canvas.width, canvas.height);
-      const va = W / H, ia = image.width / image.height;
-      cover = va > ia ? [1, ia / va] : [va / ia, 1];
       gl.uniform2f(uCover, cover[0], cover[1]);
     };
 
@@ -260,11 +272,22 @@ export default function PhotoShowcase({ scene }) {
       // chosen per scene so the photo never runs out at an edge.
       const sx = start ? start.at[0] : fx, sy = start ? start.at[1] : fy;
       const tx = sx + (drift[0] - sx) * pz, ty = sy + (drift[1] - sy) * pz;
-      gl.uniform2f(uTarget, tx, ty);
-      gl.uniform1f(uZoom, START_ZOOM + ZOOM * pz);
-      // The depth term grows with the push-in too.
-      gl.uniform1f(uDepthZoom, DEPTH_ZOOM * pz);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      if (flat) {
+        // The shader's mapping (image point x lands at target + (x - focus) *
+        // scale) as a CSS transform on the cover-fitted photo: scale about the
+        // focus, then move the focus to the target, in the element's space.
+        const S = 1 + START_ZOOM + ZOOM * pz + DEPTH_ZOOM * pz * LID;
+        const ex = (fx - 0.5) / cover[0] + 0.5, ey = (fy - 0.5) / cover[1] + 0.5;
+        const ux = (tx - 0.5) / cover[0] + 0.5, uy = (ty - 0.5) / cover[1] + 0.5;
+        still.style.transformOrigin = `${ex * 100}% ${ey * 100}%`;
+        still.style.transform = `translate(${(ux - ex) * W}px, ${(uy - ey) * H}px) scale(${S})`;
+      } else {
+        gl.uniform2f(uTarget, tx, ty);
+        gl.uniform1f(uZoom, START_ZOOM + ZOOM * pz);
+        // The depth term grows with the push-in too.
+        gl.uniform1f(uDepthZoom, DEPTH_ZOOM * pz);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
 
       if (!screen) return;
       // The screen, moved exactly like the laptop lid.
@@ -317,7 +340,10 @@ export default function PhotoShowcase({ scene }) {
     resize();
     measure();
     current = target;
-    Promise.all([texture(0, image.src), texture(1, depth)]).then(() => {
+    const loaded = flat
+      ? still.complete ? Promise.resolve() : new Promise((r) => still.addEventListener("load", r, { once: true }))
+      : Promise.all([texture(0, image.src), texture(1, depth)]);
+    loaded.then(() => {
       if (!alive) return;
       ready = true;
       draw(current);
@@ -346,6 +372,7 @@ export default function PhotoShowcase({ scene }) {
       <div className={styles.photoStage} role="img" aria-label={label}>
         {/* The still sits under the canvas until the textures are ready. */}
         <Image
+          ref={stillRef}
           src={image.src}
           alt=""
           width={image.width}
